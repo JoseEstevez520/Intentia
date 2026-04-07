@@ -50,7 +50,10 @@ Este documento resume las decisiones técnicas y estrategias de diseño acordada
 ## 📝 Notas de Implementación (Tips)
 
 1.  **Filtro Nearest:** En LibGDX, configurar las texturas con filtros `Nearest` para que el Pixel Art se vea nítido y no borroso.
-2.  **Eventos en Tiled:** Usar "Object Layers" en Tiled para definir las zonas donde saltarán los vídeos automáticamente.
+2.  **Eventos en Tiled (Capas de Objetos):** 
+    *   **Capa Visual (Tiles):** Donde dibujas el arte (suelo, paredes). Estas no deben tener los nombres de los eventos.
+    *   **Capa Lógica (Objetos):** Creas una "Object Layer" y dibujas rectángulos invisibles sobre las casillas donde quieras un evento.
+    *   **Ventaja:** Estos rectángulos son invisibles en el juego pero en Java detectamos cuando el jugador los "pisa" para lanzar un vídeo, cambiar de mapa o activar un diálogo.
 3.  **Resolución:** Mantener los vídeos a 720p o 1080p para asegurar fluidez total en cualquier ordenador.
 
 ---
