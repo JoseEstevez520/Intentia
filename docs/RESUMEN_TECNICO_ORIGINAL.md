@@ -40,10 +40,10 @@ Esta es la técnica clave para darle un aspecto "triple A" a un juego Pixel Art 
     3.  **VÍDEO:** Aquí dibujamos el vídeo transparente del dragón. Al estar "encima" del jugador, parecerá que el dragón vuela sobre su cabeza.
     4.  **UI (Interfaz):** Los menús y diálogos siempre se dibujan al final para que nunca queden tapados.
 
-*   **Sincronización Interactiva (Vídeo-Mundo):**
-    La parte más potente es que el vídeo no es solo "decoración". El código de Java puede "escuchar" al vídeo:
-    *   **Detección de Tiempo:** Si el vídeo del dragón dura 5 segundos y sabemos que en el segundo 3.2 lanza el fuego, programamos un evento en Java que diga: `if (videoTime >= 3.2) { player.takeDamage(); }`.
-    *   **Efecto Visual Real:** Aunque el fuego sea un vídeo, el jugador verá cómo su barra de vida baja justo cuando las llamas le tocan. Esto crea la ilusión de que el vídeo es una parte física del juego.
+*   **Sincronización con Mecánicas (Sistema de Pruebas):**
+    En lugar de sincronizar variables de juego al milisegundo con el vídeo (antiguo "Truco del Dragón"), el vídeo sirve exclusivamente de espectáculo visual inmersivo mientras se activa el sistema de decisiones temporizadas.
+    *   **Clase `Pregunta` y QTEs:** Mientras el vídeo del dragón se reproduce, el Motor de Mecánicas lanza una `Pregunta` visual (Ej. *¡El dragón ataca por la derecha!*).
+    *   **Resolución por UI:** El jugador tiene escasos segundos para hacer click en `[Esquivar izquierda]` o `[Cubrirse]`. El motor usa el `delta time` normal de LibGDX para evaluar el éxito, evitando por completo la pesadilla técnica de programar o sincronizar colisiones exactas con píxeles de un vídeo renderizado.
 
 *   **Ventaja Creativa:** Permite meter efectos de partículas, fluidos y luces cinemáticas que serían imposibles de programar directamente en Java para un estudiante, pero que son muy fáciles de exportar desde un programa de vídeo.
 
