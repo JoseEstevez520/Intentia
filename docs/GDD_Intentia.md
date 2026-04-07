@@ -8,7 +8,7 @@ Los padres llevan al hijo a pasar las vacaciones con el abuelo. Tras la despedid
 ### 🌲 El Bosque de las Nubes
 El abuelo advierte al niño: el bosque está lleno de dragones. Sin embargo, al salir del bosque, el abuelo le dice al niño: "Los hemos dejado atrás". Le señala el cielo y el niño descubre que los "dragones" que temían eran simplemente nubes con esa forma. Esto establece la idea de que todo lo que van a jugar será una "fantasía" sobre la realidad.
 
----
+----
 
 ## 🎬 2. Escena Prólogo: La Profecía de Pitof
 
