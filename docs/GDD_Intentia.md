@@ -1,11 +1,31 @@
 # 📘 Game Design Document (GDD): Intentia
 
+## 👁️ Visión Central y Filosofía del Juego (El Core)
+*Intentia* es un viaje autobiográfico e introspectivo basado sutilmente en el **Absurdismo de Albert Camus**. El mundo y la realidad carecen de un "sentido" o destino predefinido, y el juego trata sobre cómo decidimos enfrentarnos a ese vacío.
+*   **El Espejo Temporal:** El Niño y el Abuelo no son dos personajes separados; son el propio autor (el jugador) dialogando consigo mismo desde dos etapas de la vida.
+*   **La Evolución:** El juego explora el viaje humano. Empieza con la inocencia plena (niño), pasará a través de los recuerdos a la crisis existencial (adolescente/adulto joven) y culmina en la sabiduría del Abuelo.
+*   **El Sísifo Feliz:** El Abuelo ya ha comprendido que el mundo no tiene magia inherente. En lugar de deprimirse, su rebelión es *inventarse la magia*. Crea carteles de dragones y bromea porque ha elegido divertirse con la vida. Es Sísifo empujando la piedra con una sonrisa.
+*   **Mecánica Absurdista:** Por eso no hay "Game Over". En este universo, equivocarse en un QTE no te castiga, porque los errores carecen de importancia universal. Solo importan las risas y la anécdota que dejan atrás.
+
+---
+
+## 🎨 Dirección de Arte y Color (Leitmotiv)
+Para asegurar la cohesión visual entre los vídeos 3D (cinemáticas) y el mundo jugable (Pixel Art con *assets* genéricos), se utilizará un **Color Ancla**: el **Verde Agua (Teal/Aqua)** mezclado con tonos Plata/Ámbar.
+*   **Significado:** Es el color universal de la nostalgia, los recuerdos y la magia en la obra, y sirve como ancla autobiográfica del autor.
+*   **Aplicación en Vídeos:** La iluminación atmosférica, constelaciones y nieblas oníricas tendrán destellos de verde agua.
+*   **Aplicación en Gameplay:** El paisaje y los mapas tendrán colores estándar/realistas, pero los *sprites* del Niño y el Abuelo llevarán un detalle visible (ej. chaqueta o bufanda) codificado en ese mismo verde agua exacto. Esto hará que los personajes resalten drásticamente del fondo, indicando al subconsciente que están conectados directamente a la magia de las cinemáticas.
+
+---
+
 ## 📖 1. Historia y Estructura Narrativa
 
-### 🎮 Introducción
-Los padres dejan al hijo a pasar las vacaciones en el pueblo. La despedida es cálida y alegre; le piden que se lo pase en grande. El niño es la viva imagen de la inocencia, la curiosidad y la felicidad. El abuelo, por su parte, es un personaje estilo "Don Quijote": un bromista empedernido, teatral y con muchísima energía. Nada más perderse el coche de los padres de vista, el abuelo se pone muy serio y le anuncia que la gran aventura acaba de comenzar.
+### 💭 El Sueño Premonitorio (Cinemática Inicial)
+El juego arranca directamente con un potente *vídeo WebM* de 5 segundos. Un oscuro cielo místico bañado en niebla verde agua, donde una inmensa **Luna** empieza a cubrirse de un brillante **manto de plata**. Parece una escena épica de una película de fantasía pura. De pronto, la música y la imagen se rompen en un corte acústico seco y un fundido a negro: *"¡Despierta, que hemos llegado!"*.
 
-> **Nota de Dirección (El Efecto Espejo):** Aunque dentro del universo del juego son literalmente un abuelo y su nieto que ignoran cualquier trasfondo, a nivel de subtexto representan al autor en dos etapas de su vida. Para reforzar esta conexión de forma invisible al jugador, se incluirá un detalle muy sutil (un tic, un gesto idéntico en sus *sprites* o un objeto paralelo) que compartan sin darse cuenta, reforzando su vínculo más allá de las palabras.
+### 🎮 La Llegada y el Despertar
+El niño parpadea, despertando de su sueño épico en el asiento trasero del coche de sus padres. Acaban de aparcar frente a la casa del pueblo para pasar las vacaciones. La despedida es cálida y alegre. El niño rebosa inocencia y asombro. El abuelo le espera en la puerta de entrada. El anciano es un personaje estilo "Don Quijote": un bromista empedernido, teatral y con muchísima vitalidad. Nada más perderse el coche de los padres de vista por la carretera, el abuelo se pone muy serio y le anuncia al niño que la gran aventura acaba de comenzar.
+
+> **Nota de Dirección (El Efecto Espejo):** Aunque dentro del universo del juego son literalmente un abuelo y su nieto que ignoran cualquier trasfondo, a nivel de subtexto representan al autor en dos etapas de su vida. Para reforzar esta conexión de forma invisible al jugador sin elevar la complejidad de programación (sin crear animaciones extra para el jugador), se mostrará un detalle muy sutil (un tic, una manía o gesto idéntico) que ambos comparten **directamente en el vídeo/cinemática de introducción**. Así se establece la conexión sin saturar los recursos en el motor.
 
 ### 🌲 El Bosque de las Nubes (La Broma)
 De camino a la casa, cruzan un bosque. El niño empieza a ver carteles físicos de advertencia: "¡PELIGRO: ZONA DE DRAGONES!". El abuelo, metidísimo en su papel, le mete prisa y le hace correr esquivando supuestos peligros. Al salir por fin al claro, el abuelo empieza a reírse a carcajadas (*jajaja*). Le señala el cielo y le confiesa que esa mañana vio unas nubes con forma de dragón y decidió que "tenía que vallar la zona por seguridad escolar". El niño, dándose cuenta de que ha caído en la trampa total, suspira sonriendo: *"¿En serio, abuelo?"*. Esto establece el tono de todo el juego: jugar a seguirle las bromas teatrales a este genio loco.
