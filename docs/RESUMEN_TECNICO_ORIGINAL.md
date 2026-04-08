@@ -41,9 +41,9 @@ Esta es la técnica clave para darle un aspecto "triple A" a un juego Pixel Art 
     4.  **UI (Interfaz):** Los menús y diálogos siempre se dibujan al final para que nunca queden tapados.
 
 *   **Sincronización con Mecánicas (Sistema de Pruebas):**
-    En lugar de sincronizar variables de juego al milisegundo con el vídeo (antiguo "Truco del Dragón"), el vídeo sirve exclusivamente de espectáculo visual inmersivo mientras se activa el sistema de decisiones temporizadas.
-    *   **Clase `Pregunta` y QTEs:** Mientras el vídeo del dragón se reproduce, el Motor de Mecánicas lanza una `Pregunta` visual (Ej. *¡El dragón ataca por la derecha!*).
-    *   **Resolución por UI:** El jugador tiene escasos segundos para hacer click en `[Esquivar izquierda]` o `[Cubrirse]`. El motor usa el `delta time` normal de LibGDX para evaluar el éxito, evitando por completo la pesadilla técnica de programar o sincronizar colisiones exactas con píxeles de un vídeo renderizado.
+    En lugar de sincronizar variables de juego al milisegundo con el vídeo (antiguo "Truco del Dragón"), el vídeo sirve exclusivamente de espectáculo visual inmersivo mientras se activa el sistema de decisiones.
+    *   **Clase `Pregunta` e Interfaz:** Mientras el vídeo visual se reproduce o se pausa, el Motor de Mecánicas lanza una `Pregunta` visual al jugador.
+    *   **Resolución Directa por UI:** El jugador elige su respuesta interactuando con los botones. Se ha optado por eliminar los temporizadores estresantes por ahora para garantizar una fácil lectura. La decisión elegida cierra la prueba permanentemente y define la siguiente ramificación narrativa, evitando colisiones técnicas con los fotogramas del vídeo.
 
 *   **Ventaja Creativa:** Permite meter efectos de partículas, fluidos y luces cinemáticas que serían imposibles de programar directamente en Java para un estudiante, pero que son muy fáciles de exportar desde un programa de vídeo.
 

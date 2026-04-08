@@ -32,15 +32,15 @@ El abuelo sonríe: *"Tenía que engancharte a la historia, hijo. Pero ahora vamo
 El juego abandona la idea de volver a la casa como "Nexo" y propone una aventura continua donde el 100% de la base es caminar estilo RPG clásico, hablar con NPCs y reaccionar a situaciones.
 
 ### 🏛️ Arquitectura de Código: Pruebas y Preguntas
-Para mantener el proyecto fácil de programar en LibGDX, cualquier situación de "Habilidad o Acción" se resolverá mediante un sistema de decisiones temporizadas.
+Para mantener el proyecto fácil de programar y muy centrado en la narrativa, cualquier situación de "Habilidad o Acción" se resolverá mediante un sistema de decisiones directas sin temporizador.
 
 *   **Clase `Pregunta` (Unidad de acción):**
-    *   Maneja una única decisión con tiempo (Ej. *¡El dragón ataca por la derecha!*).
-    *   Muestra 2 o 3 botones (`[Esquivar izquierda] / [Cubrirse]`).
-    *   Usa el `delta time` de LibGDX para restar el `tiempoRestante`. Si llega a cero, cuenta como fallo.
+    *   Maneja una única decisión contextual (Ej. *¡El dragón ataca por la derecha!*).
+    *   Muestra 2 o 3 botones en pantalla (`[Esquivar izquierda] / [Cubrirse]`).
+    *   (No hay temporizador por defecto; el jugador tiene tiempo para elegir su ruta o respuesta).
 *   **Clase `Prueba` (Agrupador de nivel):**
-    *   Reúne varias `Preguntas` seguidas (como si fuera un examen o un nivel entero de la orquesta).
-    *   Calcula el `umbralAprobado`. Si el jugador supera la prueba, la historia narrativa avanza con épica. Si falla, el fallo se absorbe de forma cómica (el abuelo se ríe del desastre) pero la historia continúa sin penalizar con "Game Over".
+    *   Reúne varias `Preguntas` seguidas o en un mismo mapa.
+    *   **El Peso Narrativo (Intento Único):** No se pueden repetir las pruebas. Las decisiones se toman una sola vez, y dependiendo de los aciertos o elecciones del jugador, el motor bifurca la narrativa a un desenlace de éxito (épico) o de fallo (cómico). Esta resolución se convierte en el transcurso oficial de la partida y avanza la historia en lugar de lanzar una pantalla de muerte.
 
 ### 🎙️ La Voz en Off Reactiva
 Las mecánicas y los fallos alimentan el diálogo. Constantemente, las acciones del jugador son comentadas por el niño ("¿En serio te caíste de la bici ahí?") y justificadas por el abuelo.
