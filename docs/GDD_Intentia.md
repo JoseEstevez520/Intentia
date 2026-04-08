@@ -3,10 +3,12 @@
 ## 📖 1. Historia y Estructura Narrativa
 
 ### 🎮 Introducción
-Los padres llevan al hijo a pasar las vacaciones con el abuelo. Tras la despedida, el abuelo recibe al niño y le anuncia que la aventura está por comenzar.
+Los padres dejan al hijo a pasar las vacaciones en el pueblo. La despedida es cálida y alegre; le piden que se lo pase en grande. El niño es la viva imagen de la inocencia, la curiosidad y la felicidad. El abuelo, por su parte, es un personaje estilo "Don Quijote": un bromista empedernido, teatral y con muchísima energía. Nada más perderse el coche de los padres de vista, el abuelo se pone muy serio y le anuncia que la gran aventura acaba de comenzar.
 
-### 🌲 El Bosque de las Nubes
-El abuelo advierte al niño: el bosque está lleno de dragones. Sin embargo, al salir del bosque, el abuelo le dice al niño: "Los hemos dejado atrás". Le señala el cielo y el niño descubre que los "dragones" que temían eran simplemente nubes con esa forma. Esto establece la idea de que todo lo que van a jugar será una "fantasía" sobre la realidad.
+> **Nota de Dirección (El Efecto Espejo):** Aunque dentro del universo del juego son literalmente un abuelo y su nieto que ignoran cualquier trasfondo, a nivel de subtexto representan al autor en dos etapas de su vida. Para reforzar esta conexión de forma invisible al jugador, se incluirá un detalle muy sutil (un tic, un gesto idéntico en sus *sprites* o un objeto paralelo) que compartan sin darse cuenta, reforzando su vínculo más allá de las palabras.
+
+### 🌲 El Bosque de las Nubes (La Broma)
+De camino a la casa, cruzan un bosque. El niño empieza a ver carteles físicos de advertencia: "¡PELIGRO: ZONA DE DRAGONES!". El abuelo, metidísimo en su papel, le mete prisa y le hace correr esquivando supuestos peligros. Al salir por fin al claro, el abuelo empieza a reírse a carcajadas (*jajaja*). Le señala el cielo y le confiesa que esa mañana vio unas nubes con forma de dragón y decidió que "tenía que vallar la zona por seguridad escolar". El niño, dándose cuenta de que ha caído en la trampa total, suspira sonriendo: *"¿En serio, abuelo?"*. Esto establece el tono de todo el juego: jugar a seguirle las bromas teatrales a este genio loco.
 
 ----
 
@@ -36,11 +38,17 @@ Para mantener el proyecto fácil de programar y muy centrado en la narrativa, cu
 
 *   **Clase `Pregunta` (Unidad de acción):**
     *   Maneja una única decisión contextual (Ej. *¡El dragón ataca por la derecha!*).
-    *   Muestra 2 o 3 botones en pantalla (`[Esquivar izquierda] / [Cubrirse]`).
+    *   Muestra 2 o 3 opciones visuales acompañadas de iconos de botones (`[<-] Esquivar izquierda` / `[->] Cubrirse`).
+    *   **Controles Integrados (Teclado/Pad):** Se elimina el uso del ratón. El jugador resuelve la situación usando los mismos botones direccionales con los que camina, asegurando un *game-feel* inmersivo estilo consola, sin romper el ritmo del juego.
     *   (No hay temporizador por defecto; el jugador tiene tiempo para elegir su ruta o respuesta).
 *   **Clase `Prueba` (Agrupador de nivel):**
     *   Reúne varias `Preguntas` seguidas o en un mismo mapa.
     *   **El Peso Narrativo (Intento Único):** No se pueden repetir las pruebas. Las decisiones se toman una sola vez, y dependiendo de los aciertos o elecciones del jugador, el motor bifurca la narrativa a un desenlace de éxito (épico) o de fallo (cómico). Esta resolución se convierte en el transcurso oficial de la partida y avanza la historia en lugar de lanzar una pantalla de muerte.
+
+### 📂 Persistencia, Idiomas y Consecuencias Reales
+*   **Memoria de Decisiones (Flags):** Las decisiones de una *Prueba* se almacenan en el estado del juego (ej: `estado.tiene_pegamento == true`). Esto altera diálogos futuros o "desbloquea" la aparición dinámica de botones especiales sin necesidad de menús complejos visuales.
+*   **Bases de Datos y Múltiples Idiomas:** Los diálogos se estructuran en archivos `.json` separados (ej. `español.json`, `english.json`). El código es universal, lo que permitirá escalar el juego globalmente sin dolor de cabeza en el futuro.
+*   **Configuración de Guardado:** Se aplicará un modelo de **Guardado Manual Regular** para el desarrollo rápido del prototipo actual. Para el despliegue final, existirá un conmutador de configuración opcional para el "Auto-Save" tras cada evento.
 
 ### 🎙️ La Voz en Off Reactiva
 Las mecánicas y los fallos alimentan el diálogo. Constantemente, las acciones del jugador son comentadas por el niño ("¿En serio te caíste de la bici ahí?") y justificadas por el abuelo.

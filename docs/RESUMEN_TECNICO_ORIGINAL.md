@@ -42,8 +42,9 @@ Esta es la técnica clave para darle un aspecto "triple A" a un juego Pixel Art 
 
 *   **Sincronización con Mecánicas (Sistema de Pruebas):**
     En lugar de sincronizar variables de juego al milisegundo con el vídeo (antiguo "Truco del Dragón"), el vídeo sirve exclusivamente de espectáculo visual inmersivo mientras se activa el sistema de decisiones.
-    *   **Clase `Pregunta` e Interfaz:** Mientras el vídeo visual se reproduce o se pausa, el Motor de Mecánicas lanza una `Pregunta` visual al jugador.
-    *   **Resolución Directa por UI:** El jugador elige su respuesta interactuando con los botones. Se ha optado por eliminar los temporizadores estresantes por ahora para garantizar una fácil lectura. La decisión elegida cierra la prueba permanentemente y define la siguiente ramificación narrativa, evitando colisiones técnicas con los fotogramas del vídeo.
+    *   **Clase `Pregunta` e Interfaz:** Mientras el vídeo se reproduce o se pausa, el Motor lanza una `Pregunta` visual.
+    *   **Input de Teclado Puro en Java:** Para no romper el ritmo con "clics de ratón", el jugador pasa a `ESTADO_PREGUNTA`. En este estado, el código Java intercepta flechas (`Gdx.input.isKeyJustPressed(Input.Keys.LEFT)`) en el `update()`. Se siente fluido y natural como un juego de consola.
+    *   **Resolución Permanente:** Se han eliminado los temporizadores. Al pulsar la tecla deseada, la decisión tomada se graba en el historial (cerrando el intento de forma única) y ramificando el flujo narrativo inmediatamente.
 
 *   **Ventaja Creativa:** Permite meter efectos de partículas, fluidos y luces cinemáticas que serían imposibles de programar directamente en Java para un estudiante, pero que son muy fáciles de exportar desde un programa de vídeo.
 
@@ -75,10 +76,11 @@ Esta es la técnica clave para darle un aspecto "triple A" a un juego Pixel Art 
 
 ## 💾 Persistencia y Jugabilidad
 
-### 1. Sistema de Guardado (Save/Load)
-*   **Técnica:** Uso de la clase `Preferences` de LibGDX o archivos **JSON**.
-*   **Lógica:** Al guardar, convertimos la posición del jugador (`x`, `y`), su salud y el nombre del mapa actual en un string JSON y lo guardamos en el disco.
-*   **Carga:** Al iniciar, leemos el archivo y usamos `game.setScreen(new GameScreen(mapName, posX, posY))`.
+### 1. Arquitectura de Datos (Formatos JSON)
+*   **Diálogos e Idiomas (i18n):** Todo el texto del juego y opciones de QTE se estructuran en archivos `.json` externos (ej. `es.json` y `en.json`). El motor busca etiquetas de texto, garantizando traducción inmediata (Localización pura) y habilitando la ramificación de diálogos sin "hardcodear" *strings* en Java.
+*   **Sistema de Guardado Avanzado:** Se descarta la clase tradicional `Preferences`. Se utiliza serialización `Json` directa hacia un archivo físico (`save.json`).
+    *   **Lógica de Variables:** El JSON contiene el mapa actual, coordenadas, y sobre todo el *inventario oculto* (un `HashMap` de decisiones previas, ej: `"tiene_pegamento": true`) para habilitar opciones secretas.
+    *   **Proceso de Guardado:** Durante la fase de prototipo, se implementará un guardado normal (Manual). Para la versión del producto final, el usuario podrá configurar si quiere guardado Manual o "Auto-Save" tras cada *Prueba*, afianzando el peso narrativo irreparable de sus actos.
 
 ### 2. Animación de Sprites (Walk Cycle)
 *   **TextureAtlas:** En lugar de cargar muchas imágenes sueltas, usamos una única "hoja de sprites" (Sprite Sheet).
