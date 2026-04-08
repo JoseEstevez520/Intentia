@@ -12,23 +12,35 @@
 ## 🎨 Dirección de Arte y Color (Leitmotiv)
 Para asegurar la cohesión visual entre los vídeos 3D (cinemáticas) y el mundo jugable (Pixel Art con *assets* genéricos), se utilizará un **Color Ancla**: el **Verde Agua (Teal/Aqua)** mezclado con tonos Plata/Ámbar.
 *   **Significado:** Es el color universal de la nostalgia, los recuerdos y la magia en la obra, y sirve como ancla autobiográfica del autor.
-*   **Aplicación en Vídeos:** La iluminación atmosférica, constelaciones y nieblas oníricas tendrán destellos de verde agua.
-*   **Aplicación en Gameplay:** El paisaje y los mapas tendrán colores estándar/realistas, pero los *sprites* del Niño y el Abuelo llevarán un detalle visible (ej. chaqueta o bufanda) codificado en ese mismo verde agua exacto. Esto hará que los personajes resalten drásticamente del fondo, indicando al subconsciente que están conectados directamente a la magia de las cinemáticas.
+*   **Aplicación en Vídeos:** La iluminación atmosférica, constelaciones y nieblas oníricas tendrán destellos de verde agua. Los ojos de los personajes serán el punto focal de la conexión.
+*   **Aplicación en Gameplay:** 
+    *   **El Niño:** 9 años, delgado y ágil. Camiseta lisa Aquamarine (#7FFFD4). Ojos aquamarine brillantes.
+    *   **El Abuelo (@anciano):** Aprox. 70 años, alto y atlético. Camisa marrón remangada y reloj de plata. Ojos marrones cálidos y amables.
+    *   **Coherencia:** El diseño muestra la evolución biológica y el cambio de paleta (de la vibrante infancia al tono tierra de la madurez), manteniendo el vínculo a través del colgante de plata.
 
 ---
 
 ## 📖 1. Historia y Estructura Narrativa
 
 ### 💭 El Sueño Premonitorio (Cinemática Inicial)
-El juego arranca directamente con un potente *vídeo WebM* de 5 segundos. Un oscuro cielo místico bañado en niebla verde agua, donde una inmensa **Luna** empieza a cubrirse de un brillante **manto de plata**. Parece una escena épica de una película de fantasía pura. De pronto, la música y la imagen se rompen en un corte acústico seco y un fundido a negro: *"¡Despierta, que hemos llegado!"*.
+El juego arranca directamente con un potente *vídeo WebM* de 15 segundos. Tras mostrar la inmensidad de una Luna rodeada de nubes Verde Agua, aparece la figura mística del **Mago Pitof**, señalando al cielo y recitando su profecía con una voz profunda. De pronto, la música y la imagen se rompen en un corte acústico seco y un **fundido a negro total**.
 
 ### 🎮 La Llegada y el Despertar
-El niño parpadea, despertando de su sueño épico en el asiento trasero del coche de sus padres. Acaban de aparcar frente a la casa del pueblo para pasar las vacaciones. La despedida es cálida y alegre. El niño rebosa inocencia y asombro. El abuelo le espera en la puerta de entrada. El anciano es un personaje estilo "Don Quijote": un bromista empedernido, teatral y con muchísima vitalidad. Nada más perderse el coche de los padres de vista por la carretera, el abuelo se pone muy serio y le anuncia al niño que la gran aventura acaba de comenzar.
+La transición a la realidad comienza con los padres conduciendo hacia el pueblo. Hablan en voz baja sobre las "excentricidades" del abuelo y cómo siempre intenta llenar la cabeza del niño de fantasías. El niño, de 9 años, abre los ojos y se pregunta internamente: **"¿...era un sueño?"**, mientras se estira en el asiento de atrás. De repente, la madre se gira emocionada al verle despertar: *"¡Mira, ya se ha despertado!"*. Un plano de dron nos muestra el pequeño coche familiar recorriendo la carretera rodeada de bosque hasta aparcar frente a la casa del abuelo.
 
-> **Nota de Dirección (El Efecto Espejo):** Aunque dentro del universo del juego son literalmente un abuelo y su nieto que ignoran cualquier trasfondo, a nivel de subtexto representan al autor en dos etapas de su vida. Para reforzar esta conexión de forma invisible al jugador sin elevar la complejidad de programación (sin crear animaciones extra para el jugador), se mostrará un detalle muy sutil (un tic, una manía o gesto idéntico) que ambos comparten **directamente en el vídeo/cinemática de introducción**. Así se establece la conexión sin saturar los recursos en el motor.
+El niño baja del coche y se encuentra con el abuelo, quien le espera en el porche. El anciano es la **representación pura del autor en su vejez**: un hombre atlético de unos 70 años con camisa marrón remangada y reloj de plata. La gran aventura está a punto de comenzar.
 
-### 🌲 El Bosque de las Nubes (La Broma)
-De camino a la casa, cruzan un bosque. El niño empieza a ver carteles físicos de advertencia: "¡PELIGRO: ZONA DE DRAGONES!". El abuelo, metidísimo en su papel, le mete prisa y le hace correr esquivando supuestos peligros. Al salir por fin al claro, el abuelo empieza a reírse a carcajadas (*jajaja*). Le señala el cielo y le confiesa que esa mañana vio unas nubes con forma de dragón y decidió que "tenía que vallar la zona por seguridad escolar". El niño, dándose cuenta de que ha caído en la trampa total, suspira sonriendo: *"¿En serio, abuelo?"*. Esto establece el tono de todo el juego: jugar a seguirle las bromas teatrales a este genio loco.
+> **Nota de Dirección (El Efecto Espejo):** Aunque dentro del universo del juego son literalmente un abuelo y su nieto que ignoran cualquier trasfondo, a nivel de subtexto representan al autor en dos etapas de su vida. Para reforzar esta conexión de forma invisible al jugador sin elevar la complejidad de programación (sin crear animaciones extra para el jugador), se mostrará un detalle muy sutil (un tic, una manía o gesto idéntico) que ambos comparten **directamente en el vídeo/cinemática de introducción** (donde el niño tiene 9 años). Así se establece la conexión sin saturar los recursos en el motor.
+
+### 🎮 El Inicio: El Flash Verde y el Porche
+Tras la cinemática, el paso al juego no es inmediato.
+1.  **La Transición:** La pantalla estalla en un **Flash Verde Agua (#7FFFD4)**. El sonido 3D se disuelve y emerge la melodía Pixel Art.
+2.  **El Diálogo (Tutorial de Decisión):** El niño y el abuelo están en el porche. El abuelo promete aventuras y lanza la primera pregunta: *"¿Te gustan los dragones?"*.
+    *   Esta es la primera interacción del jugador con la **Clase Pregunta** (decisión dialógica sin presión).
+3.  **El Bosque de la Niebla:** Solo tras la charla, comienza el desafío a pie por un sendero de 1.5 km (15 min de caminata) profundamente adentrado en el bosque, donde se introduce el movimiento y la primera "Prueba" de acción.
+4.  **La Revelación:** Al final del camino, se llega al claro donde están la cabaña y el taller de piedra y madera oscura, situados literalmente junto a un lago de montaña. El scroll ascendente muestra que los dragones eran nubes.
+
+> **Consulta Detallada:** Para ver la disposición exacta de los mapas, distancias y localizaciones (Muelle, Taller, Cabaña), consulta el documento **[WORLDBUILDING_Y_MAPA.md](file:///c:/Users/sonde/Downloads/Intentia-main/Intentia-main/docs/WORLDBUILDING_Y_MAPA.md)**.
 
 ----
 
