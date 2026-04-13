@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b70bcd0b-f5ab-4560-a179-2e8cb2a677e7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/core/src/main/java/io/yourPath/ui/TerminalLauncher.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/yourPath/logic/StoryManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/yourPath/logic/StoryManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/yourPath/models/DialogNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/yourPath/models/DialogNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/yourPath/models/DialogOption.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/yourPath/models/DialogOption.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/yourPath/models/GameState.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/yourPath/models/GameState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/yourPath/ui/TerminalLauncher.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/yourPath/ui/TerminalLauncher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/yourPath/utils/JsonDataLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/yourPath/utils/JsonDataLoader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../docs/ROADMAP_JAVA.md" beforeDir="false" afterPath="$PROJECT_DIR$/../docs/ROADMAP_JAVA.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
