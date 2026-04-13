@@ -1,52 +1,106 @@
 [
   {
-    "id": "start_room",
-    "text": "El sol entra débil por la ventana. Tu abuelo te mira con esos ojos que parecen haber visto mundos que ya no existen. 'Hijo', dice suavemente, 'la realidad es solo un lienzo. ¿Qué ves tú en esas nubes que pasan?'",
+    "id": "dream_awakening",
+    "text": "Todo es verde agua y silencio. Una voz profunda susurra sobre cometas y plata, pero los colores empiezan a desvanecerse... Sientes un leve balanceo.",
     "options": [
       {
-        "text": "Veo barcos navegando hacia lo desconocido.",
+        "text": "Abrir los ojos poco a poco.",
+        "targetId": "car_scene"
+      }
+    ]
+  },
+  {
+    "id": "car_scene",
+    "text": "El zumbido del motor llena tus oídos. Estás en el asiento de atrás. Tu madre se gira con una sonrisa: '¡Mira, ya se ha despertado! ¿Dormiste bien, cielo? Ya casi llegamos a casa del abuelo.'",
+    "options": [
+      {
+        "text": "Mirar por la ventana hacia las nubes.",
+        "targetId": "look_clouds"
+      },
+      {
+        "text": "Observar la densidad del bosque que rodea la carretera.",
+        "targetId": "look_forest"
+      }
+    ]
+  },
+  {
+    "id": "look_clouds",
+    "text": "Las nubes forman figuras extrañas sobre las montañas. Por un momento, jurarías haber visto el ala de algo inmenso surcando el cielo.",
+    "options": [
+      {
+        "text": "Preguntarte si sigues soñando...",
+        "targetId": "arrival_house"
+      }
+    ],
+    "actions": ["seen_dragons"]
+  },
+  {
+    "id": "look_forest",
+    "text": "Los árboles pasan tan rápido que parecen sombras. Sientes que el bosque esconde secretos que solo el abuelo conoce.",
+    "options": [
+      {
+        "text": "Esperar con ganas la llegada.",
+        "targetId": "arrival_house"
+      }
+    ]
+  },
+  {
+    "id": "arrival_house",
+    "text": "El coche se detiene. Tus padres te dan un beso y se despiden: 'Sé bueno con el abuelo, volveremos a por ti pronto'. El abuelo te espera en el porche, su reloj de plata brilla bajo el sol.",
+    "options": [
+      {
+        "text": "Acercarse al abuelo y saludar.",
+        "targetId": "porch_meeting"
+      }
+    ]
+  },
+  {
+    "id": "porch_meeting",
+    "text": "El abuelo te revuelve el pelo. 'Has crecido, pequeño cometa. Antes de entrar a casa y enseñarte mis nuevos inventos... dime, ¿te gustan los dragones?'",
+    "options": [
+      {
+        "text": "¡Me encantan! He visto nubes que parecían alas.",
         "targetId": "choice_adventure"
       },
       {
-        "text": "Solo veo vapor de agua y viento, abuelo.",
+        "text": "Abuelo, las nubes son solo vapor. Lo sé por el colegio.",
         "targetId": "choice_reason"
       }
-    ],
-    "actions": ["start_journey"]
+    ]
   },
   {
     "id": "choice_adventure",
-    "text": "Tu abuelo sonríe. 'Ah, el corazón de un explorador. Ten, necesitarás esto si quieres encontrar esos barcos.' Te entrega una vieja brújula que casi no marca el norte, pero vibra con intención.",
+    "text": "El abuelo asiente con orgullo. 'Entonces tienes la mirada. Ten, necesitarás esta brújula para encontrar lo que otros ignoran.'",
     "options": [
       {
-        "text": "Ir hacia el bosque de los recuerdos.",
-        "targetId": "forest_entry"
+        "text": "Seguirle hacia el sendero del bosque.",
+        "targetId": "forest_start"
       }
     ],
     "actions": ["get_item:compass"]
   },
   {
     "id": "choice_reason",
-    "text": "El abuelo suspira con una pizca de ironía. 'El absurdo a veces se disfraza de lógica, pequeño. Pero incluso el vapor tiene historias que contar si sabes escuchar.'",
+    "text": "Él sonríe con una pizca de ironía. 'La lógica es una herramienta, pero a veces nos impide ver la belleza del absurdo. Acompáñame, vamos a dar un paseo.'",
     "options": [
       {
-        "text": "Caminar hacia el bosque para despejar la mente.",
-        "targetId": "forest_entry"
+        "text": "Caminar tras él hacia el bosque.",
+        "targetId": "forest_start"
       }
     ]
   },
   {
-    "id": "forest_entry",
-    "text": "Te encuentras a la entrada del bosque. Los árboles parecen susurrar nombres de poetas olvidados. El camino se divide en dos.",
+    "id": "forest_start",
+    "text": "El bosque te rodea. El camino se divide y el aire se vuelve denso y mágico. Es hora de empezar el juego.",
     "options": [
       {
-        "text": "Seguir el sendero brillante (Requiere Brújula).",
-        "targetId": "dragon_encounter",
-        "requiredFlag": "compass"
+        "text": "Consultar la brújula (Si la tienes).",
+        "targetId": "dragon_discovery",
+        "requiredFlag": "get_item:compass"
       },
       {
-        "text": "Perderse entre las sombras.",
-        "targetId": "lost_ending"
+        "text": "Seguir tu instinto por las sombras.",
+        "targetId": "shadow_path"
       }
     ]
   }
