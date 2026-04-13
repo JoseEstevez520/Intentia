@@ -1,4 +1,4 @@
-package io.yourPath.models;
+package io.yourPath.logic;
 
 public class StoryManager {
 }
