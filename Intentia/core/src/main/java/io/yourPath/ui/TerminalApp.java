@@ -24,6 +24,7 @@ public class TerminalApp extends ApplicationAdapter {
             DialogNode current = storyManager.getCurrentNode();
             if (current == null) break;
 
+            printHeader(storyManager.getGameState());
             System.out.println("\n------------------------------------------------");
             System.out.println(current.getText());
             System.out.println("------------------------------------------------");
@@ -70,6 +71,20 @@ public class TerminalApp extends ApplicationAdapter {
             }
         }
 
-        System.exit(0);
+    }
+    
+    private void printHeader(GameState state) {
+        System.out.println("\n\n\n\n\n\n"); // Separación para simular limpieza de pantalla
+        System.out.println("=================================================");
+        System.out.println("                INTENTIA: NEBULA                 ");
+        System.out.println("=================================================");
+        System.out.print(" OBJETOS: ");
+        if (state.getFlags().isEmpty()) {
+            System.out.print("[Ninguno]");
+        } else {
+            // Filtrar flags que parecen objetos (puedes ajustar esto luego)
+            System.out.print(state.getFlags());
+        }
+        System.out.println("\n=================================================");
     }
 }
