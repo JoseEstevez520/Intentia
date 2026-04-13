@@ -119,3 +119,28 @@ Ejemplo de estructura para historia.json.
   }
 ]
 ```
+
+---
+
+## 7. Estandares de Calidad y Rubrica
+
+### Control de Excepciones (Robustez)
+- Se define una jerarquia de excepciones (ej: `JuegoException` > `NodoNotFoundException`).
+- El motor utiliza bloques `try-catch` especificos para la carga de archivos JSON.
+- Se evita el "swallowing" de excepciones, informando siempre al usuario/log.
+
+### Optimizacion de Cadenas (StringBuilder)
+- La construccion de menus y pantallas de texto en la terminal se realiza mediante `StringBuilder` para optimizar el uso de memoria en lugar de concatenaciones simples.
+
+### Encapsulamiento y Visibilidad
+- Todos los atributos de clase son `private`.
+- Se proporcionan metodos `Getter` publicos solo para los campos necesarios.
+- Solo se definen `Setters` para campos mutables durante la ejecucion (fomentando la inmutabilidad).
+
+### Gestion de Recursos (IO/NIO)
+- La lectura de archivos utiliza el patron `try-with-resources` para garantizar el cierre automatico de flujos de datos.
+- Se utiliza la API interna de LibGDX (`Gdx.files`) para una gestion de rutas eficiente.
+
+### Clean Code y Convenciones
+- Nomenclatura: `PascalCase` para clases, `camelCase` para metodos y variables.
+- Documentacion: Uso de `JavaDoc` en todas las clases y metodos publicos.
