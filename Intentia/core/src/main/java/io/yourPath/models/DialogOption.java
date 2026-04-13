@@ -1,4 +1,4 @@
-package io.yourPath.logic;
+package io.yourPath.models;
 
 public class DialogOption {
 }
