@@ -137,9 +137,9 @@ Ejemplo de estructura para historia.json.
 - Se proporcionan metodos `Getter` publicos solo para los campos necesarios.
 - Solo se definen `Setters` para campos mutables durante la ejecucion (fomentando la inmutabilidad).
 
-### Gestion de Recursos (IO/NIO)
+### Gestion de Recursos y Localización
 - La lectura de archivos utiliza el patron `try-with-resources` para garantizar el cierre automatico de flujos de datos.
-- Se utiliza la API interna de LibGDX (`Gdx.files`) para una gestion de rutas eficiente.
+- **Multi-idioma:** Selección de archivos JSON (`es.json`, `en.json`) en la carga inicial para definir el idioma de la sesión.
 
 ### Clean Code y Convenciones
 - Nomenclatura: `PascalCase` para clases, `camelCase` para metodos y variables.
