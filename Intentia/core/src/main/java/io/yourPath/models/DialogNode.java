@@ -6,6 +6,7 @@ import java.util.List;
 public class DialogNode {
     private String id;
     private String text;
+    private String nextId;
     private List<DialogOption> options;
     private List<String> actions;
 
@@ -28,6 +29,14 @@ public class DialogNode {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getNextId() {
+        return nextId;
+    }
+
+    public void setNextId(String nextId) {
+        this.nextId = nextId;
     }
 
     public List<DialogOption> getOptions() {

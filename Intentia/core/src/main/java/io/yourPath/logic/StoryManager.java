@@ -33,6 +33,7 @@ public class StoryManager {
         if (node != null && node.getActions() != null) {
             for (String action : node.getActions()) {
                 gameState.addFlag(action);
+                System.out.println("\n[AVANCE: " + action + "]");
             }
         }
     }
