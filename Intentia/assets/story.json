@@ -1,0 +1,53 @@
+[
+  {
+    "id": "start_room",
+    "text": "El sol entra débil por la ventana. Tu abuelo te mira con esos ojos que parecen haber visto mundos que ya no existen. 'Hijo', dice suavemente, 'la realidad es solo un lienzo. ¿Qué ves tú en esas nubes que pasan?'",
+    "options": [
+      {
+        "text": "Veo barcos navegando hacia lo desconocido.",
+        "targetId": "choice_adventure"
+      },
+      {
+        "text": "Solo veo vapor de agua y viento, abuelo.",
+        "targetId": "choice_reason"
+      }
+    ],
+    "actions": ["start_journey"]
+  },
+  {
+    "id": "choice_adventure",
+    "text": "Tu abuelo sonríe. 'Ah, el corazón de un explorador. Ten, necesitarás esto si quieres encontrar esos barcos.' Te entrega una vieja brújula que casi no marca el norte, pero vibra con intención.",
+    "options": [
+      {
+        "text": "Ir hacia el bosque de los recuerdos.",
+        "targetId": "forest_entry"
+      }
+    ],
+    "actions": ["get_item:compass"]
+  },
+  {
+    "id": "choice_reason",
+    "text": "El abuelo suspira con una pizca de ironía. 'El absurdo a veces se disfraza de lógica, pequeño. Pero incluso el vapor tiene historias que contar si sabes escuchar.'",
+    "options": [
+      {
+        "text": "Caminar hacia el bosque para despejar la mente.",
+        "targetId": "forest_entry"
+      }
+    ]
+  },
+  {
+    "id": "forest_entry",
+    "text": "Te encuentras a la entrada del bosque. Los árboles parecen susurrar nombres de poetas olvidados. El camino se divide en dos.",
+    "options": [
+      {
+        "text": "Seguir el sendero brillante (Requiere Brújula).",
+        "targetId": "dragon_encounter",
+        "requiredFlag": "compass"
+      },
+      {
+        "text": "Perderse entre las sombras.",
+        "targetId": "lost_ending"
+      }
+    ]
+  }
+]
