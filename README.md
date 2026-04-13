@@ -8,7 +8,7 @@ No es solo un juego; **Intentia** es una exploración interactiva sobre el **abs
 
 Esta obra se desarrolla como un **"juego dentro del juego"** donde la realidad es un lienzo neutro y la mirada el pincel. A través del legado del abuelo, el jugador descubre que la narrativa tiene el poder de transformar vapores erráticos en leyendas de dragones, habitando un diálogo entre la filosofía y la ironía que convierte lo cotidiano en una oportunidad para trascender su propia visión del mundo.
 
-Se nutre de influencias que van desde la complejidad de *Don Quijote de la Mancha* hasta el *Mito de Sísifo* y el humor cínico de obras como *Bojack Horseman* o *Rick y Morty*. Es un viaje centrado en el poder de la mirada y el peso de lo invisible, una experiencia diseñada para nutrir al jugador con la capacidad de encontrar belleza incluso en el corazón del absurdo.
+Se nutre de influencias que van desde la complejidad de *Don Quijote de la Mancha* hasta el *Mito de Sísifo*, el espíritu y las múltiples perspectivas encontradas de *Naruto* y el humor cínico de obras como *Bojack Horseman* o *Rick y Morty*. Es un viaje centrado en el poder de la mirada y el peso de lo invisible, una experiencia diseñada para nutrir al jugador con la capacidad de encontrar belleza incluso en el corazón del absurdo.
 
 **el arte de ver formas en las nubes.**
 
