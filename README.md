@@ -1,4 +1,4 @@
-![Banner Intentia](Intentia/assets/banner.png)
+![Banner Intentia](assets/banner.png)
 
 # INTENTIA
 
