@@ -1,0 +1,29 @@
+# --- Java / Gradle ---
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# --- IntelliJ IDEA ---
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# --- Project Specific ---
+# User save file
+Intentia/save.json
+
+# Tiled session files (specific to the user's workspace state)
+*.tiled-session
+
+# Tools / Distributions
+gdx-liftoff-winX64/
+
+# --- OS / Misc ---
+.DS_Store
+Thumbs.db
+*.log
+tmp/
