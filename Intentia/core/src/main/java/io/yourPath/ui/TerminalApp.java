@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import io.yourPath.logic.StoryManager;
 import io.yourPath.models.DialogNode;
 import io.yourPath.models.DialogOption;
+import io.yourPath.utils.SaveSystem;
 import io.yourPath.utils.JsonDataLoader;
 import io.yourPath.models.GameState;
 
@@ -12,12 +13,12 @@ import java.util.Scanner;
 public class TerminalApp extends ApplicationAdapter {
     @Override
     public void create() {
-        StoryManager storyManager = new StoryManager(
-            JsonDataLoader.loadStory("story.json"),
-            new GameState()
-        );
+        GameState state = SaveSystem.loadGame();
+        StoryManager storyManager = new StoryManager(JsonDataLoader.loadStory("story.json"), state != null ? state : new GameState());
 
-        storyManager.start("intro_dream");
+        if (state == null) {
+            storyManager.start("intro_dream");
+        }
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -34,6 +35,7 @@ public class TerminalApp extends ApplicationAdapter {
                     System.out.println("\n[Pulsa ENTER para continuar...]");
                     scanner.nextLine();
                     storyManager.advance(current.getNextId());
+                    SaveSystem.saveGame(storyManager.getGameState());
                     continue;
                 } else {
                     System.out.println("\n[FIN DEL PROTOTIPO]");
@@ -64,6 +66,7 @@ public class TerminalApp extends ApplicationAdapter {
                         validCount++;
                         if (validCount == choice) {
                             storyManager.advance(option.getTargetId());
+                            SaveSystem.saveGame(storyManager.getGameState());
                             break;
                         }
                     }
