@@ -74,6 +74,37 @@ El "corazón" técnico es el `StoryManager`, que actúa como un intérprete de d
 
 ---
 
+## Persistencia y Gestión de Objetos
+
+El sistema utiliza un modelo de **Flags** para convertir las decisiones volátiles en consecuencias permanentes:
+
+*   **Inventario de Conceptos:** Los objetos no son solo items, son "etiquetas" en el `GameState`. Si posees la `llave_del_abuelo`, el sistema la reconoce y habilita caminos antes invisibles.
+*   **Filtros de Narrativa:** Las opciones de diálogo (`DialogOption`) utilizan el campo `requiredFlag` para aparecer o desaparecer dinámicamente según el estado del jugador.
+*   **Memoria del Mundo (`save.json`):** El `SaveSystem` garantiza que la realidad no se reinicie al cerrar el juego. Cada avance en la historia activa un **auto-guardado** que congela el estado de los objetos y el nodo actual.
+
+---
+
+## El Espacio Físico: Integración con Tiled
+
+La transición del texto al mundo visual se realiza mediante la interpretación de metadatos en los mapas `.tmx`:
+
+*   **Triggers Invisibles:** Capas de objetos con rectángulos que contienen propiedades `nodeId`. Al colisionar, la física se detiene y la narrativa toma el control.
+*   **Eventos de Persistencia:** Ciertos objetos en el mapa solo aparecerán si una "Flag" específica está activa en el `GameState`, permitiendo que el mundo cambie físicamente según tus descubrimientos.
+
+---
+
+## 🗺️ Hoja de Ruta (Roadmap)
+
+El viaje de **Intentia** se divide en hitos de evolución técnica:
+
+1.  **[x] Fase de Abstracción:** Lógica de diálogos, sistema de flags y motor de estados (Terminal).
+2.  **[x] Fase de Memoria:** Persistencia JSON y auto-guardado funcional.
+3.  **[ ] Fase de Encarnación:** Implementación de `GameScreen` y renderizado de mapas de Tiled.
+4.  **[ ] Fase de Percepción:** Integración de vídeos WebM con transparencia para efectos HD sobre Pixel Art.
+5.  **[ ] Fase de Realidad:** Gestión de colisiones espaciales y triggers interactivos.
+
+---
+
 ## Instrucciones de Ejecucion
 
 El proyecto utiliza **Gradle** para la gestion de dependencias y construccion.
