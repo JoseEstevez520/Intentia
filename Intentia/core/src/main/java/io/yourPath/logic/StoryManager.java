@@ -1,8 +1,11 @@
 package io.yourPath.logic;
 
 import io.yourPath.models.DialogNode;
+import io.yourPath.models.DialogOption;
 import io.yourPath.models.GameState;
+import io.yourPath.models.TrialEvaluation;
 import java.util.Map;
+
 
 public class StoryManager {
     private Map<String, DialogNode> nodes;
