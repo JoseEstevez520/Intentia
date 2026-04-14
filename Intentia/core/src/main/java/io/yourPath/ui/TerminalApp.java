@@ -25,7 +25,8 @@ public class TerminalApp extends ApplicationAdapter {
             DialogNode current = storyManager.getCurrentNode();
             if (current == null) break;
 
-            printHeader(storyManager.getGameState());
+            printHeader(storyManager);
+
             System.out.println("\n------------------------------------------------");
             System.out.println(current.getText());
             System.out.println("------------------------------------------------");
@@ -76,18 +77,36 @@ public class TerminalApp extends ApplicationAdapter {
 
     }
     
-    private void printHeader(GameState state) {
-        System.out.println("\n\n\n\n\n\n"); // Separación para simular limpieza de pantalla
+    private void printHeader(StoryManager storyManager) {
+        GameState state = storyManager.getGameState();
+        DialogNode current = storyManager.getCurrentNode();
+        
+        System.out.println("\n\n\n\n\n\n");
         System.out.println("=================================================");
         System.out.println("                INTENTIA: NEBULA                 ");
         System.out.println("=================================================");
-        System.out.print(" OBJETOS: ");
+        
+        if (current != null) {
+            if (current.getSpeakerId() != null) {
+                System.out.println(" PERSONAJE: [" + current.getSpeakerId().toUpperCase() + "]");
+            }
+            if (current.getMusicTrack() != null) {
+                System.out.println(" MÚSICA:    ♪ " + current.getMusicTrack());
+            }
+        }
+
+        System.out.print(" OBJETOS:  ");
         if (state.getFlags().isEmpty()) {
             System.out.print("[Ninguno]");
         } else {
-            // Filtrar flags que parecen objetos (puedes ajustar esto luego)
             System.out.print(state.getFlags());
         }
+        
+        if (state.getTotalPossibleScore() > 0) {
+            System.out.print("\n PRUEBA:   " + state.getCurrentTrialScore() + "/" + state.getTotalPossibleScore());
+        }
+        
         System.out.println("\n=================================================");
     }
 }
+

@@ -20,8 +20,37 @@ public class StoryManager {
 
     public void advance(String targetId) {
         if (nodes.containsKey(targetId)) {
+            DialogNode previousNode = getCurrentNode();
+            if (previousNode != null) {
+                for (DialogOption option : previousNode.getOptions()) {
+                    if (option.getTargetId().equals(targetId)) {
+                        if (option.getScoreValue() != null) {
+                            gameState.addTrialScore(option.getScoreValue(), 1);
+                        }
+                        break;
+                    }
+                }
+            }
+
             gameState.setCurrentNodeId(targetId);
-            processActions(nodes.get(targetId));
+            DialogNode currentNode = nodes.get(targetId);
+            processActions(currentNode);
+            checkTrialEvaluation(currentNode);
+        }
+    }
+
+    private void checkTrialEvaluation(DialogNode node) {
+        if (node != null && node.getTrialEvaluation() != null) {
+            TrialEvaluation eval = node.getTrialEvaluation();
+            boolean success = gameState.getScorePercentage() >= eval.getThreshold();
+            
+            if (success && eval.getSuccessFlag() != null) {
+                gameState.addFlag(eval.getSuccessFlag());
+            }
+
+            String nextId = success ? eval.getSuccessTargetId() : eval.getFailTargetId();
+            gameState.resetTrialScore();
+            advance(nextId);
         }
     }
 
@@ -33,7 +62,6 @@ public class StoryManager {
         if (node != null && node.getActions() != null) {
             for (String action : node.getActions()) {
                 gameState.addFlag(action);
-                System.out.println("\n[AVANCE: " + action + "]");
             }
         }
     }
@@ -42,3 +70,4 @@ public class StoryManager {
         return gameState;
     }
 }
+

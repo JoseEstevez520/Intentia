@@ -281,9 +281,87 @@
       }
     ]
   },
+  },
   {
     "id": "end_prototype",
-    "text": "Tus dedos rozan la superficie fría de la obsidiana. Sientes una descarga eléctrica y el mundo a tu alrededor parece pixelarse y recomponerse. \n\nHas dado el primer paso hacia tu verdadera herencia. La aventura solo acaba de empezar... \n\n(FIN DEL PRÓLOGO DE INTENTIA)",
+    "text": "¿Quieres probar el nuevo sistema de exámenes antes de terminar?",
+    "speakerId": "abuelo",
+    "musicTrack": "misterio_nebula",
+    "options": [
+      {
+        "text": "Sí, ponme a prueba.",
+        "targetId": "trial_q1"
+      },
+      {
+        "text": "No, prefiero terminar aquí.",
+        "targetId": "final_goodbye"
+      }
+    ]
+  },
+  {
+    "id": "trial_q1",
+    "text": "Primera pregunta: ¿Qué color define la nostalgia en Intentia?",
+    "speakerId": "abuelo",
+    "musicTrack": "tension_trial",
+    "options": [
+      {
+        "text": "Rojo Fuego",
+        "targetId": "trial_q2",
+        "scoreValue": 0
+      },
+      {
+        "text": "Verde Agua",
+        "targetId": "trial_q2",
+        "scoreValue": 1
+      }
+    ]
+  },
+  {
+    "id": "trial_q2",
+    "text": "Segunda pregunta: ¿Cómo se llama el gato del vecino? (Pista: No hay gato, es una trampa absurda)",
+    "speakerId": "abuelo",
+    "options": [
+      {
+        "text": "Sísifo",
+        "targetId": "trial_eval_node",
+        "scoreValue": 1
+      },
+      {
+        "text": "Michi",
+        "targetId": "trial_eval_node",
+        "scoreValue": 0
+      }
+    ]
+  },
+  {
+    "id": "trial_eval_node",
+    "text": "El abuelo Elías revisa tus respuestas en silencio...",
+    "speakerId": "abuelo",
+    "trialEvaluation": {
+      "threshold": 0.5,
+      "successTargetId": "trial_win",
+      "failTargetId": "trial_lose",
+      "successFlag": "medalla_sabiduria"
+    }
+  },
+  {
+    "id": "trial_win",
+    "text": "¡Increíble! Has demostrado que entiendes la esencia de este mundo. Toma esta medalla.",
+    "speakerId": "abuelo",
+    "musicTrack": "victoria_nebula",
+    "nextId": "final_goodbye"
+  },
+  {
+    "id": "trial_lose",
+    "text": "Parece que aún ves el mundo con ojos demasiado lógicos. Vuelve cuando hayas aprendido a soñar despierto.",
+    "speakerId": "abuelo",
+    "nextId": "final_goodbye"
+  },
+  {
+    "id": "final_goodbye",
+    "text": "Has dado el primer paso hacia tu verdadera herencia. La aventura solo acaba de empezar... \n\n(FIN DEL PRÓLOGO DE INTENTIA)",
+    "speakerId": "abuelo",
     "options": []
   }
 ]
+

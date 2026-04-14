@@ -4,6 +4,8 @@ public class DialogOption {
     private String text;
     private String targetId;
     private String requiredFlag;
+    private Integer scoreValue;
+
 
     public DialogOption() {
     }
@@ -42,4 +44,13 @@ public class DialogOption {
     public void setRequiredFlag(String requiredFlag) {
         this.requiredFlag = requiredFlag;
     }
+
+    public Integer getScoreValue() {
+        return scoreValue;
+    }
+
+    public void setScoreValue(Integer scoreValue) {
+        this.scoreValue = scoreValue;
+    }
 }
+
