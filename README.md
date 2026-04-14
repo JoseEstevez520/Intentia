@@ -1,3 +1,5 @@
+![Banner Intentia](Intentia/assets/banner.png)
+
 # INTENTIA
 
 > *"Juzgar si la vida vale o no vale la pena vivir es responder a la pregunta fundamental de la filosofía. Considero que el sentido de la vida es la más apremiante de las cuestiones."* — Albert Camus
