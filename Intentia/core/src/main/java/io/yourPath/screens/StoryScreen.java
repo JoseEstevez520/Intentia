@@ -59,7 +59,7 @@ public class StoryScreen implements Screen {
                 if (choice == 0) {
                     isPaused = true;
                 } else if (choice > 0 && choice <= node.getOptions().size()) {
-                    storyManager.advance(node.getOptions().get(choice - 1).getTargetId());
+                    storyManager.advance(node.getOptions().get(choice - 1));
                 }
             }
         } else if (node.getNextId() != null) {

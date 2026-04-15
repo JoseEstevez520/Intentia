@@ -21,20 +21,17 @@ public class StoryManager {
         processActions(nodes.get(startNodeId));
     }
 
+    public void advance(DialogOption option) {
+        if (option != null) {
+            if (option.getScoreValue() != null) {
+                gameState.addTrialScore(option.getScoreValue(), 1);
+            }
+            advance(option.getTargetId());
+        }
+    }
+
     public void advance(String targetId) {
         if (nodes.containsKey(targetId)) {
-            DialogNode previousNode = getCurrentNode();
-            if (previousNode != null) {
-                for (DialogOption option : previousNode.getOptions()) {
-                    if (option.getTargetId().equals(targetId)) {
-                        if (option.getScoreValue() != null) {
-                            gameState.addTrialScore(option.getScoreValue(), 1);
-                        }
-                        break;
-                    }
-                }
-            }
-
             gameState.setCurrentNodeId(targetId);
             DialogNode currentNode = nodes.get(targetId);
             processActions(currentNode);
