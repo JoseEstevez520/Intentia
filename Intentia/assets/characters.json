@@ -1,0 +1,27 @@
+[
+  {
+    "id": "protagonista",
+    "name": "Jugador",
+    "portraitPath": "portraits/player_neutral.png"
+  },
+  {
+    "id": "voce_ancestral",
+    "name": "Voz Ancestral",
+    "portraitPath": "portraits/void_echo.png"
+  },
+  {
+    "id": "padre",
+    "name": "Javier (Padre)",
+    "portraitPath": "portraits/father_normal.png"
+  },
+  {
+    "id": "madre",
+    "name": "Marta (Madre)",
+    "portraitPath": "portraits/mother_normal.png"
+  },
+  {
+    "id": "abuelo",
+    "name": "Abuelo Elías",
+    "portraitPath": "portraits/grandfather_mild.png"
+  }
+]

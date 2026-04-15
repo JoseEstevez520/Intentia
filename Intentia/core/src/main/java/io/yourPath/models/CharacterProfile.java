@@ -3,6 +3,7 @@ package io.yourPath.models;
 public class CharacterProfile {
     private String id;
     private String name;
+    private String portraitPath;
 
     public CharacterProfile() {
     }
@@ -26,5 +27,13 @@ public class CharacterProfile {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPortraitPath() {
+        return portraitPath;
+    }
+
+    public void setPortraitPath(String portraitPath) {
+        this.portraitPath = portraitPath;
     }
 }
