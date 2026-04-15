@@ -34,16 +34,15 @@ graph TD
         E[TrialEvaluation]
     end
     subgraph Capa_Vista
-        T[Terminal Launcher]
-        L[LibGDX Screen]
+        MS[MainMenuScreen]
+        SS[StoryScreen]
     end
     D -.->|Carga| M
-    C -.->|Carga| L
     M <--> G
     M --> E
     G <--> S
-    M -->|Envia Datos| T
-    M -->|Envia Datos| L
+    MS -->|Inicia| M
+    M -->|Provee Datos| SS
 ```
 
 ### 2. Maquina de Estados de Navegacion
@@ -51,14 +50,14 @@ El flujo del usuario se controla mediante estados finitos que determinan la entr
 
 ```mermaid
 stateDiagram-v2
-    [*] --> EXPLORANDO
-    EXPLORANDO --> DIALOGANDO: Trigger proximidad
-    DIALOGANDO --> EXAMEN: Inicio de Trial
-    EXAMEN --> DIALOGANDO: Éxito / Fallo
-    DIALOGANDO --> MENU: Pulsar 'Esc' (Pausa)
-    MENU --> DIALOGANDO: Volver
-    DIALOGANDO --> EXPLORANDO: Fin de charla
-    EXPLORANDO --> [*]
+    [*] --> MENU_PRINCIPAL
+    MENU_PRINCIPAL --> HISTORIA: Seleccionar '1'
+    HISTORIA --> EXAMEN: Nodo con Trial
+    EXAMEN --> HISTORIA: Evaluación Auto
+    HISTORIA --> PAUSA: Seleccionar '0'
+    PAUSA --> HISTORIA: Seleccionar '1' (Volver)
+    PAUSA --> [*]: Seleccionar '3' (Salir)
+    HISTORIA --> MENU_PRINCIPAL: Fin de Prólogo
 ```
 
 ### 3. Ciclo de Vida del Dato Narrativo
