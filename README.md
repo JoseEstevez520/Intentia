@@ -18,8 +18,8 @@ Se nutre de influencias que van desde la complejidad de *Don Quijote de la Manch
 
 El motor de Intentia se basa en el desacoplamiento total entre la logica narrativa y la representacion grafica, permitiendo una escalabilidad modular completa.
 
-### 1. Arquitectura de Capas (MVC)
-El sistema separa los datos (JSON), la logica de gestion (StoryManager) y la visualizacion (UI).
+### 1. Arquitectura de Capas (MVC+)
+El sistema separa los datos (JSON), la lógica de gestión avanzada (`StoryManager`), el estado persistente (`GameState`) y las evaluaciones de progresión (`TrialEvaluation`).
 
 ```mermaid
 graph TD
@@ -70,7 +70,12 @@ Como una decision del jugador se convierte en una consecuencia persistente.
 
 ## Funcionamiento del Sistema
 
-El "corazón" técnico es el `StoryManager`, que actúa como un intérprete de datos (**Data-Driven**). Lee los archivos JSON donde reside la historia y permite seleccionar el idioma al inicio del juego cargando diferentes diccionarios (ej: `es.json`, `en.json`). Gracias a este enfoque, es posible cambiar la historia completa o añadir nuevos capítulos sin necesidad de modificar una sola línea de código.
+El "corazón" técnico es el `StoryManager`, que actúa como un intérprete de datos (**Data-Driven**). A diferencia de los sistemas lineales, el manager de Intentia procesa la selección de opciones de forma atómica para rastrear puntuaciones y desencadenar eventos.
+
+Gracias a este enfoque, es posible:
+*   **Gestión por Selección:** El motor identifica exactamente qué opción se ha pulsado, permitiendo que varios caminos lleven al mismo sitio pero con consecuencias (o puntos) distintos.
+*   **Evaluación de Pruebas (Trials):** El sistema puede sumar puntos dinámicamente y comparar el rendimiento del jugador contra un umbral (`threshold`) para decidir el destino de la historia.
+*   **Modularidad Total:** Se pueden añadir nuevos capítulos o mecánicas de examen sin modificar una sola línea de código Java.
 
 ---
 
@@ -80,6 +85,7 @@ El sistema utiliza un modelo de **Flags** para convertir las decisiones volátil
 
 *   **Inventario de Conceptos:** Los objetos no son solo items, son "etiquetas" en el `GameState`. Si posees la `llave_del_abuelo`, el sistema la reconoce y habilita caminos antes invisibles.
 *   **Filtros de Narrativa:** Las opciones de diálogo (`DialogOption`) utilizan el campo `requiredFlag` para aparecer o desaparecer dinámicamente según el estado del jugador.
+*   **Exámenes de Intención (Trials):** El sistema soporta evaluaciones complejas donde el jugador acumula puntos (`scoreValue`) a través de varios nodos. Al final de la secuencia, un nodo de evaluación compara el porcentaje de acierto y bifurca la historia.
 *   **Memoria del Mundo (`save.json`):** El `SaveSystem` garantiza que la realidad no se reinicie al cerrar el juego. Cada avance en la historia activa un **auto-guardado** que congela el estado de los objetos y el nodo actual.
 
 ---
