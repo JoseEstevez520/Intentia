@@ -24,19 +24,23 @@ El sistema separa los datos (JSON), la lógica de gestión avanzada (`StoryManag
 ```mermaid
 graph TD
     subgraph Capa_Datos
-        D[historia.json]
+        D[story.json]
+        C[characters.json]
         S[save.json]
     end
     subgraph Capa_Cerebro
         M[StoryManager]
         G[GameState]
+        E[TrialEvaluation]
     end
     subgraph Capa_Vista
         T[Terminal Launcher]
         L[LibGDX Screen]
     end
     D -.->|Carga| M
+    C -.->|Carga| L
     M <--> G
+    M --> E
     G <--> S
     M -->|Envia Datos| T
     M -->|Envia Datos| L
@@ -49,7 +53,9 @@ El flujo del usuario se controla mediante estados finitos que determinan la entr
 stateDiagram-v2
     [*] --> EXPLORANDO
     EXPLORANDO --> DIALOGANDO: Trigger proximidad
-    DIALOGANDO --> MENU: Pulsar 'M' (Pausa)
+    DIALOGANDO --> EXAMEN: Inicio de Trial
+    EXAMEN --> DIALOGANDO: Éxito / Fallo
+    DIALOGANDO --> MENU: Pulsar 'Esc' (Pausa)
     MENU --> DIALOGANDO: Volver
     DIALOGANDO --> EXPLORANDO: Fin de charla
     EXPLORANDO --> [*]
@@ -61,9 +67,12 @@ Como una decision del jugador se convierte en una consecuencia persistente.
 ```mermaid
  graph LR
     A[Input Jugador] --> B{Manager}
-    B -->|Actualiza| C[GameState Flags]
-    C -->|Filtra| D[Nuevas Opciones]
-    D --> E[Renderizado UI]
+    B -->|Suma| C[Trial Score]
+    B -->|Activa| D[Flags]
+    C -->|Calcula %| E[Evaluación]
+    D -->|Filtra| F[Opciones]
+    E -->|Bifurca| F
+    F --> G[Renderizado UI]
 ```
 
 ---
@@ -104,10 +113,11 @@ La transición del texto al mundo visual se realiza mediante la interpretación 
 El viaje de **Intentia** se divide en hitos de evolución técnica:
 
 1.  **[x] Fase de Abstracción:** Lógica de diálogos, sistema de flags y motor de estados (Terminal).
-2.  **[x] Fase de Memoria:** Persistencia JSON y auto-guardado funcional.
-3.  **[ ] Fase de Encarnación:** Implementación de `GameScreen` y renderizado de mapas de Tiled.
-4.  **[ ] Fase de Percepción:** Integración de vídeos WebM con transparencia para efectos HD sobre Pixel Art.
-5.  **[ ] Fase de Realidad:** Gestión de colisiones espaciales y triggers interactivos.
+2.  **[x] Fase de Juicio:** Implementación de Pruebas (Trials) y lógica de evaluación porcentual.
+3.  **[x] Fase de Memoria:** Persistencia JSON y auto-guardado funcional.
+4.  **[/] Fase de Encarnación:** Implementación de `GameScreen` y renderizado de mapas de Tiled. (En curso)
+5.  **[ ] Fase de Percepción:** Integración de vídeos WebM con transparencia para efectos HD sobre Pixel Art.
+6.  **[ ] Fase de Realidad:** Gestión de colisiones espaciales y triggers interactivos.
 
 ---
 
