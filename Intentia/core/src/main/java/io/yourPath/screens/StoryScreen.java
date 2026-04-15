@@ -1,4 +1,110 @@
 package io.yourPath.screens;
 
-public class StoryScreen {
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import io.yourPath.Main;
+import io.yourPath.logic.StoryManager;
+import io.yourPath.models.CharacterProfile;
+import io.yourPath.models.DialogNode;
+import io.yourPath.models.DialogOption;
+import io.yourPath.utils.SaveSystem;
+
+import java.util.Map;
+import java.util.Scanner;
+
+public class StoryScreen implements Screen {
+    private Main game;
+    private StoryManager storyManager;
+    private Map<String, CharacterProfile> characters;
+    private Scanner scanner;
+    private boolean isPaused = false;
+
+    public StoryScreen(Main game, StoryManager storyManager, Map<String, CharacterProfile> characters) {
+        this.game = game;
+        this.storyManager = storyManager;
+        this.characters = characters;
+        this.scanner = new Scanner(System.in);
+    }
+
+    @Override
+    public void render(float delta) {
+        if (isPaused) {
+            drawPauseMenu();
+        } else {
+            drawStory();
+        }
+    }
+
+    private void drawStory() {
+        DialogNode node = storyManager.getCurrentNode();
+        if (node == null) return;
+
+        for (int i = 0; i < 50; i++) System.out.println();
+
+        CharacterProfile speaker = characters.get(node.getSpeakerId());
+        String name = (speaker != null) ? speaker.getName() : "Narrador";
+
+        System.out.println("\n------------------------------------------------");
+        System.out.println("[ " + name.toUpperCase() + " ]");
+        System.out.println(node.getText());
+        if (node.getOptions() != null && !node.getOptions().isEmpty()) {
+            System.out.println("0. [ MENÚ DE PAUSA ]");
+            for (int i = 0; i < node.getOptions().size(); i++) {
+                System.out.println((i + 1) + ". " + node.getOptions().get(i).getText());
+            }
+
+            if (scanner.hasNextInt()) {
+                int choice = scanner.nextInt();
+                scanner.nextLine();
+                if (choice == 0) {
+                    isPaused = true;
+                } else if (choice > 0 && choice <= node.getOptions().size()) {
+                    storyManager.advance(node.getOptions().get(choice - 1).getTargetId());
+                }
+            }
+        } else if (node.getNextId() != null) {
+            System.out.println("\n(Pulsa Enter para continuar...)");
+            scanner.nextLine();
+            storyManager.advance(node.getNextId());
+        }
+ else {
+            System.out.println("\n--- FIN DE LA PRÓLOGO ---");
+            System.out.println("1. Volver al menú");
+            if (scanner.hasNextInt()) {
+                int choice = scanner.nextInt();
+                scanner.nextLine();
+                if (choice == 1) {
+                    game.setScreen(new MainMenuScreen(game));
+                }
+            }
+        }
+    }
+
+    private void drawPauseMenu() {
+        System.out.println("\n=== MENÚ DE PAUSA ===");
+        System.out.println("1. Volver al juego");
+        System.out.println("2. Guardar partida");
+        System.out.println("3. Salir del juego");
+        System.out.print("\nSelecciona: ");
+
+        if (scanner.hasNextInt()) {
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice == 1) {
+                isPaused = false;
+            } else if (choice == 2) {
+                SaveSystem.saveGame(storyManager.getGameState());
+                isPaused = false;
+            } else if (choice == 3) {
+                Gdx.app.exit();
+            }
+        }
+    }
+
+    @Override public void show() {}
+    @Override public void resize(int width, int height) {}
+    @Override public void pause() {}
+    @Override public void resume() {}
+    @Override public void hide() {}
+    @Override public void dispose() {}
 }

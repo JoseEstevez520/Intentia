@@ -1,2 +1,3 @@
 .gitkeep
+characters.json
 story.json

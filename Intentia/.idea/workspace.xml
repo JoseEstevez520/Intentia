@@ -5,12 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b70bcd0b-f5ab-4560-a179-2e8cb2a677e7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/characters.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/assets.txt" beforeDir="false" afterPath="$PROJECT_DIR$/assets/assets.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/story.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/story.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/yourPath/FirstScreen.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/core/src/main/java/io/yourPath/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/yourPath/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/yourPath/models/CharacterProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/yourPath/models/CharacterProfile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/yourPath/utils/JsonDataLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/yourPath/utils/JsonDataLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/yourPath/screens/MainMenuScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/yourPath/screens/MainMenuScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/src/main/java/io/yourPath/screens/StoryScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/core/src/main/java/io/yourPath/screens/StoryScreen.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +35,8 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/core/src/main/java/io/yourPath/Main.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/core/src/main/java/io/yourPath/screens/MainMenuScreen.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/core/src/main/java/io/yourPath/screens/StoryScreen.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/lwjgl3/src/main/java/io/yourPath/lwjgl3/TerminalLauncher.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="McpProjectServerCommands">

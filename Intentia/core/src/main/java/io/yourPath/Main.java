@@ -5,6 +5,7 @@ import io.yourPath.logic.StoryManager;
 import io.yourPath.models.CharacterProfile;
 import io.yourPath.models.DialogNode;
 import io.yourPath.models.GameState;
+import io.yourPath.screens.MainMenuScreen;
 import io.yourPath.ui.TerminalApp;
 import io.yourPath.utils.JsonDataLoader;
 
@@ -13,12 +14,17 @@ import java.util.Map;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {
+    public StoryManager storyManager;
+    public Map<String, CharacterProfile> characters;
+    public Map<String, DialogNode> story;
+
     @Override
     public void create() {
-        Map<String, CharacterProfile> characters = JsonDataLoader.loadCharacters("characters.json");
-        Map<String, DialogNode> story = JsonDataLoader.loadStory("story.json");
-        StoryManager storyManager = new StoryManager(story,new GameState());
+        characters = JsonDataLoader.loadCharacters("characters.json");
+        story = JsonDataLoader.loadStory("story.json");
+        storyManager = new StoryManager(story,new GameState());
 
-        setScreen(FirstScreen(this,storyManager,characters));
+        setScreen(new MainMenuScreen(this));
+
     }
 }
