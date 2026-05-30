@@ -17,7 +17,7 @@ public class NarrativeDAOImplementation implements NarrativeDAO {
     }
 
     @Override
-    public Map<String, CharacterProfile> getAllCharacters() {
+    public Map<String, CharacterProfile> getAllCharacters() throws IntentiaException {
         Map<String, CharacterProfile> characters = new HashMap<>();
         String sql = "SELECT * FROM characters";
 
@@ -33,13 +33,13 @@ public class NarrativeDAOImplementation implements NarrativeDAO {
                 characters.put(profile.getId(), profile);
             }
         } catch (SQLException e) {
-            System.out.println("Error al cargar personajes: " + e.getMessage());
+            throw new IntentiaException("Error al cargar los personajes desde la base de datos: " + e.getMessage());
         }
         return characters;
     }
 
     @Override
-    public Map<String, DialogNode> getAllDialogNodes() {
+    public Map<String, DialogNode> getAllDialogNodes() throws IntentiaException {
         Map<String, DialogNode> nodes = new HashMap<>();
         
         try (Connection conn = DriverManager.getConnection(url)) {
@@ -112,7 +112,7 @@ public class NarrativeDAOImplementation implements NarrativeDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("Error al cargar nodos de diálogo: " + e.getMessage());
+            throw new IntentiaException("Error al cargar los nodos de diálogo desde la base de datos: " + e.getMessage());
         }
 
         return nodes;

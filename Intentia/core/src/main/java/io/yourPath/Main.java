@@ -6,6 +6,7 @@ import io.yourPath.models.CharacterProfile;
 import io.yourPath.models.DialogNode;
 import io.yourPath.models.GameState;
 import io.yourPath.screens.MainMenuScreen;
+import io.yourPath.utils.IntentiaException;
 import io.yourPath.utils.NarrativeDAO;
 import io.yourPath.utils.NarrativeDAOImplementation;
 
@@ -23,8 +24,12 @@ public class Main extends Game {
     public void create() {
         narrativeDAO = new NarrativeDAOImplementation("database/intentia.db");
 
-        characters = narrativeDAO.getAllCharacters();
-        story = narrativeDAO.getAllDialogNodes();
+        try {
+            characters = narrativeDAO.getAllCharacters();
+            story = narrativeDAO.getAllDialogNodes();
+        } catch (IntentiaException e) {
+            System.err.println(e.getMessage());
+        }
         storyManager = new StoryManager(story,new GameState());
 
         setScreen(new MainMenuScreen(this));
