@@ -6,7 +6,6 @@ import io.yourPath.models.CharacterProfile;
 import io.yourPath.models.DialogNode;
 import io.yourPath.models.GameState;
 import io.yourPath.screens.MainMenuScreen;
-import io.yourPath.ui.TerminalApp;
 import io.yourPath.utils.JsonDataLoader;
 
 import java.awt.*;
