@@ -27,3 +27,6 @@ gdx-liftoff-winX64/
 Thumbs.db
 *.log
 tmp/
+
+# -- Carpeta de investigacion
+/investigacion

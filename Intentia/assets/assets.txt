@@ -1,3 +1,4 @@
 .gitkeep
 characters.json
+database/intentia.db
 story.json

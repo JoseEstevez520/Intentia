@@ -6,7 +6,8 @@ import io.yourPath.models.CharacterProfile;
 import io.yourPath.models.DialogNode;
 import io.yourPath.models.GameState;
 import io.yourPath.screens.MainMenuScreen;
-import io.yourPath.utils.JsonDataLoader;
+import io.yourPath.utils.NarrativeDAO;
+import io.yourPath.utils.NarrativeDAOImplementation;
 
 import java.awt.*;
 import java.util.Map;
@@ -16,11 +17,14 @@ public class Main extends Game {
     public StoryManager storyManager;
     public Map<String, CharacterProfile> characters;
     public Map<String, DialogNode> story;
+    private NarrativeDAO narrativeDAO;
 
     @Override
     public void create() {
-        characters = JsonDataLoader.loadCharacters("characters.json");
-        story = JsonDataLoader.loadStory("story.json");
+        narrativeDAO = new NarrativeDAOImplementation("database/intentia.db");
+
+        characters = narrativeDAO.getAllCharacters();
+        story = narrativeDAO.getAllDialogNodes();
         storyManager = new StoryManager(story,new GameState());
 
         setScreen(new MainMenuScreen(this));
