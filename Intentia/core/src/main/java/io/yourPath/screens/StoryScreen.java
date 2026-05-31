@@ -7,6 +7,7 @@ import io.yourPath.logic.StoryManager;
 import io.yourPath.models.CharacterProfile;
 import io.yourPath.models.DialogNode;
 import io.yourPath.models.NarrativeNode;
+import io.yourPath.models.UIState;
 import io.yourPath.utils.SaveSystem;
 
 import java.util.Map;
@@ -17,7 +18,7 @@ public class StoryScreen implements Screen {
     private StoryManager storyManager;
     private Map<String, CharacterProfile> characters;
     private Scanner scanner;
-    private boolean isPaused = false;
+    private UIState currentState = UIState.DIALOGANDO;
 
     public StoryScreen(Main game, StoryManager storyManager, Map<String, CharacterProfile> characters) {
         this.game = game;
@@ -28,10 +29,13 @@ public class StoryScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if (isPaused) {
-            drawPauseMenu();
-        } else {
-            drawStory();
+        switch (currentState) {
+            case DIALOGANDO:
+                drawStory();
+                break;
+            case MENU_PAUSA:
+                drawPauseMenu();
+                break;
         }
     }
 
@@ -60,7 +64,7 @@ public class StoryScreen implements Screen {
                     int choice = scanner.nextInt();
                     scanner.nextLine();
                     if (choice == 0) {
-                        isPaused = true;
+                        currentState = UIState.MENU_PAUSA;
                     } else if (choice > 0 && choice <= dialogNode.getOptions().size()) {
                         storyManager.advance(dialogNode.getOptions().get(choice - 1));
                     }
@@ -94,15 +98,17 @@ public class StoryScreen implements Screen {
             int choice = scanner.nextInt();
             scanner.nextLine();
             if (choice == 1) {
-                isPaused = false;
+                currentState = UIState.DIALOGANDO;
             } else if (choice == 2) {
                 SaveSystem.saveGame(storyManager.getGameState());
-                isPaused = false;
+                currentState = UIState.DIALOGANDO;
             } else if (choice == 3) {
                 Gdx.app.exit();
             }
         }
     }
+
+
 
     @Override public void show() {}
     @Override public void resize(int width, int height) {}
