@@ -1,96 +1,110 @@
-# Intentia: El Legado
+# Intentia: El Legado — Rama `logic`
 
-> *"Juzgar si la vida vale o no vale la pena vivir es responder a la pregunta fundamental de la filosofía."* — Albert Camus
+> *Branch del motor narrativo. libGDX apenas asoma; esto es Java puro modelando la lógica del juego.*
 
-Una aventura narrativa interactiva construida con [libGDX](https://libgdx.com/), donde las decisiones del jugador moldean la historia a través de un sistema de flags, evaluaciones y ramificaciones.
+En esta rama, libGDX se usa únicamente como esqueleto de proyecto (la clase `Main` extiende `Game`, y `SaveSystem` usa su serializador `Json`). Todo lo demás — modelos, DAO, motor narrativo, evaluación de trials, sistema de flags — es Java estándar, independiente del framework.
+
+La idea es que el **motor de juego** esté completamente desacoplado de la capa gráfica. Cuando llegue la fase visual, libGDX consumirá esta lógica sin tocar una línea del núcleo.
 
 ---
 
-## Arquitectura del Código
+## Arquitectura
 
 ```
 io.yourPath/
-├── Main.java                        # Punto de entrada (Game). Inicializa DAO, StoryManager y Screen.
-├── screens/
-│   ├── MainMenuScreen.java          # Menú principal: nueva partida, continuar, salir.
-│   └── StoryScreen.java             # Presentación de diálogo y menú de pausa.
-├── models/
-│   ├── UIState.java                 # Enum: DIALOGANDO, MENU_PAUSA
-│   ├── NarrativeNode.java           # Clase abstracta base para nodos narrativos.
-│   ├── DialogNode.java              # Nodo con opciones de diálogo seleccionables.
-│   ├── TrialNode.java               # Nodo de evaluación (prueba/juicio).
-│   ├── DialogOption.java            # Opción individual: texto, destino, flag requerido, puntuación.
-│   ├── TrialEvaluation.java         # Criterios de éxito/fallo para TrialNode.
-│   ├── CharacterProfile.java        # Datos de personaje: id, nombre, retrato.
-│   └── GameState.java               # Estado persistente: flags, nodo actual, puntuación de prueba.
-├── logic/
-│   └── StoryManager.java            # Motor narrativo: avance, evaluación de pruebas y procesamiento de acciones.
-└── utils/
-    ├── NarrativeDAO.java            # Interfaz DAO para datos narrativos.
-    ├── NarrativeDAOImplementation.java # Implementación SQLite del DAO.
-    ├── IntentiaException.java       # Excepción personalizada del proyecto.
-    └── SaveSystem.java              # Guardado/carga JSON del estado de juego.
+├── Main.java                        # Punto de entrada. Inicializa DAO + StoryManager.
+├── screens/                (delgada)
+│   ├── MainMenuScreen.java          # Menú por consola (Scanner).
+│   └── StoryScreen.java             # Diálogo por consola.
+├── models/                 (núcleo)
+│   ├── NarrativeNode.java           # Clase abstracta: nodo narrativo base.
+│   ├── DialogNode.java              # Nodo con opciones seleccionables.
+│   ├── TrialNode.java               # Nodo de juicio/evaluación.
+│   ├── DialogOption.java            # Opción: texto, destino, flag, puntuación.
+│   ├── TrialEvaluation.java         # Umbral, rutas de éxito/fallo.
+│   ├── CharacterProfile.java        # id, nombre, retrato.
+│   ├── GameState.java               # Flags, nodo actual, puntuación de prueba.
+│   └── UIState.java                 # Enum: DIALOGANDO / MENU_PAUSA.
+├── logic/                  (cerebro)
+│   └── StoryManager.java            # Motor narrativo: avance, trials, acciones.
+└── utils/                 (infraestructura)
+    ├── NarrativeDAO.java            # Interfaz DAO.
+    ├── NarrativeDAOImplementation.java # SQLite vía JDBC.
+    ├── IntentiaException.java       # Excepción personalizada.
+    └── SaveSystem.java              # Persistencia JSON (único con libGDX aquí).
 ```
 
-### Capa de Datos (DAO + SQLite)
+### Lo que NO usa libGDX
 
-La persistencia se maneja mediante JDBC con SQLite en `database/intentia.db`. El `NarrativeDAOImplementation` lee cinco tablas:
-
-| Tabla | Propósito |
+| Componente | Dependencia |
 |---|---|
-| `characters` | Perfiles de personajes (id, nombre, ruta de retrato) |
-| `dialog_nodes` | Nodos narrativos (texto, orador, tipo, música) |
-| `dialog_options` | Opciones de diálogo por nodo (texto, destino, flags, puntuación) |
-| `dialog_actions` | Acciones/efectos secundarios al entrar a un nodo |
-| `trial_evaluations` | Evaluaciones de prueba (umbral, rutas de éxito/fallo) |
+| `NarrativeNode`, `DialogNode`, `TrialNode`, `DialogOption`, `TrialEvaluation`, `CharacterProfile`, `UIState` | 100% Java |
+| `GameState` (flags, scores) | 100% Java |
+| `StoryManager` (navegación, trials, acciones) | 100% Java |
+| `NarrativeDAO` + `NarrativeDAOImplementation` | Solo JDBC (SQLite) |
+| `IntentiaException` | 100% Java |
 
-### Motor Narrativo (StoryManager)
+### Lo que SÍ usa libGDX
 
-El `StoryManager` es el cerebro del juego. Procesa la navegación entre nodos:
+| Componente | Uso de libGDX |
+|---|---|
+| `Main` | Extiende `com.badlogic.gdx.Game` |
+| `MainMenuScreen`, `StoryScreen` | Implementan `Screen` (pero su IO es `Scanner`/`System.out`, no Stage) |
+| `SaveSystem` | Usa `Gdx.files.local()` y `com.badlogic.gdx.utils.Json` |
 
-1. **Entrada a nodo:** Ejecuta las `actions` del nodo como flags en `GameState`.
-2. **Opciones:** Filtra `DialogOption`s según `requiredFlag` del estado actual.
-3. **Evaluación (Trials):** Al llegar a un `TrialNode`, compara el porcentaje de acierto contra el umbral y bifurca la historia.
-4. **Persistencia:** El `SaveSystem` serializa el `GameState` a `save.json` usando el serializador JSON de libGDX.
+---
 
-### Ciclo de Vida de una Decisión
+## Motor Narrativo (StoryManager)
+
+El `StoryManager` maneja el flujo sin depender de libGDX:
+
+1. **Entrada a nodo** → ejecuta `actions` como flags en `GameState`.
+2. **Opciones filtradas** → solo muestra `DialogOption`s cuyo `requiredFlag` esté presente.
+3. **Evaluación de Trial** → al llegar a un `TrialNode`, calcula porcentaje vs umbral y bifurca.
+4. **Persistencia** → `SaveSystem` serializa `GameState` a `save.json`.
 
 ```
-Input Jugador → StoryManager.advance(option)
-  → Acumula puntuación en GameState
-  → Navega al nodo destino
-  → Si es TrialNode: evalúa porcentaje vs umbral
-    → Éxito: activa flag, bifurca a successTargetId
-    → Fallo: bifurca a failTargetId
-  → Renderiza nuevo estado en pantalla
+Jugador elige → StoryManager.advance(option)
+  → suma puntuación
+  → navega al nodo destino
+  → si es TrialNode: evalúa % vs threshold
+    → éxito: flag + successTargetId
+    → fallo: failTargetId
+  → render en consola
 ```
 
 ---
 
-## Tecnologías
+## Tecnologías (reales)
 
 | Componente | Tecnología |
 |---|---|
-| Framework | libGDX |
-| Lenguaje | Java 17 |
-| Build | Gradle (multi-proyecto: `core` + `lwjgl3`) |
-| Base de datos | SQLite via JDBC |
-| Serialización | libGDX `Json` |
-| Estado actual | Prototipo funcional por consola |
+| Lógica del juego | Java 17 puro |
+| Motor narrativo | `StoryManager` (0 dependencias externas) |
+| Base de datos | SQLite vía JDBC |
+| Serialización | libGDX `Json` (única dependencia real) |
+| Build | Gradle |
+| UI actual | Consola (`System.out` / `Scanner`) |
 
 ---
 
 ## Ejecución
 
 ```bash
-# Clonar y ejecutar
 ./gradlew lwjgl3:run
 ```
 
-El juego requiere la base de datos `database/intentia.db` en el directorio de trabajo.
+Requiere `database/intentia.db` en el directorio de trabajo.
 
 ---
 
-## Proyecto Generado con gdx-liftoff
+## Estado de la Rama
 
-Este proyecto fue generado con [gdx-liftoff](https://github.com/libgdx/gdx-liftoff) e incluye lanzadores para escritorio (LWJGL3). La clase principal `Main` extiende `Game` y establece la primera pantalla.
+```
+logic ────●──→ master (cuando llegue la UI visual)
+           │
+           └── Aquí se solidifica el motor.
+               libGDX es solo el andamio.
+```
+
+El siguiente paso será reemplazar las pantallas de consola por `Stage`+`Skin` de libGDX, manteniendo intacto todo lo que está en `models/`, `logic/` y `utils/`.
