@@ -14,9 +14,9 @@ import java.util.Map;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {
-    public StoryManager storyManager;
-    public Map<String, CharacterProfile> characters;
-    public Map<String, NarrativeNode> story;
+    private StoryManager storyManager;
+    private Map<String, CharacterProfile> characters;
+    private Map<String, NarrativeNode> story;
     private NarrativeDAO narrativeDAO;
 
     @Override
@@ -32,5 +32,21 @@ public class Main extends Game {
         storyManager = new StoryManager(story, new GameState());
 
         setScreen(new MainMenuScreen(this));
+    }
+
+    public StoryManager getStoryManager() {
+        return storyManager;
+    }
+
+    public void setStoryManager(StoryManager storyManager) {
+        this.storyManager = storyManager;
+    }
+
+    public Map<String, CharacterProfile> getCharacters() {
+        return characters;
+    }
+
+    public Map<String, NarrativeNode> getStory() {
+        return story;
     }
 }

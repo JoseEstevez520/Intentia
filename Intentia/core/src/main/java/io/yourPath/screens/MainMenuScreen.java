@@ -38,13 +38,13 @@ public class MainMenuScreen implements Screen {
             scanner.nextLine();
 
             if (opcion == 1) {
-                game.storyManager.start("car_awakening");
-                game.setScreen(new StoryScreen(game, game.storyManager, game.characters));
+                game.getStoryManager().start("car_awakening");
+                game.setScreen(new StoryScreen(game, game.getStoryManager(), game.getCharacters()));
             } else if (opcion == 2 && partidaGuardada) {
                 GameState guardado = SaveSystem.loadGame();
                 if (guardado != null) {
-                    game.storyManager = new StoryManager(game.story, guardado);
-                    game.setScreen(new StoryScreen(game, game.storyManager, game.characters));
+                    game.setStoryManager(new StoryManager(game.getStory(), guardado));
+                    game.setScreen(new StoryScreen(game, game.getStoryManager(), game.getCharacters()));
                 }
             } else if ((opcion == 2 && !partidaGuardada) || opcion == 3) {
                 Gdx.app.exit();
