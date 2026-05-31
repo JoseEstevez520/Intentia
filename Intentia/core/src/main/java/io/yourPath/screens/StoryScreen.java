@@ -6,7 +6,7 @@ import io.yourPath.Main;
 import io.yourPath.logic.StoryManager;
 import io.yourPath.models.CharacterProfile;
 import io.yourPath.models.DialogNode;
-import io.yourPath.models.DialogOption;
+import io.yourPath.models.NarrativeNode;
 import io.yourPath.utils.SaveSystem;
 
 import java.util.Map;
@@ -36,7 +36,7 @@ public class StoryScreen implements Screen {
     }
 
     private void drawStory() {
-        DialogNode node = storyManager.getCurrentNode();
+        NarrativeNode node = storyManager.getCurrentNode();
         if (node == null) return;
 
         for (int i = 0; i < 50; i++) System.out.println();
@@ -47,34 +47,37 @@ public class StoryScreen implements Screen {
         System.out.println("\n------------------------------------------------");
         System.out.println("[ " + name.toUpperCase() + " ]");
         System.out.println(node.getText());
-        if (node.getOptions() != null && !node.getOptions().isEmpty()) {
-            System.out.println("0. [ MENÚ DE PAUSA ]");
-            for (int i = 0; i < node.getOptions().size(); i++) {
-                System.out.println((i + 1) + ". " + node.getOptions().get(i).getText());
-            }
 
-            if (scanner.hasNextInt()) {
-                int choice = scanner.nextInt();
-                scanner.nextLine();
-                if (choice == 0) {
-                    isPaused = true;
-                } else if (choice > 0 && choice <= node.getOptions().size()) {
-                    storyManager.advance(node.getOptions().get(choice - 1));
+        if (node instanceof DialogNode) {
+            DialogNode dialogNode = (DialogNode) node;
+            if (dialogNode.getOptions() != null && !dialogNode.getOptions().isEmpty()) {
+                System.out.println("0. [ MENÚ DE PAUSA ]");
+                for (int i = 0; i < dialogNode.getOptions().size(); i++) {
+                    System.out.println((i + 1) + ". " + dialogNode.getOptions().get(i).getText());
                 }
-            }
-        } else if (node.getNextId() != null) {
-            System.out.println("\n(Pulsa Enter para continuar...)");
-            scanner.nextLine();
-            storyManager.advance(node.getNextId());
-        }
- else {
-            System.out.println("\n--- FIN DE LA PRÓLOGO ---");
-            System.out.println("1. Volver al menú");
-            if (scanner.hasNextInt()) {
-                int choice = scanner.nextInt();
+
+                if (scanner.hasNextInt()) {
+                    int choice = scanner.nextInt();
+                    scanner.nextLine();
+                    if (choice == 0) {
+                        isPaused = true;
+                    } else if (choice > 0 && choice <= dialogNode.getOptions().size()) {
+                        storyManager.advance(dialogNode.getOptions().get(choice - 1));
+                    }
+                }
+            } else if (dialogNode.getNextId() != null) {
+                System.out.println("\n(Pulsa Enter para continuar...)");
                 scanner.nextLine();
-                if (choice == 1) {
-                    game.setScreen(new MainMenuScreen(game));
+                storyManager.advance(dialogNode.getNextId());
+            } else {
+                System.out.println("\n--- FIN DE LA PRÓLOGO ---");
+                System.out.println("1. Volver al menú");
+                if (scanner.hasNextInt()) {
+                    int choice = scanner.nextInt();
+                    scanner.nextLine();
+                    if (choice == 1) {
+                        game.setScreen(new MainMenuScreen(game));
+                    }
                 }
             }
         }

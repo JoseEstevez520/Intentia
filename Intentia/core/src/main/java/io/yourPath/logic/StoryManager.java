@@ -3,15 +3,17 @@ package io.yourPath.logic;
 import io.yourPath.models.DialogNode;
 import io.yourPath.models.DialogOption;
 import io.yourPath.models.GameState;
+import io.yourPath.models.NarrativeNode;
 import io.yourPath.models.TrialEvaluation;
+import io.yourPath.models.TrialNode;
+
 import java.util.Map;
 
-
 public class StoryManager {
-    private Map<String, DialogNode> nodes;
+    private Map<String, NarrativeNode> nodes;
     private GameState gameState;
 
-    public StoryManager(Map<String, DialogNode> nodes, GameState gameState) {
+    public StoryManager(Map<String, NarrativeNode> nodes, GameState gameState) {
         this.nodes = nodes;
         this.gameState = gameState;
     }
@@ -33,32 +35,33 @@ public class StoryManager {
     public void advance(String targetId) {
         if (nodes.containsKey(targetId)) {
             gameState.setCurrentNodeId(targetId);
-            DialogNode currentNode = nodes.get(targetId);
+            NarrativeNode currentNode = nodes.get(targetId);
             processActions(currentNode);
-            checkTrialEvaluation(currentNode);
-        }
-    }
-
-    private void checkTrialEvaluation(DialogNode node) {
-        if (node != null && node.getTrialEvaluation() != null) {
-            TrialEvaluation eval = node.getTrialEvaluation();
-            boolean success = gameState.getScorePercentage() >= eval.getThreshold();
-            
-            if (success && eval.getSuccessFlag() != null) {
-                gameState.addFlag(eval.getSuccessFlag());
+            if (currentNode instanceof TrialNode) {
+                checkTrialEvaluation((TrialNode) currentNode);
             }
-
-            String nextId = success ? eval.getSuccessTargetId() : eval.getFailTargetId();
-            gameState.resetTrialScore();
-            advance(nextId);
         }
     }
 
-    public DialogNode getCurrentNode() {
+    private void checkTrialEvaluation(TrialNode node) {
+        TrialEvaluation eval = node.getTrialEvaluation();
+        if (eval == null) return;
+        boolean success = gameState.getScorePercentage() >= eval.getThreshold();
+
+        if (success && eval.getSuccessFlag() != null) {
+            gameState.addFlag(eval.getSuccessFlag());
+        }
+
+        String nextId = success ? eval.getSuccessTargetId() : eval.getFailTargetId();
+        gameState.resetTrialScore();
+        advance(nextId);
+    }
+
+    public NarrativeNode getCurrentNode() {
         return nodes.get(gameState.getCurrentNodeId());
     }
 
-    private void processActions(DialogNode node) {
+    private void processActions(NarrativeNode node) {
         if (node != null && node.getActions() != null) {
             for (String action : node.getActions()) {
                 gameState.addFlag(action);
@@ -70,4 +73,3 @@ public class StoryManager {
         return gameState;
     }
 }
-
