@@ -77,6 +77,11 @@ public class DialogOverlayScreen implements Screen {
     private boolean pausaAbierta = false;
     private Runnable onFinish;
 
+    private Table badgeTable;
+    private Label labelBadge;
+    private Label labelPuntos;
+    private static final int TOTAL_PREGUNTAS_PRUEBA = 3;
+
     public DialogOverlayScreen(Main game) {
         this(game, null, null);
     }
@@ -146,7 +151,16 @@ public class DialogOverlayScreen implements Screen {
         contenedorDialogo.add(retrato).size(72, 72).left().padRight(6).center();
         contenedorDialogo.add(textoColumna).expandX().fillX().height(100);
 
+        labelBadge = new Label("[PRUEBA]", skin, "dialogo-texto");
+        labelBadge.setColor(new Color(1f, 0.55f, 0.1f, 1f));
+        labelPuntos = new Label("○  ○  ○", skin, "dialogo-texto");
+        badgeTable = new Table();
+        badgeTable.add(labelBadge).left().padRight(16);
+        badgeTable.add(labelPuntos).right().expandX();
+        badgeTable.setVisible(false);
+
         raiz.add().expandY().row();
+        raiz.add(badgeTable).width(520).expandX().center().padBottom(1).row();
         raiz.add(contenedorDialogo).width(520).height(145).expandX().center().padBottom(7);
         mostrarNodoActual();
     }
@@ -156,6 +170,12 @@ public class DialogOverlayScreen implements Screen {
         if (nodo == null) {
             mostrarFinHistoria();
             return;
+        }
+
+        if (badgeTable != null) {
+            boolean esPrueba = esNodoPrueba(nodo);
+            badgeTable.setVisible(esPrueba);
+            if (esPrueba) actualizarPuntos();
         }
 
         labelNombre.setVisible(false);
@@ -238,6 +258,29 @@ public class DialogOverlayScreen implements Screen {
         } else {
             mostrarOpciones(nodo);
         }
+    }
+
+    private boolean esNodoPrueba(NarrativeNode nodo) {
+        if (nodo instanceof TrialNode) return true;
+        if (nodo instanceof DialogNode) {
+            List<DialogOption> opts = ((DialogNode) nodo).getOptions();
+            if (opts != null) {
+                for (DialogOption op : opts) {
+                    if (op.getScoreValue() != null) return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void actualizarPuntos() {
+        int correctas = estado.getCurrentTrialScore();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < TOTAL_PREGUNTAS_PRUEBA; i++) {
+            sb.append(i < correctas ? "●" : "○");
+            if (i < TOTAL_PREGUNTAS_PRUEBA - 1) sb.append("  ");
+        }
+        labelPuntos.setText(sb.toString());
     }
 
     private void actualizarIndicadorPagina() {

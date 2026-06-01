@@ -5,7 +5,9 @@
       "Bash(sqlite3 assets/database/intentia.db \"SELECT id, name FROM characters;\")",
       "Bash(sqlite3 assets/database/intentia.db \"SELECT id, type, speaker_id, substr\\(text,1,40\\) as texto FROM dialog_nodes LIMIT 10;\")",
       "Bash(sqlite3 assets/database/intentia.db \"SELECT id, type, next_id, substr\\(text,1,50\\) FROM dialog_nodes WHERE id LIKE 'trial%' OR id LIKE '%trial%';\")",
-      "Bash(sqlite3 assets/database/intentia.db \"SELECT * FROM trial_evaluations; SELECT node_id, text, target_id, score_value FROM dialog_options WHERE node_id LIKE 'trial%';\")"
+      "Bash(sqlite3 assets/database/intentia.db \"SELECT * FROM trial_evaluations; SELECT node_id, text, target_id, score_value FROM dialog_options WHERE node_id LIKE 'trial%';\")",
+      "Bash(sqlite3 assets/database/intentia.db)",
+      "Bash(gradlew core:compileJava)"
     ]
   }
 }
