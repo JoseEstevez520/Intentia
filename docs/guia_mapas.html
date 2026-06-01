@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Guía de Mapas · Intentia</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,sans-serif;background:#0f0f12;color:#e0e0e0;line-height:1.6;padding:2rem}
+.container{max-width:960px;margin:0 auto}
+h1{font-size:2rem;color:#7fffd4;margin-bottom:.5rem}
+h2{font-size:1.3rem;color:#7fffd4;margin:2rem 0 .8rem;border-bottom:1px solid #2a2a30;padding-bottom:.4rem}
+h3{color:#ccc;margin:1.2rem 0 .5rem}
+p,li{color:#b0b0b8}
+code{background:#1a1a22;padding:.15em .5em;border-radius:4px;font-size:.9em;color:#7fffd4}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.9em}
+th,td{border:1px solid #2a2a30;padding:.5em .8em;text-align:left}
+th{background:#1a1a22;color:#7fffd4;font-weight:600}
+td{background:#16161c}
+.tag{display:inline-block;background:#1a1a22;padding:0 .5em;border-radius:3px;font-size:.8em;color:#888;margin-right:.3em}
+.tag-layer{background:#1a2a1a;color:#6f6}
+.tag-obj{background:#2a1a1a;color:#f66}
+.tag-tile{background:#1a1a2a;color:#66f}
+.tag-col{background:#2a2a10;color:#ff6}
+.note{background:#1a1a22;border-left:3px solid #7fffd4;padding:.8em 1em;margin:1rem 0;border-radius:0 6px 6px 0;font-size:.9em}
+.note strong{color:#7fffd4}
+.schema{margin:1.5rem 0}
+.schema-row{display:flex;align-items:center;gap:.5rem;padding:.25rem 0}
+.schema-label{width:140px;text-align:right;font-size:.85em;color:#888}
+.schema-bar{height:28px;border-radius:4px;display:flex;align-items:center;padding:0 10px;font-size:.8em;font-weight:600;flex-shrink:0}
+.bar1{background:#2d4a2d;color:#8f8;width:80px}
+.bar2{background:#3d3a1d;color:#ff8;width:70px}
+.bar3{background:#3d2d1d;color:#fa8;width:60px}
+.bar4{background:#2d3d2d;color:#8f8;width:70px}
+.bar5{background:#2a1a1a;color:#f66;width:90px}
+.bar6{background:#1d2d3d;color:#8cf;width:60px}
+.bar7{background:#3d2d4d;color:#c8f;width:110px}
+.bar8{background:#2d4a2d;color:#8f8;border:2px dashed #7fffd4;width:100px}
+.bar9{background:#4a2d2d;color:#f88;width:90px;font-style:italic}
+.bar10{background:#2a2a10;color:#ff6;width:80px}
+ul{list-style:none;padding:0}
+ul li{padding:.2em 0;padding-left:1.2em;position:relative}
+ul li::before{content:"\25B8";position:absolute;left:0;color:#7fffd4}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Guía de Diseño de Mapas</h1>
+<p>Referencia rápida para crear mapas en <strong>Tiled</strong> para Intentia. Tile size: <code>16x16</code>. Orientación: <code>Orthogonal</code>.</p>
+
+<h2>Capas del mapa</h2>
+<p>Orden de renderizado (de atrás a adelante):</p>
+
+<div class="schema">
+<div class="schema-row"><span class="schema-label">Arriba (tapa)</span><div class="schema-bar bar10">Collisions</div><span style="font-size:.8em;color:#888">Rectángulos invisibles que bloquean</span></div>
+<div class="schema-row"><span class="schema-label"></span><div class="schema-bar bar9">NPCs</div><span style="font-size:.8em;color:#888">Definiciones de personajes</span></div>
+<div class="schema-row"><span class="schema-label"></span><div class="schema-bar bar8">AbovePlayer</div><span style="font-size:.8em;color:#888">Copas de árboles, techos — tapan al jugador</span></div>
+<div class="schema-row"><span class="schema-label"></span><div class="schema-bar bar7">Object Layer 1</div><span style="font-size:.8em;color:#888">Edificios, árboles grandes, props</span></div>
+<div class="schema-row"><span class="schema-label"></span><div class="schema-bar bar6">Water</div><span style="font-size:.8em;color:#888">Agua animada</span></div>
+<div class="schema-row"><span class="schema-label"></span><div class="schema-bar bar5">RockSlopes_Auto</div><span style="font-size:.8em;color:#888">Paredes de roca (auto-tiling)</span></div>
+<div class="schema-row"><span class="schema-label"></span><div class="schema-bar bar4">Trees</div><span style="font-size:.8em;color:#888">Árboles pintados con brocha</span></div>
+<div class="schema-row"><span class="schema-label"></span><div class="schema-bar bar3">Road</div><span style="font-size:.8em;color:#888">Caminos de tierra</span></div>
+<div class="schema-row"><span class="schema-label"></span><div class="schema-bar bar2">Flowers</div><span style="font-size:.8em;color:#888">Flores decorativas</span></div>
+<div class="schema-row"><span class="schema-label">Abajo (fondo)</span><div class="schema-bar bar1">Ground</div><span style="font-size:.8em;color:#888">Pasto, tierra, base del terreno</span></div>
+</div>
+
+<table>
+<tr><th>Capa</th><th>Tipo</th><th>Qué poner</th><th>Render</th></tr>
+<tr><td>Ground</td><td><span class="tag tag-tile">tile</span></td><td>Pasto (700), tierra (781), transiciones</td><td>Detrás del jugador</td></tr>
+<tr><td>Flowers</td><td><span class="tag tag-tile">tile</span></td><td>Flores animadas (5484+), decoración</td><td>Detrás</td></tr>
+<tr><td>Road</td><td><span class="tag tag-tile">tile</span></td><td>Caminos de tierra (5280+)</td><td>Detrás</td></tr>
+<tr><td>Trees</td><td><span class="tag tag-tile">tile</span></td><td>Arbustos, vegetación (5340+, Atlas_Trees_Bushes)</td><td>Detrás</td></tr>
+<tr><td>RockSlopes</td><td><span class="tag tag-tile">tile</span></td><td><em>(Oculta)</em> Paredes de roca manuales</td><td>—</td></tr>
+<tr><td>RockSlopes_Auto</td><td><span class="tag tag-tile">tile</span></td><td>Paredes de roca auto-tiled (818+)</td><td>Detrás</td></tr>
+<tr><td>Water</td><td><span class="tag tag-tile">tile</span></td><td>Agua animada (4968+)</td><td>Detrás</td></tr>
+<tr><td>Object Layer 1</td><td><span class="tag tag-obj">obj</span></td><td>Casas (443-446), árboles grandes (480-483), props, hoguera</td><td>Detrás del jugador</td></tr>
+<tr><td>AbovePlayer</td><td><span class="tag tag-tile">tile</span></td><td>Copas de árboles, techos, toldos — lo que tape al jugador</td><td>Delante del jugador</td></tr>
+<tr><td>Collisions</td><td><span class="tag tag-col">col</span></td><td>Rectángulos rojos donde no se pueda caminar</td><td>Nunca se renderiza</td></tr>
+<tr><td>NPCs</td><td><span class="tag tag-obj">obj</span></td><td>Rectángulos con propiedades npcId, dialogNodeId, etc.</td><td>Nunca se renderiza</td></tr>
+</table>
+
+<h2>Tile IDs de referencia</h2>
+
+<table>
+<tr><th>Tileset</th><th>firstgid</th><th>Uso</th><th>IDs clave</th></tr>
+<tr><td>Tileset_Ground</td><td>686</td><td>Pasto y tierra</td><td><b>700</b> pasto, <b>781</b> tierra, 693-721 transiciones</td></tr>
+<tr><td>Tilesets_Road</td><td>5280</td><td>Camino de tierra</td><td><b>5282</b> horizontal, <b>5294</b> centro, 5281/5283 bordes</td></tr>
+<tr><td>Tileset_Water</td><td>4968</td><td>Agua animada</td><td><b>5141</b> agua profunda, 5017+ orillas</td></tr>
+<tr><td>Tileset_RockSlope</td><td>818</td><td>Paredes de roca</td><td>Usar auto-tiling de Tiled</td></tr>
+<tr><td>Atlas_Trees_Bushes</td><td>5340</td><td>Árboles/arbustos 16x16</td><td>Pintar con brocha en capa Trees</td></tr>
+<tr><td>Animation_Flowers_Red</td><td>5484</td><td>Flores rojas animadas</td><td>5484+ (12 variantes)</td></tr>
+<tr><td>Animation_Flowers_White</td><td>5580</td><td>Flores blancas animadas</td><td>5580+</td></tr>
+<tr><td>Animation_Campfire</td><td>5676</td><td>Fogata animada</td><td>5676+ (4 tiles forman 1 fogata)</td></tr>
+</table>
+
+<h2>Objetos del Object Layer 1</h2>
+
+<table>
+<tr><th>gid</th><th>Nombre</th><th>Tamaño</th><th>Notas</th></tr>
+<tr><td>443</td><td>House_Hay_1</td><td>89x91</td><td>Casa pequeña</td></tr>
+<tr><td>444</td><td>House_Hay_2</td><td>157x112</td><td>Casa mediana → Taller</td></tr>
+<tr><td>445</td><td>House_Hay_3</td><td>175x128</td><td>Casa grande → Cabaña de Elio</td></tr>
+<tr><td>446</td><td>House_Hay_4_Purple</td><td>128x128</td><td>Casa morada (variante)</td></tr>
+<tr><td>448</td><td>Well_Hay_1</td><td>56x74</td><td>Pozo</td></tr>
+<tr><td>450</td><td>Bench_1</td><td>14x30</td><td>Banco</td></tr>
+<tr><td>456</td><td>LampPost_3</td><td>46x62</td><td>Farola</td></tr>
+<tr><td>459</td><td>Sign_1</td><td>24x22</td><td>Cartel</td></tr>
+<tr><td>464</td><td>HayStack_2</td><td>29x32</td><td>Paca de heno</td></tr>
+<tr><td>465</td><td>Barrel_Small_Empty</td><td>16x20</td><td>Barril</td></tr>
+<tr><td>467</td><td>Table_Medium_1</td><td>42x39</td><td>Mesa</td></tr>
+<tr><td>468</td><td>Rock_Brown_1</td><td>28x14</td><td>Roca pequeña</td></tr>
+<tr><td>470</td><td>Rock_Brown_4</td><td>27x27</td><td>Roca mediana</td></tr>
+<tr><td>473</td><td>Bush_Emerald_1</td><td>40x29</td><td>Arbusto</td></tr>
+<tr><td>480</td><td>Tree_Emerald_1</td><td>64x63</td><td>Árbol grande copa ancha</td></tr>
+<tr><td>481</td><td>Tree_Emerald_2</td><td>46x63</td><td>Árbol mediano</td></tr>
+<tr><td>482</td><td>Tree_Emerald_3</td><td>52x92</td><td>Árbol alto</td></tr>
+<tr><td>483</td><td>Tree_Emerald_4</td><td>48x93</td><td>Árbol alto delgado</td></tr>
+</table>
+
+<h2>Cómo crear colisiones</h2>
+
+<div class="grid">
+<div>
+<h3>En Tiled</h3>
+<ol style="padding-left:1.2em;color:#b0b0b8">
+<li>Seleccionar capa <code>Collisions</code></li>
+<li>Herramienta <b>Insertar Rectángulo</b> (R)</li>
+<li>Dibujar donde no se deba caminar:
+<ul style="margin-top:.4em">
+<li>Bordes del mapa</li>
+<li>Contorno de casas</li>
+<li>Base de árboles grandes</li>
+<li>Orillas del agua</li>
+</ul>
+</li>
+<li>Presionar <b>B</b> en el juego para ver los rectángulos</li>
+</ol>
+</div>
+<div>
+<h3>Coordenadas útiles</h3>
+<table>
+<tr><th>Mapa</th><th>Spawn del jugador</th></tr>
+<tr><td>Beginning Fields</td><td><code>(12*16, 15*16)</code></td></tr>
+<tr><td>LaParadaDeLaBruma</td><td>(por definir)</td></tr>
+<tr><td>ElClaroDelRoble</td><td>(por definir)</td></tr>
+</table>
+<div class="note" style="margin-top:1rem">
+<strong>Cambiar spawn:</strong> La posición inicial del jugador se edita en <code>GameScreen.java</code>, línea:
+<code>jugador = new Player(x, y);</code>
+</div>
+</div>
+</div>
+
+<h2>AbovePlayer — Cómo tapar al jugador</h2>
+<p>La capa <code>AbovePlayer</code> se renderiza <strong>después</strong> del jugador. Todo lo que pongas ahí tapa al personaje cuando pasa por debajo.</p>
+
+<div class="note">
+<strong>Idea:</strong> En un árbol de 92px de alto, poner el tronco en <code>Object Layer 1</code> (detrás del jugador) y la copa en <code>AbovePlayer</code> (delante). El jugador camina por debajo y la copa lo tapa.<br><br>
+<strong>Pero no tenemos los tiles partidos.</strong> Alternativa: los árboles enteros en Object Layer 1 (detrás), y en AbovePlayer pones tiles de <code>Atlas_Trees_Bushes</code> simulando copas o ramas colgantes.
+</div>
+
+<h2>Mapas del proyecto</h2>
+
+<table>
+<tr><th>Mapa</th><th>Tamaño</th><th>Descripción</th></tr>
+<tr><td>LaParadaDeLaBruma</td><td>40x40</td><td>Escena inicial — carretera, parada de bus, entrada al bosque</td></tr>
+<tr><td>ElCaminoDelMusgo</td><td>60x20</td><td>Sendero del bosque (conectar parada → claro)</td></tr>
+<tr><td>ElClaroDelRoble</td><td>60x60</td><td>Zona principal — cabaña, taller, lago Ojo de Plata</td></tr>
+<tr><td>LaCabana</td><td>40x40</td><td>Interior de la cabaña (opcional)</td></tr>
+<tr><td>ElLago</td><td>30x30</td><td>Zona del lago (opcional)</td></tr>
+</table>
+
+<h2>Pipeline de renderizado (código)</h2>
+<pre style="background:#1a1a22;padding:1em;border-radius:6px;overflow-x:auto;font-size:.85em;color:#aaa">
+<code style="background:none;color:#aaa;font-size:1em">1. renderer.render(capasFondo)       → Ground, Flowers, Road, <b>Trees</b>, RockSlopes_Auto, Water
+2. batch.begin()
+3.   renderObjetos(Object Layer 1)   → Casas, árboles, props (detrás del jugador)
+4.   npcManager.renderSortedWithPlayer() → NPCs + Player (Y-sorted entre ellos)
+5. batch.end()
+6. renderer.render(aboveIndices)     → <b>AbovePlayer</b> (tapa al jugador)
+7. Stage                             → UI, menús, diálogos</code>
+</pre>
+
+<h2>Reglas de oro</h2>
+
+<ul>
+<li><strong>Spawn</strong> no debe caer dentro de una colisión ni de agua</li>
+<li><strong>AbovePlayer</strong> solo para lo que tape al jugador (copas, techos)</li>
+<li><strong>Collisions</strong> para todo lo sólido — el Y-sorting no frena al jugador</li>
+<li><strong>Object Layer 1</strong> para objetos grandes que se necesiten como entidad individual</li>
+<li><strong>Ground</strong> siempre con algún tile (si no, se ve negro)</li>
+<li><strong>Tile 0</strong> en CSV = sin tile. Para rellenar de pasto, usa 700</li>
+<li><strong>Redimensionar</strong> el mapa en Tiled: <code>Mapa → Redimensionar Mapa (Ctrl+Shift+R)</code></li>
+</ul>
+
+</div>
+</body>
+</html>

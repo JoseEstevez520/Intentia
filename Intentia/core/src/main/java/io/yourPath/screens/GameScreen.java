@@ -3,9 +3,12 @@ package io.yourPath.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapLayer;
@@ -17,6 +20,7 @@ import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -49,6 +53,7 @@ public class GameScreen implements Screen {
     private Player jugador;
     private NpcManager npcManager;
     private TriggerManager triggerManager;
+    private MapLayer capaColisiones;
     private GameState gameState;
     private boolean pausaAbierta = false;
     private boolean esFondo = false;
@@ -62,6 +67,8 @@ public class GameScreen implements Screen {
     private Table pausaPanel;
     private boolean inicializado;
     private boolean snapCamara = true;
+    private boolean debugColisiones = false;
+    private ShapeRenderer debugRenderer;
 
     public GameScreen(Main game) {
         this.game = game;
@@ -85,9 +92,12 @@ public class GameScreen implements Screen {
             tilesAncho = capaBase.getWidth();
             tilesAlto = capaBase.getHeight();
 
-            capasFondo = obtenerIndicesCapas(new String[]{"Ground", "Flowers", "Road", "RockSlopes_Auto", "Water"});
+            capasFondo = obtenerIndicesCapas(new String[]{"Ground", "Flowers", "Road", "Trees", "RockSlopes_Auto", "Water"});
 
-            jugador = new Player(10 * 16, 20 * 16);
+            capaColisiones = mapa.getLayers().get("Collisions");
+            debugRenderer = new ShapeRenderer();
+
+            jugador = new Player(12 * 16, 15 * 16);
 
             gameState = game.getStoryManager().getGameState();
 
@@ -123,7 +133,21 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (!pausaAbierta) {
+            float prevX = jugador.posicion.x;
+            float prevY = jugador.posicion.y;
             jugador.actualizar(delta);
+            if (capaColisiones != null) {
+                Rectangle hitbox = new Rectangle(jugador.posicion.x + 8, jugador.posicion.y, 16, 12);
+                for (MapObject obj : capaColisiones.getObjects()) {
+                    if (obj instanceof com.badlogic.gdx.maps.objects.RectangleMapObject) {
+                        Rectangle r = ((com.badlogic.gdx.maps.objects.RectangleMapObject) obj).getRectangle();
+                        if (hitbox.overlaps(r)) {
+                            jugador.posicion.set(prevX, prevY);
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         npcManager.update(delta, jugador.posicion);
@@ -167,6 +191,11 @@ public class GameScreen implements Screen {
         npcManager.renderSortedWithPlayer(renderer.getBatch(), jugador);
         renderer.getBatch().end();
 
+        int idxAbove = mapa.getLayers().getIndex("AbovePlayer");
+        if (idxAbove >= 0) {
+            renderer.render(new int[]{idxAbove});
+        }
+
         if (!pausaAbierta) {
             Trigger triggerActivado = triggerManager.checkTriggers(jugador.posicion, gameState);
             if (triggerActivado != null) {
@@ -189,6 +218,13 @@ public class GameScreen implements Screen {
 
         stage.act(delta);
         stage.draw();
+
+        if (!esFondo && Gdx.input.isKeyJustPressed(Input.Keys.B)) {
+            debugColisiones = !debugColisiones;
+        }
+        if (debugColisiones) {
+            dibujarDebugColisiones();
+        }
 
         if (!esFondo && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             if (pausaPanel.isVisible()) {
@@ -331,19 +367,37 @@ public class GameScreen implements Screen {
         return indices;
     }
 
+    private void dibujarDebugColisiones() {
+        debugRenderer.setProjectionMatrix(camara.combined);
+        debugRenderer.begin(ShapeType.Line);
+
+        if (capaColisiones != null) {
+            debugRenderer.setColor(Color.RED);
+            for (MapObject obj : capaColisiones.getObjects()) {
+                if (obj instanceof com.badlogic.gdx.maps.objects.RectangleMapObject) {
+                    Rectangle r = ((com.badlogic.gdx.maps.objects.RectangleMapObject) obj).getRectangle();
+                    debugRenderer.rect(r.x, r.y, r.width, r.height);
+                }
+            }
+        }
+
+        debugRenderer.setColor(Color.GREEN);
+        float hx = jugador.posicion.x + 8;
+        float hy = jugador.posicion.y;
+        debugRenderer.rect(hx, hy, 16, 12);
+
+        debugRenderer.end();
+    }
+
     private void renderObjetos(MapLayer layer) {
         for (MapObject objeto : layer.getObjects()) {
             if (objeto instanceof TiledMapTileMapObject) {
                 TiledMapTileMapObject tileObj = (TiledMapTileMapObject) objeto;
                 TiledMapTile tile = tileObj.getTile();
-                if (tile != null) {
-                    TextureRegion region = tile.getTextureRegion();
-                    if (region != null) {
-                        float x = tileObj.getX();
-                        float y = tileObj.getY();
-                        renderer.getBatch().draw(region, x, y);
-                    }
-                }
+                if (tile == null) continue;
+                TextureRegion region = tile.getTextureRegion();
+                if (region == null) continue;
+                renderer.getBatch().draw(region, tileObj.getX(), tileObj.getY());
             }
         }
     }
@@ -372,6 +426,7 @@ public class GameScreen implements Screen {
         skin.dispose();
         npcManager.dispose();
         jugador.dispose();
+        if (debugRenderer != null) debugRenderer.dispose();
     }
 
     @Override public void pause() {}
