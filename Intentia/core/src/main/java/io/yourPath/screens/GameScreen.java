@@ -7,8 +7,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
@@ -51,7 +56,6 @@ public class GameScreen implements Screen {
     private int tilesAlto;
 
     private int[] capasFondo;
-    private int[] capasFrontales;
 
     private NPC npcInteractivo;
     private Label labelInteraccion;
@@ -81,8 +85,7 @@ public class GameScreen implements Screen {
             tilesAncho = capaBase.getWidth();
             tilesAlto = capaBase.getHeight();
 
-            capasFondo = obtenerIndicesCapas(new String[]{"Ground", "Road", "Water", "Flowers", "RockSlopes_Auto"});
-            capasFrontales = obtenerIndicesCapas(new String[]{"Object Layer 1"});
+            capasFondo = obtenerIndicesCapas(new String[]{"Ground", "Flowers", "Road", "RockSlopes_Auto", "Water"});
 
             jugador = new Player(10 * 16, 20 * 16);
 
@@ -157,10 +160,12 @@ public class GameScreen implements Screen {
         renderer.render(capasFondo);
 
         renderer.getBatch().begin();
+        MapLayer objetosLayer = mapa.getLayers().get("Object Layer 1");
+        if (objetosLayer != null) {
+            renderObjetos(objetosLayer);
+        }
         npcManager.renderSortedWithPlayer(renderer.getBatch(), jugador);
         renderer.getBatch().end();
-
-        renderer.render(capasFrontales);
 
         if (!pausaAbierta) {
             Trigger triggerActivado = triggerManager.checkTriggers(jugador.posicion, gameState);
@@ -324,6 +329,23 @@ public class GameScreen implements Screen {
             indices[i] = mapa.getLayers().getIndex(nombres[i]);
         }
         return indices;
+    }
+
+    private void renderObjetos(MapLayer layer) {
+        for (MapObject objeto : layer.getObjects()) {
+            if (objeto instanceof TiledMapTileMapObject) {
+                TiledMapTileMapObject tileObj = (TiledMapTileMapObject) objeto;
+                TiledMapTile tile = tileObj.getTile();
+                if (tile != null) {
+                    TextureRegion region = tile.getTextureRegion();
+                    if (region != null) {
+                        float x = tileObj.getX();
+                        float y = tileObj.getY();
+                        renderer.getBatch().draw(region, x, y);
+                    }
+                }
+            }
+        }
     }
 
     private String obtenerNombreNPC(String npcId) {

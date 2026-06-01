@@ -105,6 +105,7 @@ public class MainMenuScreen implements Screen {
                 SoundManager.inst().click();
                 transicionando = true;
                 game.getStoryManager().getGameState().resetTrialScore();
+                game.getStoryManager().getGameState().setTrialCurrentQuestion(0);
                 game.transitarA(new DialogOverlayScreen(game, "trial_start"), fadeToBlack());
             }
         });

@@ -1,3 +1,6 @@
 {
-currentNodeId: npc_padre_despide
+currentNodeId: trial_evaluation_node
+currentTrialScore: 1
+totalPossibleScore: 3
+trialCurrentQuestion: 3
 }

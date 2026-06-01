@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -67,7 +68,6 @@ public class DialogOverlayScreen implements Screen {
     private int indiceOpcion = -1;
     private DialogOption opcionUnicaAuto;
 
-    private static final int MAX_CHARS_POR_PAGINA = 130;
     private List<String> paginasTexto;
     private int paginaActual;
     private Label labelPagina;
@@ -85,14 +85,22 @@ public class DialogOverlayScreen implements Screen {
     private Table badgeTable;
     private Label labelBadge;
     private Label labelPuntos;
-    private static final int TOTAL_PREGUNTAS_PRUEBA = 3;
+    private Label.LabelStyle labelPuntosStyle;
+    private int trialTotalQuestions;
+    private float feedbackTimer;
+    private Table overlayResultados;
+    private String trialNextNodeId;
+    private static final float DURACION_FEEDBACK = 1.2f;
+    private static final int TOTAL_PREGUNTAS_PRUEBA_FALLBACK = 3;
     private static final float ANCHO_DIALOGO_RATIO = 0.82f;
-    private static final float PORTRAIT_SIZE = 72f;
-    private static final float ESPACIO_PEQ = 4f;
-    private static final float ESPACIO_MEDIO = 8f;
-    private static final float ESPACIO_GRANDE = 16f;
-    private static final float ALTURA_DIALOGO = 155f;
-    private static final float ALTURA_OPCIONES_ROW = 28f;
+    private static final float VW = 640f;
+    private static final float VH = 360f;
+    private static final float PORTRAIT_SIZE = VH * 0.2f;
+    private static final float ALTURA_DIALOGO = VH * 0.43f;
+    private static final float ALTURA_OPCIONES_ROW = VH * 0.078f;
+    private static final float ESPACIO_PEQ = VH * 0.011f;
+    private static final float ESPACIO_MEDIO = VH * 0.022f;
+    private static final float ESPACIO_GRANDE = VH * 0.044f;
 
     private Cell badgeCell;
 
@@ -154,10 +162,11 @@ public class DialogOverlayScreen implements Screen {
 
         labelBadge = new Label("[PRUEBA]", skin, "dialogo-texto");
         labelBadge.setColor(new Color(1f, 0.55f, 0.1f, 1f));
-        labelPuntos = new Label("○  ○  ○", skin, "dialogo-texto");
+        labelPuntos = new Label("", skin, "dialogo-texto");
+        labelPuntosStyle = labelPuntos.getStyle();
         badgeTable = new Table();
-        badgeTable.add(labelBadge).left().padRight(ESPACIO_GRANDE);
-        badgeTable.add(labelPuntos).right().expandX();
+        badgeTable.add(labelBadge).left();
+        badgeTable.add(labelPuntos).right().expandX().padLeft(ESPACIO_GRANDE);
         badgeTable.setVisible(false);
 
         Table textoColumna = new Table();
@@ -175,7 +184,7 @@ public class DialogOverlayScreen implements Screen {
         contenedorDialogo.add(retrato).size(PORTRAIT_SIZE, PORTRAIT_SIZE).left().padRight(ESPACIO_MEDIO);
         contenedorDialogo.add(textoColumna).expand().fill();
 
-        float anchoDialogo = 640 * ANCHO_DIALOGO_RATIO;
+        float anchoDialogo = VW * ANCHO_DIALOGO_RATIO;
         raiz.add().expand().row();
         raiz.add(contenedorDialogo).width(anchoDialogo).height(ALTURA_DIALOGO).expandX().center().padBottom(ESPACIO_GRANDE);
         mostrarNodoActual();
@@ -193,10 +202,24 @@ public class DialogOverlayScreen implements Screen {
             if (esPrueba) {
                 badgeCell.maxHeight(999).minHeight(0);
                 badgeTable.setVisible(true);
+                labelPuntos.setStyle(labelPuntosStyle);
+                labelBadge.setColor(DORADO_PRUEBA);
+                contenedorDialogo.setColor(1f, 0.95f, 0.85f, 1f);
+                if (estado.getTrialCurrentQuestion() == 0 && trialTotalQuestions == 0) {
+                    trialTotalQuestions = storyManager.countTrialQuestions(nodo.getId());
+                }
+                if (trialTotalQuestions == 0) {
+                    trialTotalQuestions = TOTAL_PREGUNTAS_PRUEBA_FALLBACK;
+                }
                 actualizarPuntos();
             } else {
                 badgeCell.maxHeight(0).minHeight(0);
                 badgeTable.setVisible(false);
+                contenedorDialogo.setColor(Color.WHITE);
+                labelBadge.setColor(MARRON_OSCURO);
+                if (trialTotalQuestions > 0) {
+                    trialTotalQuestions = 0;
+                }
             }
             contenedorDialogo.invalidate();
         }
@@ -260,18 +283,36 @@ public class DialogOverlayScreen implements Screen {
 
     private List<String> dividirEnPaginas(String texto) {
         List<String> paginas = new ArrayList<>();
-        if (texto.length() <= MAX_CHARS_POR_PAGINA) {
+        if (texto == null || texto.isEmpty()) {
+            paginas.add("");
+            return paginas;
+        }
+        BitmapFont font = labelTexto.getStyle().font;
+        float anchoMax = getAnchoTexto();
+        GlyphLayout layout = new GlyphLayout();
+
+        layout.setText(font, texto);
+        if (layout.width <= anchoMax) {
             paginas.add(texto);
             return paginas;
         }
-        String resto = texto;
-        while (resto.length() > MAX_CHARS_POR_PAGINA) {
-            int corte = resto.lastIndexOf(' ', MAX_CHARS_POR_PAGINA);
-            if (corte == -1) corte = MAX_CHARS_POR_PAGINA;
-            paginas.add(resto.substring(0, corte).trim());
-            resto = resto.substring(corte).trim();
+
+        String[] palabras = texto.split(" ");
+        StringBuilder pagina = new StringBuilder();
+        for (String palabra : palabras) {
+            String prueba = pagina.length() > 0 ? pagina + " " + palabra : palabra;
+            layout.setText(font, prueba);
+            if (layout.width > anchoMax && pagina.length() > 0) {
+                paginas.add(pagina.toString().trim());
+                pagina = new StringBuilder(palabra);
+            } else {
+                pagina = new StringBuilder(prueba);
+            }
         }
-        if (!resto.isEmpty()) paginas.add(resto);
+        if (pagina.length() > 0) {
+            paginas.add(pagina.toString().trim());
+        }
+
         return paginas;
     }
 
@@ -299,12 +340,90 @@ public class DialogOverlayScreen implements Screen {
 
     private void actualizarPuntos() {
         int correctas = estado.getCurrentTrialScore();
+        int total = Math.max(trialTotalQuestions, estado.getTotalPossibleScore());
+        int actual = Math.min(estado.getTotalPossibleScore() + 1, total);
+
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < TOTAL_PREGUNTAS_PRUEBA; i++) {
-            sb.append(i < correctas ? "●" : "○");
-            if (i < TOTAL_PREGUNTAS_PRUEBA - 1) sb.append("  ");
+        if (total <= 6) {
+            for (int i = 0; i < total; i++) {
+                sb.append(i < correctas ? "●" : "○");
+                if (i < total - 1) sb.append("  ");
+            }
+            if (actual > 0 && total > 0 && actual <= total) {
+                sb.append("  ").append(actual).append("/").append(total);
+            }
+        } else {
+            sb.append(actual).append("/").append(total);
         }
         labelPuntos.setText(sb.toString());
+    }
+
+    private void mostrarFeedback(boolean correcta) {
+        tablaOpciones.clear();
+        flechaContinuar.setVisible(false);
+        labelTexto.clearActions();
+        actualizarPuntos();
+        Label.LabelStyle feedbackStyle = new Label.LabelStyle(labelPuntosStyle);
+        feedbackStyle.fontColor = correcta ? VERDE_EXITO : ROJO_FRACASO;
+        labelPuntos.setStyle(feedbackStyle);
+        if (correcta) {
+            SoundManager.inst().confirm();
+        } else {
+            SoundManager.inst().deny();
+        }
+    }
+
+    private void mostrarResultadosPrueba(StoryManager.TrialResult result) {
+        estadoUI = UIState.TRIAL_RESULT;
+        tablaOpciones.clear();
+        flechaContinuar.setVisible(false);
+        labelTexto.clearActions();
+
+        Table overlay = new Table(skin);
+        overlay.setBackground(skin.newDrawable("fondo-dialogo"));
+        overlay.pad(20);
+
+        String tituloStr = result.success ? "PRUEBA SUPERADA!" : "PRUEBA NO SUPERADA";
+        Label titulo = new Label(tituloStr, skin, "dialogo-texto");
+        titulo.setColor(result.success ? VERDE_EXITO : ROJO_FRACASO);
+        titulo.setFontScale(1.5f);
+
+        String puntosStr = "Puntuacion: " + result.score + "/" + result.total;
+        Label puntos = new Label(puntosStr, skin, "dialogo-texto");
+
+        String pctStr = "Porcentaje: " + (int)(result.percentage * 100) + "%";
+        Label porcentaje = new Label(pctStr, skin, "dialogo-texto");
+
+        overlay.add(titulo).padBottom(12).row();
+        overlay.add(puntos).padBottom(4).row();
+        overlay.add(porcentaje).padBottom(8).row();
+
+        if (result.earnedFlag != null) {
+            Label flagLabel = new Label("Has obtenido: " + result.earnedFlag, skin, "dialogo-texto");
+            flagLabel.setColor(DORADO_PRUEBA);
+            overlay.add(flagLabel).padBottom(12).row();
+        }
+
+        TextButton btnContinuar = new TextButton("CONTINUAR", skin);
+        btnContinuar.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                SoundManager.inst().click();
+                overlay.remove();
+                storyManager.advance(result.nextNodeId);
+                estadoUI = UIState.DIALOGANDO;
+                mostrarNodoActual();
+            }
+        });
+        overlay.add(btnContinuar).width(VW * 0.28f).padTop(VH * 0.022f);
+
+        float overlayW = VW * 0.5f;
+        float overlayH = VH * 0.6f;
+        overlay.setSize(overlayW, overlayH);
+        overlay.setPosition((VW - overlayW) / 2f, (VH - overlayH) / 2f);
+        overlayResultados = overlay;
+        trialNextNodeId = result.nextNodeId;
+        stage.addActor(overlay);
     }
 
     private void actualizarIndicadorPagina() {
@@ -321,10 +440,9 @@ public class DialogOverlayScreen implements Screen {
                     TextButton btn = crearBotonOpcion(opcion);
                     opcionesBotones.add(btn);
                 }
-                boolean unicaDesbloqueada = opcionesBotones.size == 1
-                    && dn.getOptions().get(0).getRequiredFlag() == null
-                    || (dn.getOptions().get(0).getRequiredFlag() != null
-                        && estado.hasFlag(dn.getOptions().get(0).getRequiredFlag()));
+                boolean unicaDesbloqueada = opcionesBotones.size == 1 && (
+                    dn.getOptions().get(0).getRequiredFlag() == null
+                    || estado.hasFlag(dn.getOptions().get(0).getRequiredFlag()));
                 if (unicaDesbloqueada) {
                     opcionUnicaAuto = dn.getOptions().get(0);
                     opcionesBotones.clear();
@@ -392,7 +510,12 @@ public class DialogOverlayScreen implements Screen {
     }
 
     private float getAnchoOpciones() {
-        float anchoDialogo = 640 * ANCHO_DIALOGO_RATIO;
+        float anchoDialogo = VW * ANCHO_DIALOGO_RATIO;
+        return anchoDialogo - ESPACIO_MEDIO * 2 - PORTRAIT_SIZE - ESPACIO_MEDIO;
+    }
+
+    private float getAnchoTexto() {
+        float anchoDialogo = VW * ANCHO_DIALOGO_RATIO;
         return anchoDialogo - ESPACIO_MEDIO * 2 - PORTRAIT_SIZE - ESPACIO_MEDIO;
     }
 
@@ -413,10 +536,18 @@ public class DialogOverlayScreen implements Screen {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
                         SoundManager.inst().click();
-                        storyManager.advance(opcion);
-                        SaveSystem.saveGame(estado);
-                        labelTexto.clearActions();
-                        mostrarNodoActual();
+                        if (opcion.getScoreValue() != null) {
+                            storyManager.advance(opcion);
+                            SaveSystem.saveGame(estado);
+                            mostrarFeedback(opcion.getScoreValue() > 0);
+                            feedbackTimer = DURACION_FEEDBACK;
+                            estadoUI = UIState.FEEDBACK;
+                        } else {
+                            storyManager.advance(opcion);
+                            SaveSystem.saveGame(estado);
+                            labelTexto.clearActions();
+                            mostrarNodoActual();
+                        }
                 }
             });
         }
@@ -466,6 +597,35 @@ public class DialogOverlayScreen implements Screen {
         }
 
         switch (estadoUI) {
+            case TRIAL_RESULT:
+                if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
+                    Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+                    if (overlayResultados != null) {
+                        overlayResultados.remove();
+                        overlayResultados = null;
+                    }
+                    estadoUI = UIState.DIALOGANDO;
+                    if (trialNextNodeId != null) {
+                        storyManager.advance(trialNextNodeId);
+                        trialNextNodeId = null;
+                        mostrarNodoActual();
+                    }
+                }
+                break;
+            case FEEDBACK:
+                if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
+                    Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+                    feedbackTimer = 0;
+                }
+                feedbackTimer -= delta;
+                if (feedbackTimer <= 0) {
+                    estadoUI = UIState.DIALOGANDO;
+                    labelTexto.clearActions();
+                    mostrarNodoActual();
+                }
+                break;
+            case MENU_PAUSA:
+                break;
             case DIALOGANDO:
                 if (opcionesBotones.size > 0) {
                     if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
@@ -513,8 +673,12 @@ public class DialogOverlayScreen implements Screen {
                                     mostrarNodoActual();
                                 }
                             } else if (nodo instanceof TrialNode) {
-                                storyManager.advance(nodo.getId());
-                                mostrarNodoActual();
+                                StoryManager.TrialResult result = storyManager.evaluateCurrentTrial();
+                                if (result != null) {
+                                    mostrarResultadosPrueba(result);
+                                } else {
+                                    mostrarFinHistoria();
+                                }
                             }
                         }
                         esperandoInput = false;
@@ -526,6 +690,7 @@ public class DialogOverlayScreen implements Screen {
                     }
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+                    dibujarMenuPausa();
                 }
                 break;
         }
@@ -591,10 +756,12 @@ public class DialogOverlayScreen implements Screen {
         panel.add(btnGuardar).fillX().padBottom(6).row();
         panel.add(btnSalir).fillX();
 
-        panel.setSize(240, 192);
+        float panelW = VW * 0.375f;
+        float panelH = VH * 0.533f;
+        panel.setSize(panelW, panelH);
         panel.setPosition(
-            (640 - 240) / 2f,
-            (360 - 192) / 2f
+            (VW - panelW) / 2f,
+            (VH - panelH) / 2f
         );
 
         stage.addActor(panel);

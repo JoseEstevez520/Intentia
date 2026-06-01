@@ -8,11 +8,13 @@ public class GameState {
     private String currentNodeId;
     private int currentTrialScore;
     private int totalPossibleScore;
+    private int trialCurrentQuestion;
 
     public GameState() {
         this.flags = new HashSet<>();
         this.currentTrialScore = 0;
         this.totalPossibleScore = 0;
+        this.trialCurrentQuestion = 0;
     }
 
 
@@ -69,6 +71,14 @@ public class GameState {
     public void resetTrialScore() {
         this.currentTrialScore = 0;
         this.totalPossibleScore = 0;
+    }
+
+    public int getTrialCurrentQuestion() {
+        return trialCurrentQuestion;
+    }
+
+    public void setTrialCurrentQuestion(int trialCurrentQuestion) {
+        this.trialCurrentQuestion = trialCurrentQuestion;
     }
 }
 
