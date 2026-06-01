@@ -1,0 +1,14 @@
+{
+  "abuelo": [
+    { "check": "flag", "flag": "tiene_brujula", "nodeId": "npc_abuelo_examen" },
+    { "check": "flag", "flag": "leyo_pergamino", "nodeId": "npc_abuelo_desvan" },
+    { "check": "flag", "flag": "mision_biblioteca", "nodeId": "npc_abuelo_apremia" },
+    { "check": "default", "nodeId": "npc_abuelo_hola" }
+  ],
+  "padre": [
+    { "check": "default", "nodeId": "npc_padre_hola" }
+  ],
+  "madre": [
+    { "check": "default", "nodeId": "npc_madre_hola" }
+  ]
+}

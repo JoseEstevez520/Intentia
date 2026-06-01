@@ -1,8 +1,8 @@
-# Intentia: El Legado
+# Intentia: El Legado — Rama `dev`
 
-> *"Juzgar si la vida vale o no vale la pena vivir es responder a la pregunta fundamental de la filosofía."* — Albert Camus
+> *Rama de desarrollo activo. Aquí se integran las features antes de pasar a `main`.*
 
-Una aventura narrativa interactiva construida con [libGDX](https://libgdx.com/), donde las decisiones del jugador moldean la historia a través de un sistema de flags, evaluaciones y ramificaciones.
+`dev` es la rama donde confluye el trabajo de las ramas satélite (`logic`, `persistence`, etc.). Cada feature se implementa, se prueba y se consolida aquí antes de fusionarse a `main`. El código puede estar en distintas fases de madurez — algunas partes funcionando por consola, otras en transición a la UI gráfica.
 
 ---
 
@@ -32,38 +32,33 @@ io.yourPath/
     └── SaveSystem.java              # Guardado/carga JSON del estado de juego.
 ```
 
-### Capa de Datos (DAO + SQLite)
+---
 
-La persistencia se maneja mediante JDBC con SQLite en `database/intentia.db`. El `NarrativeDAOImplementation` lee cinco tablas:
+## Flujo de Desarrollo
 
-| Tabla | Propósito |
+```
+        ramas feature
+     ┌─ logic ──────────┐
+     │  persistence     │
+     │  screens-ui      ├──→ dev ──→ main (lanzamiento)
+     │  tiled-maps      │
+     └──────────────────┘
+```
+
+Cada feature se desarrolla en su propia rama y se fusiona a `dev` cuando está lista. `dev` es el campo de pruebas antes del merge definitivo a `main`.
+
+---
+
+## Historial de Features Incorporadas
+
+| Commit | Feature |
 |---|---|
-| `characters` | Perfiles de personajes (id, nombre, ruta de retrato) |
-| `dialog_nodes` | Nodos narrativos (texto, orador, tipo, música) |
-| `dialog_options` | Opciones de diálogo por nodo (texto, destino, flags, puntuación) |
-| `dialog_actions` | Acciones/efectos secundarios al entrar a un nodo |
-| `trial_evaluations` | Evaluaciones de prueba (umbral, rutas de éxito/fallo) |
-
-### Motor Narrativo (StoryManager)
-
-El `StoryManager` es el cerebro del juego. Procesa la navegación entre nodos:
-
-1. **Entrada a nodo:** Ejecuta las `actions` del nodo como flags en `GameState`.
-2. **Opciones:** Filtra `DialogOption`s según `requiredFlag` del estado actual.
-3. **Evaluación (Trials):** Al llegar a un `TrialNode`, compara el porcentaje de acierto contra el umbral y bifurca la historia.
-4. **Persistencia:** El `SaveSystem` serializa el `GameState` a `save.json` usando el serializador JSON de libGDX.
-
-### Ciclo de Vida de una Decisión
-
-```
-Input Jugador → StoryManager.advance(option)
-  → Acumula puntuación en GameState
-  → Navega al nodo destino
-  → Si es TrialNode: evalúa porcentaje vs umbral
-    → Éxito: activa flag, bifurca a successTargetId
-    → Fallo: bifurca a failTargetId
-  → Renderiza nuevo estado en pantalla
-```
+| `af5c47e` | Migración de historia de JSON a SQLite |
+| `76ee3e6` | Diálogos e historia completos en SQLite |
+| `4e3aa93` | Sistema de excepciones personalizadas |
+| `a3c3b30` | Herencia de nodos: `NarrativeNode` → `DialogNode` / `TrialNode` |
+| `6ddae3f` | `UIState` enum para menú de pausa |
+| `ad31e4e` | Encapsulamiento: atributos privados con getters |
 
 ---
 
@@ -71,26 +66,30 @@ Input Jugador → StoryManager.advance(option)
 
 | Componente | Tecnología |
 |---|---|
-| Framework | libGDX |
-| Lenguaje | Java 17 |
-| Build | Gradle (multi-proyecto: `core` + `lwjgl3`) |
-| Base de datos | SQLite via JDBC |
+| Framework base | libGDX (solo `Game`/`Screen` + serialización) |
+| Lógica del juego | Java 17 puro |
+| Motor narrativo | `StoryManager` |
+| Base de datos | SQLite vía JDBC |
 | Serialización | libGDX `Json` |
-| Estado actual | Prototipo funcional por consola |
+| Build | Gradle |
+| UI actual | Consola (`System.out` / `Scanner`) |
 
 ---
 
 ## Ejecución
 
 ```bash
-# Clonar y ejecutar
 ./gradlew lwjgl3:run
 ```
 
-El juego requiere la base de datos `database/intentia.db` en el directorio de trabajo.
+Requiere `database/intentia.db` en el directorio de trabajo.
 
 ---
 
-## Proyecto Generado con gdx-liftoff
+## Próximas Features (en desarrollo)
 
-Este proyecto fue generado con [gdx-liftoff](https://github.com/libgdx/gdx-liftoff) e incluye lanzadores para escritorio (LWJGL3). La clase principal `Main` extiende `Game` y establece la primera pantalla.
+- [ ] Reemplazar consola por `Stage` + `Skin` de libGDX
+- [ ] Integración con mapas Tiled
+- [ ] Reproducción de vídeo WebM con transparencia
+- [ ] Pantalla de carga con `AssetManager`
+- [ ] Sistema de inventario visual
