@@ -82,7 +82,7 @@ public class NPC {
         this.movementType = movementType;
         this.speed = speed;
         this.patrolDistance = patrolDistance * 16;
-        this.interactionRadius = 120f;
+        this.interactionRadius = 48f;
         this.direction = Direction.ABAJO;
         this.state = State.IDLE;
         this.stateTime = 0;

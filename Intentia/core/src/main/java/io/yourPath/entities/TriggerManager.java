@@ -98,6 +98,17 @@ public class TriggerManager {
         }
     }
 
+    public void checkExits(Vector2 playerPos) {
+        Rectangle playerBounds = new Rectangle(playerPos.x, playerPos.y, 32, 48);
+        for (Trigger trigger : triggers) {
+            if (!trigger.isActive() && !trigger.isSpent()) {
+                if (!playerBounds.overlaps(trigger.getBounds())) {
+                    trigger.setActive(true);
+                }
+            }
+        }
+    }
+
     private static String getString(MapObject obj, String key, String fallback) {
         Object val = obj.getProperties().get(key);
         return val != null ? val.toString() : fallback;

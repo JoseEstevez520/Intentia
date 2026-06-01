@@ -123,22 +123,19 @@ public class Player {
         float dx = 0;
         float dy = 0;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             dx = -VELOCIDAD * delta;
             filaDireccion = FILA_IZQUIERDA;
             moviendo = true;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             dx = VELOCIDAD * delta;
             filaDireccion = FILA_DERECHA;
             moviendo = true;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             dy = VELOCIDAD * delta;
             filaDireccion = FILA_ARRIBA;
             moviendo = true;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             dy = -VELOCIDAD * delta;
             filaDireccion = FILA_ABAJO;
             moviendo = true;

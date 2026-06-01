@@ -48,8 +48,8 @@ public class GameScreen implements Screen {
 
     private NPC npcInteractivo;
     private Label labelInteraccion;
-    private Label labelTrigger;
     private boolean inicializado;
+    private boolean snapCamara = true;
 
     public GameScreen(Main game) {
         this.game = game;
@@ -86,7 +86,7 @@ public class GameScreen implements Screen {
             triggerManager = new TriggerManager();
             triggerManager.loadFromTiledLayer(mapa, "Beginning Fields", gameState);
 
-            stage = new Stage(viewport);
+            stage = new Stage(new FitViewport(640, 360));
             skin = SkinUtil.crear();
 
             crearUIInteraccion();
@@ -94,16 +94,14 @@ public class GameScreen implements Screen {
         }
         Gdx.input.setInputProcessor(stage);
         pausaAbierta = false;
+        snapCamara = true;
     }
 
     private void crearUIInteraccion() {
-        labelInteraccion = new Label("[E] Hablar", skin);
-        labelInteraccion.setVisible(false);
-        Table tabla = new Table();
-        tabla.setFillParent(true);
-        tabla.bottom().padBottom(60);
-        tabla.add(labelInteraccion);
-        stage.addActor(tabla);
+        labelInteraccion = new Label("", skin, "interaccion");
+        labelInteraccion.setVisible(true);
+        labelInteraccion.setPosition(280, 30);
+        stage.addActor(labelInteraccion);
     }
 
     @Override
@@ -136,9 +134,12 @@ public class GameScreen implements Screen {
             destinoY = mapaAlto / 2f;
         }
 
-        camara.position.lerp(new Vector3(destinoX, destinoY, 0), 0.08f);
-        camara.position.x = Math.round(camara.position.x);
-        camara.position.y = Math.round(camara.position.y);
+        if (snapCamara) {
+            camara.position.set(destinoX, destinoY, 0);
+            snapCamara = false;
+        } else {
+            camara.position.lerp(new Vector3(destinoX, destinoY, 0), 0.08f);
+        }
         camara.update();
 
         renderer.setView(camara);
@@ -158,7 +159,6 @@ public class GameScreen implements Screen {
                     case DIALOG:
                         pausaAbierta = true;
                         abrirDialogo(triggerActivado.getNodeId(), () -> {
-                            triggerManager.rearmTrigger(triggerActivado);
                             pausaAbierta = false;
                         });
                         break;
@@ -167,6 +167,8 @@ public class GameScreen implements Screen {
                 }
             }
         }
+
+        triggerManager.checkExits(jugador.posicion);
 
         manejarInteraccion();
 
@@ -193,6 +195,11 @@ public class GameScreen implements Screen {
 
         if (npcInteractivo != null) {
             labelInteraccion.setText("[E] " + obtenerNombreNPC(npcInteractivo.getNpcId()));
+            labelInteraccion.pack();
+            labelInteraccion.setPosition(
+                viewport.getWorldWidth() / 2f - labelInteraccion.getWidth() / 2f,
+                30
+            );
             labelInteraccion.setVisible(true);
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.E) && !pausaAbierta) {
@@ -213,6 +220,7 @@ public class GameScreen implements Screen {
                 });
             }
         } else {
+            labelInteraccion.setText("");
             labelInteraccion.setVisible(false);
         }
     }
@@ -238,6 +246,7 @@ public class GameScreen implements Screen {
     @Override
     public void resize(int ancho, int alto) {
         viewport.update(ancho, alto, true);
+        stage.getViewport().update(ancho, alto, true);
     }
 
     @Override

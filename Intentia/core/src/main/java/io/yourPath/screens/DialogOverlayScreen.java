@@ -3,6 +3,7 @@ package io.yourPath.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.yourPath.Main;
 import io.yourPath.audio.MusicCommand;
@@ -31,10 +33,14 @@ import io.yourPath.utils.SaveSystem;
 import io.yourPath.utils.SkinUtil;
 import io.yourPath.utils.TypewriterAction;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DialogOverlayScreen implements Screen {
+    private static final String ID_JUGADOR = "protagonista";
+
     private Main game;
     private StoryManager storyManager;
     private Map<String, CharacterProfile> personajes;
@@ -47,9 +53,19 @@ public class DialogOverlayScreen implements Screen {
     private Label labelNombre;
     private Label labelTexto;
     private Table tablaOpciones;
+    private Table zonaOpciones;
     private Image retrato;
     private Label flechaContinuar;
     private TypewriterAction typewriter;
+
+    private Array<TextButton> opcionesBotones;
+    private int indiceOpcion = -1;
+    private DialogOption opcionUnicaAuto;
+
+    private static final int MAX_CHARS_POR_PAGINA = 130;
+    private List<String> paginasTexto;
+    private int paginaActual;
+    private Label labelPagina;
 
     private Screen fondoJuego;
     private boolean pausaDirecto;
@@ -105,26 +121,33 @@ public class DialogOverlayScreen implements Screen {
         labelTexto.setWrap(true);
 
         tablaOpciones = new Table();
-        tablaOpciones.padTop(2);
+
+        labelPagina = new Label("", skin, "dialogo-texto");
+        labelPagina.setVisible(false);
+
+        zonaOpciones = new Table();
+        zonaOpciones.left();
+        zonaOpciones.add(tablaOpciones).left().expandX().fillX();
+        zonaOpciones.add(labelPagina).right().padLeft(8);
 
         flechaContinuar = new Label("\u25B8", skin, "dialogo-texto");
         flechaContinuar.setVisible(false);
-        tablaOpciones.add(flechaContinuar).right().padTop(4);
 
         Table textoColumna = new Table();
-        textoColumna.add(labelNombre).left().padBottom(1).row();
-        textoColumna.add(labelTexto).left().expandX().fillX();
+        textoColumna.left();
+        textoColumna.add(labelNombre).left().padBottom(2).row();
+        textoColumna.add(labelTexto).left().expand().fill().row();
+        textoColumna.add(zonaOpciones).left().expandX().fillX().height(28);
 
         contenedorDialogo = new Table(skin);
         contenedorDialogo.setBackground(skin.newDrawable("fondo-dialogo"));
-        contenedorDialogo.pad(4, 6, 4, 6);
+        contenedorDialogo.pad(5, 7, 5, 7);
 
-        contenedorDialogo.add(retrato).size(48, 48).left().padRight(4);
-        contenedorDialogo.add(textoColumna).expandX().fillX().row();
-        contenedorDialogo.add(tablaOpciones).colspan(2).center().row();
+        contenedorDialogo.add(retrato).size(72, 72).left().padRight(6).center();
+        contenedorDialogo.add(textoColumna).expandX().fillX().height(100);
 
         raiz.add().expandY().row();
-        raiz.add(contenedorDialogo).width(520).expandX().center().padBottom(6);
+        raiz.add(contenedorDialogo).width(520).height(145).expandX().center().padBottom(7);
         mostrarNodoActual();
     }
 
@@ -141,6 +164,10 @@ public class DialogOverlayScreen implements Screen {
         flechaContinuar.setVisible(false);
         esperandoInput = false;
         tiempoEspera = 0;
+        opcionesBotones = new Array<>();
+        indiceOpcion = -1;
+        opcionUnicaAuto = null;
+        labelPagina.setVisible(false);
 
         CharacterProfile hablante = personajes.get(nodo.getSpeakerId());
         if (hablante != null) {
@@ -149,9 +176,12 @@ public class DialogOverlayScreen implements Screen {
             cargarRetrato(hablante);
         }
 
-        typewriter = new TypewriterAction(labelTexto, nodo.getText(), Math.max(0.8f, nodo.getText().length() * 0.04f));
+        paginasTexto = dividirEnPaginas(nodo.getText());
+        paginaActual = 0;
+        String textoPagina = paginasTexto.get(0);
+        typewriter = new TypewriterAction(labelTexto, textoPagina, Math.max(0.8f, textoPagina.length() * 0.04f));
         labelTexto.addAction(Actions.sequence(typewriter, Actions.run(() -> {
-            mostrarOpciones(nodo);
+            alCompletarPagina(nodo);
         })));
 
         if (nodo.getMusicTrack() != null && !nodo.getMusicTrack().equals(pistaActual)) {
@@ -184,24 +214,93 @@ public class DialogOverlayScreen implements Screen {
         }
     }
 
+    private List<String> dividirEnPaginas(String texto) {
+        List<String> paginas = new ArrayList<>();
+        if (texto.length() <= MAX_CHARS_POR_PAGINA) {
+            paginas.add(texto);
+            return paginas;
+        }
+        String resto = texto;
+        while (resto.length() > MAX_CHARS_POR_PAGINA) {
+            int corte = resto.lastIndexOf(' ', MAX_CHARS_POR_PAGINA);
+            if (corte == -1) corte = MAX_CHARS_POR_PAGINA;
+            paginas.add(resto.substring(0, corte).trim());
+            resto = resto.substring(corte).trim();
+        }
+        if (!resto.isEmpty()) paginas.add(resto);
+        return paginas;
+    }
+
+    private void alCompletarPagina(NarrativeNode nodo) {
+        if (paginaActual < paginasTexto.size() - 1) {
+            esperandoInput = true;
+            actualizarIndicadorPagina();
+        } else {
+            mostrarOpciones(nodo);
+        }
+    }
+
+    private void actualizarIndicadorPagina() {
+        labelPagina.setText((paginaActual + 1) + "/" + paginasTexto.size());
+        labelPagina.setVisible(true);
+    }
+
     private void mostrarOpciones(NarrativeNode nodo) {
         if (nodo instanceof DialogNode) {
             DialogNode dn = (DialogNode) nodo;
             if (dn.getOptions() != null && !dn.getOptions().isEmpty()) {
+                opcionUnicaAuto = null;
                 for (DialogOption opcion : dn.getOptions()) {
                     TextButton btn = crearBotonOpcion(opcion);
-                    tablaOpciones.add(btn).fillX().padBottom(4).row();
+                    opcionesBotones.add(btn);
+                }
+                boolean unicaDesbloqueada = opcionesBotones.size == 1
+                    && dn.getOptions().get(0).getRequiredFlag() == null
+                    || (dn.getOptions().get(0).getRequiredFlag() != null
+                        && estado.hasFlag(dn.getOptions().get(0).getRequiredFlag()));
+                if (unicaDesbloqueada) {
+                    opcionUnicaAuto = dn.getOptions().get(0);
+                    opcionesBotones.clear();
+                    esperandoInput = true;
+                    tablaOpciones.add(flechaContinuar).right();
+                    flechaContinuar.setVisible(true);
+                } else {
+                    for (TextButton btn : opcionesBotones) {
+                        tablaOpciones.add(btn).expandX().fillX().uniform().padRight(3);
+                    }
+                    indiceOpcion = 0;
+                    resaltarOpcion();
                 }
             } else if (dn.getNextId() != null) {
                 esperandoInput = true;
+                tablaOpciones.add(flechaContinuar).right();
                 flechaContinuar.setVisible(true);
             } else {
                 mostrarFinHistoria();
             }
         } else if (nodo instanceof TrialNode) {
             esperandoInput = true;
+            tablaOpciones.add(flechaContinuar).right();
             flechaContinuar.setVisible(true);
         }
+    }
+
+    private void resaltarOpcion() {
+        for (int i = 0; i < opcionesBotones.size; i++) {
+            TextButton btn = opcionesBotones.get(i);
+            if (i == indiceOpcion) {
+                btn.getLabel().setColor(VERDE_AGUA);
+            } else {
+                btn.getLabel().setColor(Color.WHITE);
+            }
+        }
+    }
+
+    private final Color VERDE_AGUA = new Color(0x7F / 255f, 0xFF / 255f, 0xD4 / 255f, 1);
+
+    private void seleccionarOpcion(int index) {
+        if (index < 0 || index >= opcionesBotones.size) return;
+        opcionesBotones.get(index).fire(new ChangeListener.ChangeEvent());
     }
 
     private TextButton crearBotonOpcion(DialogOption opcion) {
@@ -268,23 +367,53 @@ public class DialogOverlayScreen implements Screen {
 
         switch (estadoUI) {
             case DIALOGANDO:
-                if (esperandoInput) {
+                if (opcionesBotones.size > 0) {
+                    if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+                        indiceOpcion = (indiceOpcion - 1 + opcionesBotones.size) % opcionesBotones.size;
+                        resaltarOpcion();
+                    }
+                    if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+                        indiceOpcion = (indiceOpcion + 1) % opcionesBotones.size;
+                        resaltarOpcion();
+                    }
+                    if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
+                        Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+                        seleccionarOpcion(indiceOpcion);
+                    }
+                } else if (esperandoInput) {
                     tiempoEspera += delta;
                     flechaContinuar.setVisible((int)(tiempoEspera * 3) % 2 == 0);
                     if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
                         Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-                        NarrativeNode nodo = storyManager.getCurrentNode();
-                        if (nodo == null) {
-                            mostrarFinHistoria();
-                        } else if (nodo instanceof DialogNode) {
-                            DialogNode dn = (DialogNode) nodo;
-                            if (dn.getNextId() != null) {
-                                storyManager.advance(dn.getNextId());
+                        if (paginaActual < paginasTexto.size() - 1) {
+                            paginaActual++;
+                            String textoPagina = paginasTexto.get(paginaActual);
+                            labelTexto.clearActions();
+                            typewriter = new TypewriterAction(labelTexto, textoPagina, Math.max(0.8f, textoPagina.length() * 0.04f));
+                            labelTexto.addAction(Actions.sequence(typewriter, Actions.run(() -> {
+                                alCompletarPagina(storyManager.getCurrentNode());
+                            })));
+                        } else if (opcionUnicaAuto != null) {
+                            DialogOption opt = opcionUnicaAuto;
+                            opcionUnicaAuto = null;
+                            storyManager.advance(opt);
+                            SaveSystem.saveGame(estado);
+                            labelTexto.clearActions();
+                            mostrarNodoActual();
+                        } else {
+                            NarrativeNode nodo = storyManager.getCurrentNode();
+                            if (nodo == null) {
+                                mostrarFinHistoria();
+                            } else if (nodo instanceof DialogNode) {
+                                DialogNode dn = (DialogNode) nodo;
+                                if (dn.getNextId() != null) {
+                                    storyManager.advance(dn.getNextId());
+                                    mostrarNodoActual();
+                                }
+                            } else if (nodo instanceof TrialNode) {
+                                storyManager.advance(nodo.getId());
                                 mostrarNodoActual();
                             }
-                        } else if (nodo instanceof TrialNode) {
-                            storyManager.advance(nodo.getId());
-                            mostrarNodoActual();
                         }
                         esperandoInput = false;
                     }

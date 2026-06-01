@@ -64,6 +64,7 @@ public class SkinUtil {
 
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
         Label.LabelStyle labelNombreStyle = new Label.LabelStyle(fontNombre, MARRON_MADERA);
+        Label.LabelStyle labelInteraccionStyle = new Label.LabelStyle(font, VERDE_AGUA);
         Label.LabelStyle labelDialogoStyle = new Label.LabelStyle(font, MARRON_OSCURO);
         Label.LabelStyle labelNombreDialogoStyle = new Label.LabelStyle(font, MARRON_MADERA);
 
@@ -93,6 +94,7 @@ public class SkinUtil {
         skin.add("font-nombre", fontNombre);
         skin.add("default", labelStyle);
         skin.add("nombre", labelNombreStyle);
+        skin.add("interaccion", labelInteraccionStyle);
         skin.add("dialogo-texto", labelDialogoStyle);
         skin.add("nombre-dialogo", labelNombreDialogoStyle);
         skin.add("default", btnStyle);

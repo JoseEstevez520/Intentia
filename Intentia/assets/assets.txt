@@ -126,6 +126,8 @@ dialog/dialog_routes.json
 fonts/gnf.regular.ttf
 music/exploracion.mp3
 music/menu.mp3
+portraits/father_normal.png
+portraits/player_neutral.png
 portraits/retrato.png
 save.json
 sprites/Base.png
