@@ -28,5 +28,8 @@ Thumbs.db
 *.log
 tmp/
 
+# -- Asset packs de terceros no utilizados
+kenney_ui-pack-pixel-adventure/
+
 # -- Carpeta de investigacion
 /investigacion
