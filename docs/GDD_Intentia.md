@@ -25,12 +25,18 @@ Para asegurar la cohesión visual entre los vídeos 3D (cinemáticas) y el mundo
 ### 💭 El Sueño Premonitorio (Cinemática Inicial)
 El juego arranca directamente con un potente *vídeo WebM* de 15 segundos. Tras mostrar la inmensidad de una Luna rodeada de nubes Verde Agua, aparece la figura mística del **Mago Pitof**, señalando al cielo y recitando su profecía con una voz profunda. De pronto, la música y la imagen se rompen en un corte acústico seco y un **fundido a negro total**.
 
-### 🎮 La Llegada y el Despertar
-La transición a la realidad comienza con los padres conduciendo hacia el pueblo. Hablan en voz baja sobre las "excentricidades" del abuelo y cómo siempre intenta llenar la cabeza del niño de fantasías. El niño, de 9 años, abre los ojos y se pregunta internamente: **"¿...era un sueño?"**, mientras se estira en el asiento de atrás. De repente, la madre se gira emocionada al verle despertar: *"¡Mira, ya se ha despertado!"*. Un plano de dron nos muestra el pequeño coche familiar recorriendo la carretera rodeada de bosque hasta aparcar frente a la casa del abuelo.
+### 🎮 La Llegada (Mundo Real — Presente)
+La apertura del juego es silenciosa. **Una furgo** se detiene frente a una casa aislada. **Leo** (el padre) conduce. **Ray** (8-12) mira por la ventana. No hay diálogo — solo el ruido del motor que se apaga.
 
-El niño baja del coche y se encuentra con el abuelo, quien le espera en el porche. El anciano es la **representación pura del autor en su vejez**: un hombre atlético de unos 70 años con camisa marrón remangada y reloj de plata. La gran aventura está a punto de comenzar.
+Leo baja, saca la mochila del maletero, la deja en el suelo. Mira la casa un momento. Mira a Ray. No hay abrazo. No hay escena. Dice algo breve — *"Venga, baja"* o *"Pórtate bien"* — y se mete de vuelta al coche.
 
-> **Nota de Dirección (El Efecto Espejo):** Aunque dentro del universo del juego son literalmente un abuelo y su nieto que ignoran cualquier trasfondo, a nivel de subtexto representan al autor en dos etapas de su vida. Para reforzar esta conexión de forma invisible al jugador sin elevar la complejidad de programación (sin crear animaciones extra para el jugador), se mostrará un detalle muy sutil (un tic, una manía o gesto idéntico) que ambos comparten **directamente en el vídeo/cinemática de introducción** (donde el niño tiene 9 años). Así se establece la conexión sin saturar los recursos en el motor.
+Ray se queda solo en la acera con la mochila. La furgo arranca. Se aleja. Las luces traseras se pierden en la carretera.
+
+**Elio** (el abuelo) está en el umbral. No ha salido a recibirle. Solo espera.
+
+Ray se da la vuelta. La casa es vieja. Ventanas con polvo. Un taller en la planta baja. Una luz encendida arriba. Primer encuentro: sin palabras. Elio le señala la puerta con la cabeza. Ray entra.
+
+> **Nota de Dirección (Paralelismo):** Esta misma composición — un coche que se va, un niño con una mochila, un adulto que espera en silencio — se repite dentro de la consola cuando Elio llega al taller de Cierzo. El jugador lo reconocerá sin que nadie se lo señale.
 
 ### 🎮 El Inicio: El Flash Verde y el Porche
 Tras la cinemática, el paso al juego no es inmediato.

@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.video.VideoPlayer;
 import com.badlogic.gdx.video.VideoPlayerCreator;
 import io.yourPath.Main;
+import static io.yourPath.screens.TransitionConfig.*;
 
 public class CinematicScreen implements Screen {
     private Main juego;
@@ -63,7 +64,7 @@ public class CinematicScreen implements Screen {
         if (!listo) {
             if (terminado) {
                 dispose();
-                juego.setScreen(siguiente);
+                juego.transitarA(siguiente, flashVerdeAgua());
             }
             return;
         }
@@ -76,7 +77,7 @@ public class CinematicScreen implements Screen {
 
         if (terminado) {
             dispose();
-            juego.setScreen(siguiente);
+            juego.transitarA(siguiente, flashVerdeAgua());
             return;
         }
 

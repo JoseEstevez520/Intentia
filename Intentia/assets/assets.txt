@@ -130,6 +130,14 @@ portraits/father_normal.png
 portraits/player_neutral.png
 portraits/retrato.png
 save.json
+sfx/_click.wav
+sfx/_confirm.wav
+sfx/_deny.wav
+sfx/_interact.wav
+sfx/_page.wav
+sfx/_paso_der.wav
+sfx/_paso_izq.wav
+sfx/_typewriter.wav
 sprites/Base.png
 sprites/Character_Idle.png
 sprites/Character_Slash.png

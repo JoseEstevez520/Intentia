@@ -114,6 +114,17 @@ public class SettingsManager {
         return ordenadas;
     }
 
+    public void setResolution(int w, int h) {
+        data.resolutionX = w;
+        data.resolutionY = h;
+        if (!data.fullscreen) {
+            try {
+                Gdx.graphics.setWindowedMode(w, h);
+            } catch (Exception ignored) {}
+        }
+        save();
+    }
+
     public void setMusicVolume(float v) {
         data.musicVolume = Math.max(0, Math.min(1, v));
         save();
@@ -123,6 +134,7 @@ public class SettingsManager {
     public void setSfxVolume(float v) {
         data.sfxVolume = Math.max(0, Math.min(1, v));
         save();
+        notificar();
     }
 
     public SettingsData data() { return data; }

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import io.yourPath.audio.SoundManager;
 
 public class Player {
 
@@ -40,6 +41,10 @@ public class Player {
     private Texture walkSheetTexture;
     private Texture fallbackTexture;
     private Texture placeholderTexture;
+
+    private float tiempoPasos = 0;
+    private static final float INTERVALO_PASOS_BASE = 0.35f;
+    private boolean pasoIzquierdo = false;
 
     public Vector2 posicion;
 
@@ -146,8 +151,16 @@ public class Player {
 
         if (moviendo) {
             tiempoAnimacion += delta;
+            tiempoPasos += delta;
+            float intervalo = INTERVALO_PASOS_BASE * (0.9f + com.badlogic.gdx.math.MathUtils.random(0.2f));
+            if (tiempoPasos >= intervalo) {
+                tiempoPasos = 0;
+                pasoIzquierdo = !pasoIzquierdo;
+                SoundManager.inst().paso(pasoIzquierdo);
+            }
         } else {
             tiempoAnimacion = 0;
+            tiempoPasos = 0;
         }
 
         if (moviendo) {

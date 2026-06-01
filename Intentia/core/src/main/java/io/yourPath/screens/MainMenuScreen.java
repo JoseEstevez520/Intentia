@@ -16,10 +16,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.yourPath.Main;
 import io.yourPath.audio.MusicCommand;
+import io.yourPath.audio.SoundManager;
 import io.yourPath.logic.StoryManager;
 import io.yourPath.models.GameState;
 import io.yourPath.utils.SaveSystem;
 import io.yourPath.utils.SkinUtil;
+import static io.yourPath.screens.TransitionConfig.*;
 
 public class MainMenuScreen implements Screen {
     private Main game;
@@ -63,11 +65,12 @@ public class MainMenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (transicionando) return;
+                SoundManager.inst().click();
                 transicionando = true;
                 game.getStoryManager().start("car_awakening");
                 Screen anterior = game.getScreen();
                 game.setScreen(new CinematicScreen(game, new DialogOverlayScreen(game)));
-                if (anterior != null && anterior != game.getScreen()) anterior.dispose();
+                if (anterior != null) anterior.dispose();
             }
         });
 
@@ -75,13 +78,12 @@ public class MainMenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (transicionando) return;
+                SoundManager.inst().click();
                 transicionando = true;
                 GameState guardado = SaveSystem.loadGame();
                 if (guardado != null) {
                     game.setStoryManager(new StoryManager(game.getStory(), guardado));
-                    Screen anterior = game.getScreen();
-                    game.setScreen(new DialogOverlayScreen(game));
-                    if (anterior != null && anterior != game.getScreen()) anterior.dispose();
+                    game.transitarA(new DialogOverlayScreen(game), fadeToBlack());
                 }
             }
         });
@@ -90,10 +92,9 @@ public class MainMenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (transicionando) return;
+                SoundManager.inst().click();
                 transicionando = true;
-                Screen anterior = game.getScreen();
-                game.setScreen(new GameScreen(game));
-                if (anterior != null && anterior != game.getScreen()) anterior.dispose();
+                game.transitarA(new GameScreen(game), crossfade());
             }
         });
 
@@ -101,11 +102,10 @@ public class MainMenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (transicionando) return;
+                SoundManager.inst().click();
                 transicionando = true;
                 game.getStoryManager().getGameState().resetTrialScore();
-                Screen anterior = game.getScreen();
-                game.setScreen(new DialogOverlayScreen(game, "trial_start"));
-                if (anterior != null && anterior != game.getScreen()) anterior.dispose();
+                game.transitarA(new DialogOverlayScreen(game, "trial_start"), fadeToBlack());
             }
         });
 
@@ -113,14 +113,16 @@ public class MainMenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (transicionando) return;
+                SoundManager.inst().click();
                 transicionando = true;
-                game.setScreen(new SettingsScreen(game));
+                game.transitarA(new SettingsScreen(game), crossfade());
             }
         });
 
         btnSalir.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                SoundManager.inst().click();
                 Gdx.app.exit();
             }
         });

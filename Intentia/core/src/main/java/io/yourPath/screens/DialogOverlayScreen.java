@@ -10,8 +10,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -21,6 +23,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.yourPath.Main;
 import io.yourPath.audio.MusicCommand;
+import io.yourPath.audio.SoundManager;
 import io.yourPath.logic.StoryManager;
 import io.yourPath.models.CharacterProfile;
 import io.yourPath.models.DialogNode;
@@ -30,8 +33,10 @@ import io.yourPath.models.NarrativeNode;
 import io.yourPath.models.TrialNode;
 import io.yourPath.models.UIState;
 import io.yourPath.utils.SaveSystem;
+import static io.yourPath.utils.Colors.*;
 import io.yourPath.utils.SkinUtil;
 import io.yourPath.utils.TypewriterAction;
+import static io.yourPath.screens.TransitionConfig.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +63,7 @@ public class DialogOverlayScreen implements Screen {
     private Label flechaContinuar;
     private TypewriterAction typewriter;
 
-    private Array<TextButton> opcionesBotones;
+    private Array<TextButton> opcionesBotones = new Array<>();
     private int indiceOpcion = -1;
     private DialogOption opcionUnicaAuto;
 
@@ -81,6 +86,15 @@ public class DialogOverlayScreen implements Screen {
     private Label labelBadge;
     private Label labelPuntos;
     private static final int TOTAL_PREGUNTAS_PRUEBA = 3;
+    private static final float ANCHO_DIALOGO_RATIO = 0.82f;
+    private static final float PORTRAIT_SIZE = 72f;
+    private static final float ESPACIO_PEQ = 4f;
+    private static final float ESPACIO_MEDIO = 8f;
+    private static final float ESPACIO_GRANDE = 16f;
+    private static final float ALTURA_DIALOGO = 155f;
+    private static final float ALTURA_OPCIONES_ROW = 28f;
+
+    private Cell badgeCell;
 
     public DialogOverlayScreen(Main game) {
         this(game, null, null);
@@ -138,30 +152,32 @@ public class DialogOverlayScreen implements Screen {
         flechaContinuar = new Label("\u25B8", skin, "dialogo-texto");
         flechaContinuar.setVisible(false);
 
-        Table textoColumna = new Table();
-        textoColumna.left();
-        textoColumna.add(labelNombre).left().padBottom(2).row();
-        textoColumna.add(labelTexto).left().expand().fill().row();
-        textoColumna.add(zonaOpciones).left().expandX().fillX().height(28);
-
-        contenedorDialogo = new Table(skin);
-        contenedorDialogo.setBackground(skin.newDrawable("fondo-dialogo"));
-        contenedorDialogo.pad(5, 7, 5, 7);
-
-        contenedorDialogo.add(retrato).size(72, 72).left().padRight(6).center();
-        contenedorDialogo.add(textoColumna).expandX().fillX().height(100);
-
         labelBadge = new Label("[PRUEBA]", skin, "dialogo-texto");
         labelBadge.setColor(new Color(1f, 0.55f, 0.1f, 1f));
         labelPuntos = new Label("○  ○  ○", skin, "dialogo-texto");
         badgeTable = new Table();
-        badgeTable.add(labelBadge).left().padRight(16);
+        badgeTable.add(labelBadge).left().padRight(ESPACIO_GRANDE);
         badgeTable.add(labelPuntos).right().expandX();
         badgeTable.setVisible(false);
 
-        raiz.add().expandY().row();
-        raiz.add(badgeTable).width(520).expandX().center().padBottom(1).row();
-        raiz.add(contenedorDialogo).width(520).height(145).expandX().center().padBottom(7);
+        Table textoColumna = new Table();
+        textoColumna.left();
+        textoColumna.add(labelNombre).left().padBottom(2).row();
+        textoColumna.add(labelTexto).left().expand().fill().padBottom(ESPACIO_PEQ).row();
+        textoColumna.add(zonaOpciones).left().expandX().fillX().height(ALTURA_OPCIONES_ROW);
+
+        contenedorDialogo = new Table(skin);
+        contenedorDialogo.setBackground(skin.newDrawable("fondo-dialogo"));
+        contenedorDialogo.pad(ESPACIO_MEDIO);
+
+        badgeCell = contenedorDialogo.add(badgeTable).colspan(2).expandX().fillX().padBottom(ESPACIO_PEQ);
+        contenedorDialogo.row();
+        contenedorDialogo.add(retrato).size(PORTRAIT_SIZE, PORTRAIT_SIZE).left().padRight(ESPACIO_MEDIO);
+        contenedorDialogo.add(textoColumna).expand().fill();
+
+        float anchoDialogo = 640 * ANCHO_DIALOGO_RATIO;
+        raiz.add().expand().row();
+        raiz.add(contenedorDialogo).width(anchoDialogo).height(ALTURA_DIALOGO).expandX().center().padBottom(ESPACIO_GRANDE);
         mostrarNodoActual();
     }
 
@@ -172,10 +188,17 @@ public class DialogOverlayScreen implements Screen {
             return;
         }
 
-        if (badgeTable != null) {
+        if (badgeCell != null) {
             boolean esPrueba = esNodoPrueba(nodo);
-            badgeTable.setVisible(esPrueba);
-            if (esPrueba) actualizarPuntos();
+            if (esPrueba) {
+                badgeCell.maxHeight(999).minHeight(0);
+                badgeTable.setVisible(true);
+                actualizarPuntos();
+            } else {
+                badgeCell.maxHeight(0).minHeight(0);
+                badgeTable.setVisible(false);
+            }
+            contenedorDialogo.invalidate();
         }
 
         labelNombre.setVisible(false);
@@ -199,7 +222,8 @@ public class DialogOverlayScreen implements Screen {
         paginasTexto = dividirEnPaginas(nodo.getText());
         paginaActual = 0;
         String textoPagina = paginasTexto.get(0);
-        typewriter = new TypewriterAction(labelTexto, textoPagina, Math.max(0.8f, textoPagina.length() * 0.04f));
+        typewriter = new TypewriterAction(labelTexto, textoPagina);
+        typewriter.setOnCharReveal(c -> SoundManager.inst().typewriter(c));
         labelTexto.addAction(Actions.sequence(typewriter, Actions.run(() -> {
             alCompletarPagina(nodo);
         })));
@@ -308,9 +332,7 @@ public class DialogOverlayScreen implements Screen {
                     tablaOpciones.add(flechaContinuar).right();
                     flechaContinuar.setVisible(true);
                 } else {
-                    for (TextButton btn : opcionesBotones) {
-                        tablaOpciones.add(btn).expandX().fillX().uniform().padRight(3);
-                    }
+                    disponerBotonesEnFilas();
                     indiceOpcion = 0;
                     resaltarOpcion();
                 }
@@ -339,7 +361,40 @@ public class DialogOverlayScreen implements Screen {
         }
     }
 
-    private final Color VERDE_AGUA = new Color(0x7F / 255f, 0xFF / 255f, 0xD4 / 255f, 1);
+    private void disponerBotonesEnFilas() {
+        GlyphLayout glyphLayout = new GlyphLayout();
+        float anchoUtil = getAnchoOpciones();
+        int n = opcionesBotones.size;
+        int porFila = n <= 3 ? n : 2;
+
+        for (int i = 0; i < n; i++) {
+            TextButton btn = opcionesBotones.get(i);
+            int fila = i / porFila;
+            int enEstaFila = Math.min(porFila, n - fila * porFila);
+            int idxEnFila = i % porFila;
+
+            glyphLayout.setText(btn.getStyle().font, btn.getText());
+            float anchoTexto = glyphLayout.width + 16f;
+
+            float anchoBoton = (anchoUtil - (enEstaFila - 1) * 3f) / enEstaFila;
+            if (anchoTexto > anchoBoton) {
+                btn.getLabel().setFontScale(Math.max(anchoBoton / anchoTexto, 0.55f));
+            }
+
+            tablaOpciones.add(btn).expandX().fillX().uniform();
+            if (idxEnFila < enEstaFila - 1) {
+                tablaOpciones.add().padRight(3);
+            }
+            if (idxEnFila == enEstaFila - 1 && i < n - 1) {
+                tablaOpciones.row();
+            }
+        }
+    }
+
+    private float getAnchoOpciones() {
+        float anchoDialogo = 640 * ANCHO_DIALOGO_RATIO;
+        return anchoDialogo - ESPACIO_MEDIO * 2 - PORTRAIT_SIZE - ESPACIO_MEDIO;
+    }
 
     private void seleccionarOpcion(int index) {
         if (index < 0 || index >= opcionesBotones.size) return;
@@ -353,14 +408,15 @@ public class DialogOverlayScreen implements Screen {
             btn = new TextButton("???", skin, "bloqueado");
             btn.getLabel().setFontScale(0.75f);
         } else {
-            btn = new TextButton(opcion.getText(), skin);
-            btn.addListener(new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent event, Actor actor) {
-                    storyManager.advance(opcion);
-                    SaveSystem.saveGame(estado);
-                    labelTexto.clearActions();
-                    mostrarNodoActual();
+                btn = new TextButton(opcion.getText(), skin);
+                btn.addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        SoundManager.inst().click();
+                        storyManager.advance(opcion);
+                        SaveSystem.saveGame(estado);
+                        labelTexto.clearActions();
+                        mostrarNodoActual();
                 }
             });
         }
@@ -386,7 +442,8 @@ public class DialogOverlayScreen implements Screen {
         btnVolver.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new MainMenuScreen(game));
+                SoundManager.inst().click();
+                game.transitarA(new MainMenuScreen(game), fadeToBlack());
             }
         });
         tablaOpciones.add(btnVolver).padTop(12);
@@ -429,10 +486,12 @@ public class DialogOverlayScreen implements Screen {
                     if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) ||
                         Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
                         if (paginaActual < paginasTexto.size() - 1) {
+                            SoundManager.inst().page();
                             paginaActual++;
                             String textoPagina = paginasTexto.get(paginaActual);
                             labelTexto.clearActions();
-                            typewriter = new TypewriterAction(labelTexto, textoPagina, Math.max(0.8f, textoPagina.length() * 0.04f));
+                            typewriter = new TypewriterAction(labelTexto, textoPagina);
+                            typewriter.setOnCharReveal(c -> SoundManager.inst().typewriter(c));
                             labelTexto.addAction(Actions.sequence(typewriter, Actions.run(() -> {
                                 alCompletarPagina(storyManager.getCurrentNode());
                             })));
@@ -466,12 +525,8 @@ public class DialogOverlayScreen implements Screen {
                         typewriter.completarInstantaneo();
                     }
                 }
-                if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && !pausaAbierta) {
-                    estadoUI = UIState.MENU_PAUSA;
+                if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
                 }
-                break;
-            case MENU_PAUSA:
-                dibujarMenuPausa();
                 break;
         }
 
@@ -499,6 +554,7 @@ public class DialogOverlayScreen implements Screen {
         btnContinuar.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                SoundManager.inst().click();
                 if (pausaDirecto && fondoJuego != null) {
                     panel.remove();
                     pausaAbierta = false;
@@ -513,6 +569,7 @@ public class DialogOverlayScreen implements Screen {
         btnGuardar.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                SoundManager.inst().click();
                 SaveSystem.saveGame(estado);
                 cerrar.run();
             }
@@ -522,9 +579,10 @@ public class DialogOverlayScreen implements Screen {
         btnSalir.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                SoundManager.inst().click();
                 panel.remove();
                 pausaAbierta = false;
-                game.setScreen(new MainMenuScreen(game));
+                game.transitarA(new MainMenuScreen(game), fadeToBlack());
             }
         });
 

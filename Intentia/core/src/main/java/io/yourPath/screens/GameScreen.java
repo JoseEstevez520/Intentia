@@ -14,11 +14,17 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
 import io.yourPath.Main;
+import io.yourPath.audio.SoundManager;
+import io.yourPath.entities.Direction;
 import io.yourPath.entities.NPC;
 import io.yourPath.entities.NpcManager;
 import io.yourPath.entities.Player;
@@ -40,6 +46,7 @@ public class GameScreen implements Screen {
     private TriggerManager triggerManager;
     private GameState gameState;
     private boolean pausaAbierta = false;
+    private boolean esFondo = false;
     private int tilesAncho;
     private int tilesAlto;
 
@@ -48,6 +55,7 @@ public class GameScreen implements Screen {
 
     private NPC npcInteractivo;
     private Label labelInteraccion;
+    private Table pausaPanel;
     private boolean inicializado;
     private boolean snapCamara = true;
 
@@ -90,17 +98,19 @@ public class GameScreen implements Screen {
             skin = SkinUtil.crear();
 
             crearUIInteraccion();
+            crearUIPausa();
             inicializado = true;
         }
         Gdx.input.setInputProcessor(stage);
         pausaAbierta = false;
+        esFondo = false;
         snapCamara = true;
     }
 
     private void crearUIInteraccion() {
         labelInteraccion = new Label("", skin, "interaccion");
-        labelInteraccion.setVisible(true);
-        labelInteraccion.setPosition(280, 30);
+        labelInteraccion.setVisible(false);
+        labelInteraccion.setOrigin(com.badlogic.gdx.utils.Align.center);
         stage.addActor(labelInteraccion);
     }
 
@@ -175,12 +185,12 @@ public class GameScreen implements Screen {
         stage.act(delta);
         stage.draw();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) && !pausaAbierta) {
-            pausaAbierta = true;
-            DialogOverlayScreen dialog = new DialogOverlayScreen(game);
-            dialog.setFondo(this);
-            dialog.irAPausaDirecto();
-            game.setScreen(dialog);
+        if (!esFondo && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            if (pausaPanel.isVisible()) {
+                cerrarPausa();
+            } else {
+                abrirPausa();
+            }
         }
     }
 
@@ -196,15 +206,30 @@ public class GameScreen implements Screen {
         if (npcInteractivo != null) {
             labelInteraccion.setText("[E] " + obtenerNombreNPC(npcInteractivo.getNpcId()));
             labelInteraccion.pack();
+
+            float npcCentroX = npcInteractivo.getX() + 16;
+            float npcCabezaY = npcInteractivo.getY() + 54;
+            float screenX = (npcCentroX - camara.position.x) + viewport.getWorldWidth() / 2f;
+            float screenY = (npcCabezaY - camara.position.y) + viewport.getWorldHeight() / 2f;
             labelInteraccion.setPosition(
-                viewport.getWorldWidth() / 2f - labelInteraccion.getWidth() / 2f,
-                30
-            );
+                screenX - labelInteraccion.getWidth() / 2f,
+                screenY);
             labelInteraccion.setVisible(true);
 
+            if (labelInteraccion.getActions().size == 0) {
+                labelInteraccion.addAction(Actions.forever(
+                    Actions.sequence(
+                        Actions.scaleTo(1.1f, 1.1f, 0.6f),
+                        Actions.scaleTo(1f, 1f, 0.6f)
+                    )
+                ));
+            }
+
             if (Gdx.input.isKeyJustPressed(Input.Keys.E) && !pausaAbierta) {
+                SoundManager.inst().interact();
                 NPC npcParaDialogo = npcInteractivo;
                 npcParaDialogo.setTalking(true);
+                npcParaDialogo.setDirection(direccionHaciaJugador(npcParaDialogo));
                 pausaAbierta = true;
 
                 String resolvedNodeId = npcParaDialogo.getDialogNodeId();
@@ -220,9 +245,77 @@ public class GameScreen implements Screen {
                 });
             }
         } else {
-            labelInteraccion.setText("");
             labelInteraccion.setVisible(false);
+            labelInteraccion.clearActions();
+            labelInteraccion.setScale(1f);
         }
+    }
+
+    private Direction direccionHaciaJugador(NPC npc) {
+        float dx = jugador.posicion.x - npc.getX();
+        float dy = jugador.posicion.y - npc.getY();
+        if (Math.abs(dx) > Math.abs(dy)) {
+            return dx > 0 ? Direction.DERECHA : Direction.IZQUIERDA;
+        } else {
+            return dy > 0 ? Direction.ARRIBA : Direction.ABAJO;
+        }
+    }
+
+    private void crearUIPausa() {
+        pausaPanel = new Table(skin);
+        pausaPanel.setBackground(skin.newDrawable("pausa-fondo"));
+        pausaPanel.pad(12);
+
+        Label titulo = new Label("PAUSA", skin, "nombre");
+
+        TextButton btnContinuar = new TextButton("VOLVER AL JUEGO", skin);
+        btnContinuar.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, com.badlogic.gdx.scenes.scene2d.Actor actor) {
+                cerrarPausa();
+            }
+        });
+
+        TextButton btnGuardar = new TextButton("GUARDAR PARTIDA", skin);
+        btnGuardar.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, com.badlogic.gdx.scenes.scene2d.Actor actor) {
+                io.yourPath.utils.SaveSystem.saveGame(gameState);
+                cerrarPausa();
+            }
+        });
+
+        TextButton btnSalir = new TextButton("SALIR AL MENU", skin);
+        btnSalir.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, com.badlogic.gdx.scenes.scene2d.Actor actor) {
+                pausaPanel.setVisible(false);
+                pausaAbierta = false;
+                game.transitarA(new MainMenuScreen(game), TransitionConfig.fadeToBlack());
+            }
+        });
+
+        pausaPanel.add(titulo).colspan(2).center().padBottom(12).row();
+        pausaPanel.add(btnContinuar).fillX().padBottom(4).colspan(2).row();
+        pausaPanel.add(btnGuardar).fillX().padBottom(4).colspan(2).row();
+        pausaPanel.add(btnSalir).fillX().colspan(2);
+
+        pausaPanel.pack();
+        pausaPanel.setPosition(
+            (640 - pausaPanel.getWidth()) / 2f,
+            (360 - pausaPanel.getHeight()) / 2f);
+        pausaPanel.setVisible(false);
+        stage.addActor(pausaPanel);
+    }
+
+    private void abrirPausa() {
+        pausaAbierta = true;
+        pausaPanel.setVisible(true);
+    }
+
+    private void cerrarPausa() {
+        pausaAbierta = false;
+        pausaPanel.setVisible(false);
     }
 
     private int[] obtenerIndicesCapas(String[] nombres) {
@@ -261,5 +354,5 @@ public class GameScreen implements Screen {
 
     @Override public void pause() {}
     @Override public void resume() {}
-    @Override public void hide() {}
+    @Override public void hide() { esFondo = true; }
 }

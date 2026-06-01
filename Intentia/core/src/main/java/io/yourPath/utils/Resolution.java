@@ -16,6 +16,11 @@ public class Resolution {
     }
 
     @Override
+    public String toString() {
+        return label();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Resolution)) return false;

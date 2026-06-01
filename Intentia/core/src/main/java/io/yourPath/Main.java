@@ -3,13 +3,17 @@ package io.yourPath;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import io.yourPath.audio.MusicManager;
+import io.yourPath.audio.SoundManager;
 import io.yourPath.dialog.DialogRouter;
 import io.yourPath.logic.StoryManager;
 import io.yourPath.models.CharacterProfile;
 import io.yourPath.models.GameState;
 import io.yourPath.models.NarrativeNode;
 import io.yourPath.screens.MainMenuScreen;
+import io.yourPath.screens.TransitionConfig;
+import io.yourPath.screens.TransitionScreen;
 import io.yourPath.utils.IntentiaException;
 import io.yourPath.utils.NarrativeDAO;
 import io.yourPath.utils.NarrativeDAOImplementation;
@@ -39,7 +43,10 @@ public class Main extends Game {
         musicManager.setVolumen(SettingsManager.inst().getMusicVolume());
         SettingsManager.inst().addListener(() -> {
             musicManager.setVolumen(SettingsManager.inst().getMusicVolume());
+            SoundManager.inst().setVolumen(SettingsManager.inst().getSfxVolume());
         });
+
+        SoundManager.inst().init();
 
         if (SettingsManager.inst().isFullscreen()) {
             try {
@@ -105,5 +112,19 @@ public class Main extends Game {
     public Map<String, CharacterProfile> getCharacters() { return characters; }
     public Map<String, NarrativeNode> getStory() { return story; }
     public DialogRouter getDialogRouter() { return dialogRouter; }
+
+    public void transitarA(Screen destino) {
+        transitarA(destino, TransitionConfig.fadeToBlack());
+    }
+
+    public void transitarA(Screen destino, TransitionConfig config) {
+        Screen origen = getScreen();
+        if (origen instanceof TransitionScreen) return;
+        setScreen(new TransitionScreen(this, origen, destino, config));
+    }
+
+    public void setScreenFinal(Screen screen) {
+        super.setScreen(screen);
+    }
 
 }

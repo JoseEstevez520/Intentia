@@ -21,12 +21,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import static io.yourPath.utils.Colors.*;
 
 public class SkinUtil {
-
-    private static final Color VERDE_AGUA = new Color(0x7F / 255f, 0xFF / 255f, 0xD4 / 255f, 1);
-    private static final Color MARRON_OSCURO = new Color(109 / 255f, 75 / 255f, 39 / 255f, 1);
-    private static final Color MARRON_MADERA = new Color(165 / 255f, 115 / 255f, 55 / 255f, 1);
 
     private static final int TILE = 32;
     private static final int GAP = 1;
@@ -137,6 +134,7 @@ public class SkinUtil {
         skin.add("default-check", checkBoxStyle);
 
         texturas.limpiar();
+        texturas.transferirAlSkin(skin);
 
         return skin;
     }
@@ -209,9 +207,9 @@ public class SkinUtil {
             }
         }
 
-        void dispose() {
-            for (Texture t : texturas) {
-                t.dispose();
+        void transferirAlSkin(Skin skin) {
+            for (int i = 0; i < texturas.size; i++) {
+                skin.add("_tex_" + i, texturas.get(i));
             }
             texturas.clear();
         }

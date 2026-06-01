@@ -30,7 +30,6 @@ if (JavaVersion.current().isJava9Compatible()) {
 
 dependencies {
   implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-  implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
   implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
 
   implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
@@ -39,7 +38,6 @@ dependencies {
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-backend-lwjgl3:$graalHelperVersion"
-      implementation "io.github.berstanio:gdx-svmhelper-extension-box2d:$graalHelperVersion"
       implementation "io.github.berstanio:gdx-svmhelper-extension-freetype:$graalHelperVersion"
 
     }
