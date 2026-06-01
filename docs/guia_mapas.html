@@ -9,191 +9,312 @@ body{font-family:system-ui,sans-serif;background:#0f0f12;color:#e0e0e0;line-heig
 .container{max-width:960px;margin:0 auto}
 h1{font-size:2rem;color:#7fffd4;margin-bottom:.5rem}
 h2{font-size:1.3rem;color:#7fffd4;margin:2rem 0 .8rem;border-bottom:1px solid #2a2a30;padding-bottom:.4rem}
-h3{color:#ccc;margin:1.2rem 0 .5rem}
-p,li{color:#b0b0b8}
+h3{color:#ccc;margin:1rem 0 .5rem}
 code{background:#1a1a22;padding:.15em .5em;border-radius:4px;font-size:.9em;color:#7fffd4}
 table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.9em}
 th,td{border:1px solid #2a2a30;padding:.5em .8em;text-align:left}
 th{background:#1a1a22;color:#7fffd4;font-weight:600}
 td{background:#16161c}
-.tag{display:inline-block;background:#1a1a22;padding:0 .5em;border-radius:3px;font-size:.8em;color:#888;margin-right:.3em}
-.tag-layer{background:#1a2a1a;color:#6f6}
-.tag-obj{background:#2a1a1a;color:#f66}
-.tag-tile{background:#1a1a2a;color:#66f}
-.tag-col{background:#2a2a10;color:#ff6}
 .note{background:#1a1a22;border-left:3px solid #7fffd4;padding:.8em 1em;margin:1rem 0;border-radius:0 6px 6px 0;font-size:.9em}
 .note strong{color:#7fffd4}
-.schema{margin:1.5rem 0}
-.schema-row{display:flex;align-items:center;gap:.5rem;padding:.25rem 0}
-.schema-label{width:140px;text-align:right;font-size:.85em;color:#888}
-.schema-bar{height:28px;border-radius:4px;display:flex;align-items:center;padding:0 10px;font-size:.8em;font-weight:600;flex-shrink:0}
-.bar1{background:#2d4a2d;color:#8f8;width:80px}
-.bar2{background:#3d3a1d;color:#ff8;width:70px}
-.bar3{background:#3d2d1d;color:#fa8;width:60px}
-.bar4{background:#2d3d2d;color:#8f8;width:70px}
-.bar5{background:#2a1a1a;color:#f66;width:90px}
-.bar6{background:#1d2d3d;color:#8cf;width:60px}
-.bar7{background:#3d2d4d;color:#c8f;width:110px}
-.bar8{background:#2d4a2d;color:#8f8;border:2px dashed #7fffd4;width:100px}
-.bar9{background:#4a2d2d;color:#f88;width:90px;font-style:italic}
-.bar10{background:#2a2a10;color:#ff6;width:80px}
-ul{list-style:none;padding:0}
-ul li{padding:.2em 0;padding-left:1.2em;position:relative}
-ul li::before{content:"\25B8";position:absolute;left:0;color:#7fffd4}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-@media(max-width:600px){.grid{grid-template-columns:1fr}}
+
+.map-grid{display:grid;grid-template-columns:repeat(40,12px);gap:1px;margin:1rem 0;image-rendering:pixelated}
+.map-grid .cell{width:12px;height:12px;border-radius:1px}
+.map-grid .grass{background:#4a7a3a}
+.map-grid .dirt{background:#8a7a4a}
+.map-grid .water{background:#3a6a9a}
+.map-grid .road{background:#9a8a5a}
+.map-grid .tree{background:#2a5a2a}
+.map-grid .tree-d{background:#1a4a1a}
+.map-grid .house{background:#8a5a3a}
+.map-grid .house-d{background:#6a4a2a}
+.map-grid .fire{background:#da6a2a}
+.map-grid .rock{background:#7a7a7a}
+.map-grid .well{background:#5a6a7a}
+.map-grid .lamp{background:#dad66a}
+.map-grid .bush{background:#3a7a3a}
+.map-grid .flower{background:#da6a8a}
+.map-grid .sign{background:#baaa6a}
+.map-grid .bench{background:#6a4a3a}
+.map-grid .beach{background:#caba7a}
+.map-grid .wall{background:#5a5a5a}
+.map-grid .empty{background:transparent}
+
+.legend{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}
+.legend-item{display:flex;align-items:center;gap:.3rem;font-size:.75em;color:#aaa}
+.legend-sq{width:14px;height:14px;border-radius:2px;flex-shrink:0}
 </style>
 </head>
 <body>
 <div class="container">
 
 <h1>Guía de Diseño de Mapas</h1>
-<p>Referencia rápida para crear mapas en <strong>Tiled</strong> para Intentia. Tile size: <code>16x16</code>. Orientación: <code>Orthogonal</code>.</p>
-
-<h2>Capas del mapa</h2>
-<p>Orden de renderizado (de atrás a adelante):</p>
-
-<div class="schema">
-<div class="schema-row"><span class="schema-label">Arriba (tapa)</span><div class="schema-bar bar10">Collisions</div><span style="font-size:.8em;color:#888">Rectángulos invisibles que bloquean</span></div>
-<div class="schema-row"><span class="schema-label"></span><div class="schema-bar bar9">NPCs</div><span style="font-size:.8em;color:#888">Definiciones de personajes</span></div>
-<div class="schema-row"><span class="schema-label"></span><div class="schema-bar bar8">AbovePlayer</div><span style="font-size:.8em;color:#888">Copas de árboles, techos — tapan al jugador</span></div>
-<div class="schema-row"><span class="schema-label"></span><div class="schema-bar bar7">Object Layer 1</div><span style="font-size:.8em;color:#888">Edificios, árboles grandes, props</span></div>
-<div class="schema-row"><span class="schema-label"></span><div class="schema-bar bar6">Water</div><span style="font-size:.8em;color:#888">Agua animada</span></div>
-<div class="schema-row"><span class="schema-label"></span><div class="schema-bar bar5">RockSlopes_Auto</div><span style="font-size:.8em;color:#888">Paredes de roca (auto-tiling)</span></div>
-<div class="schema-row"><span class="schema-label"></span><div class="schema-bar bar4">Trees</div><span style="font-size:.8em;color:#888">Árboles pintados con brocha</span></div>
-<div class="schema-row"><span class="schema-label"></span><div class="schema-bar bar3">Road</div><span style="font-size:.8em;color:#888">Caminos de tierra</span></div>
-<div class="schema-row"><span class="schema-label"></span><div class="schema-bar bar2">Flowers</div><span style="font-size:.8em;color:#888">Flores decorativas</span></div>
-<div class="schema-row"><span class="schema-label">Abajo (fondo)</span><div class="schema-bar bar1">Ground</div><span style="font-size:.8em;color:#888">Pasto, tierra, base del terreno</span></div>
-</div>
-
-<table>
-<tr><th>Capa</th><th>Tipo</th><th>Qué poner</th><th>Render</th></tr>
-<tr><td>Ground</td><td><span class="tag tag-tile">tile</span></td><td>Pasto (700), tierra (781), transiciones</td><td>Detrás del jugador</td></tr>
-<tr><td>Flowers</td><td><span class="tag tag-tile">tile</span></td><td>Flores animadas (5484+), decoración</td><td>Detrás</td></tr>
-<tr><td>Road</td><td><span class="tag tag-tile">tile</span></td><td>Caminos de tierra (5280+)</td><td>Detrás</td></tr>
-<tr><td>Trees</td><td><span class="tag tag-tile">tile</span></td><td>Arbustos, vegetación (5340+, Atlas_Trees_Bushes)</td><td>Detrás</td></tr>
-<tr><td>RockSlopes</td><td><span class="tag tag-tile">tile</span></td><td><em>(Oculta)</em> Paredes de roca manuales</td><td>—</td></tr>
-<tr><td>RockSlopes_Auto</td><td><span class="tag tag-tile">tile</span></td><td>Paredes de roca auto-tiled (818+)</td><td>Detrás</td></tr>
-<tr><td>Water</td><td><span class="tag tag-tile">tile</span></td><td>Agua animada (4968+)</td><td>Detrás</td></tr>
-<tr><td>Object Layer 1</td><td><span class="tag tag-obj">obj</span></td><td>Casas (443-446), árboles grandes (480-483), props, hoguera</td><td>Detrás del jugador</td></tr>
-<tr><td>AbovePlayer</td><td><span class="tag tag-tile">tile</span></td><td>Copas de árboles, techos, toldos — lo que tape al jugador</td><td>Delante del jugador</td></tr>
-<tr><td>Collisions</td><td><span class="tag tag-col">col</span></td><td>Rectángulos rojos donde no se pueda caminar</td><td>Nunca se renderiza</td></tr>
-<tr><td>NPCs</td><td><span class="tag tag-obj">obj</span></td><td>Rectángulos con propiedades npcId, dialogNodeId, etc.</td><td>Nunca se renderiza</td></tr>
-</table>
-
-<h2>Tile IDs de referencia</h2>
-
-<table>
-<tr><th>Tileset</th><th>firstgid</th><th>Uso</th><th>IDs clave</th></tr>
-<tr><td>Tileset_Ground</td><td>686</td><td>Pasto y tierra</td><td><b>700</b> pasto, <b>781</b> tierra, 693-721 transiciones</td></tr>
-<tr><td>Tilesets_Road</td><td>5280</td><td>Camino de tierra</td><td><b>5282</b> horizontal, <b>5294</b> centro, 5281/5283 bordes</td></tr>
-<tr><td>Tileset_Water</td><td>4968</td><td>Agua animada</td><td><b>5141</b> agua profunda, 5017+ orillas</td></tr>
-<tr><td>Tileset_RockSlope</td><td>818</td><td>Paredes de roca</td><td>Usar auto-tiling de Tiled</td></tr>
-<tr><td>Atlas_Trees_Bushes</td><td>5340</td><td>Árboles/arbustos 16x16</td><td>Pintar con brocha en capa Trees</td></tr>
-<tr><td>Animation_Flowers_Red</td><td>5484</td><td>Flores rojas animadas</td><td>5484+ (12 variantes)</td></tr>
-<tr><td>Animation_Flowers_White</td><td>5580</td><td>Flores blancas animadas</td><td>5580+</td></tr>
-<tr><td>Animation_Campfire</td><td>5676</td><td>Fogata animada</td><td>5676+ (4 tiles forman 1 fogata)</td></tr>
-</table>
-
-<h2>Objetos del Object Layer 1</h2>
-
-<table>
-<tr><th>gid</th><th>Nombre</th><th>Tamaño</th><th>Notas</th></tr>
-<tr><td>443</td><td>House_Hay_1</td><td>89x91</td><td>Casa pequeña</td></tr>
-<tr><td>444</td><td>House_Hay_2</td><td>157x112</td><td>Casa mediana → Taller</td></tr>
-<tr><td>445</td><td>House_Hay_3</td><td>175x128</td><td>Casa grande → Cabaña de Elio</td></tr>
-<tr><td>446</td><td>House_Hay_4_Purple</td><td>128x128</td><td>Casa morada (variante)</td></tr>
-<tr><td>448</td><td>Well_Hay_1</td><td>56x74</td><td>Pozo</td></tr>
-<tr><td>450</td><td>Bench_1</td><td>14x30</td><td>Banco</td></tr>
-<tr><td>456</td><td>LampPost_3</td><td>46x62</td><td>Farola</td></tr>
-<tr><td>459</td><td>Sign_1</td><td>24x22</td><td>Cartel</td></tr>
-<tr><td>464</td><td>HayStack_2</td><td>29x32</td><td>Paca de heno</td></tr>
-<tr><td>465</td><td>Barrel_Small_Empty</td><td>16x20</td><td>Barril</td></tr>
-<tr><td>467</td><td>Table_Medium_1</td><td>42x39</td><td>Mesa</td></tr>
-<tr><td>468</td><td>Rock_Brown_1</td><td>28x14</td><td>Roca pequeña</td></tr>
-<tr><td>470</td><td>Rock_Brown_4</td><td>27x27</td><td>Roca mediana</td></tr>
-<tr><td>473</td><td>Bush_Emerald_1</td><td>40x29</td><td>Arbusto</td></tr>
-<tr><td>480</td><td>Tree_Emerald_1</td><td>64x63</td><td>Árbol grande copa ancha</td></tr>
-<tr><td>481</td><td>Tree_Emerald_2</td><td>46x63</td><td>Árbol mediano</td></tr>
-<tr><td>482</td><td>Tree_Emerald_3</td><td>52x92</td><td>Árbol alto</td></tr>
-<tr><td>483</td><td>Tree_Emerald_4</td><td>48x93</td><td>Árbol alto delgado</td></tr>
-</table>
-
-<h2>Cómo crear colisiones</h2>
-
-<div class="grid">
-<div>
-<h3>En Tiled</h3>
-<ol style="padding-left:1.2em;color:#b0b0b8">
-<li>Seleccionar capa <code>Collisions</code></li>
-<li>Herramienta <b>Insertar Rectángulo</b> (R)</li>
-<li>Dibujar donde no se deba caminar:
-<ul style="margin-top:.4em">
-<li>Bordes del mapa</li>
-<li>Contorno de casas</li>
-<li>Base de árboles grandes</li>
-<li>Orillas del agua</li>
-</ul>
-</li>
-<li>Presionar <b>B</b> en el juego para ver los rectángulos</li>
-</ol>
-</div>
-<div>
-<h3>Coordenadas útiles</h3>
-<table>
-<tr><th>Mapa</th><th>Spawn del jugador</th></tr>
-<tr><td>Beginning Fields</td><td><code>(12*16, 15*16)</code></td></tr>
-<tr><td>LaParadaDeLaBruma</td><td>(por definir)</td></tr>
-<tr><td>ElClaroDelRoble</td><td>(por definir)</td></tr>
-</table>
-<div class="note" style="margin-top:1rem">
-<strong>Cambiar spawn:</strong> La posición inicial del jugador se edita en <code>GameScreen.java</code>, línea:
-<code>jugador = new Player(x, y);</code>
-</div>
-</div>
-</div>
-
-<h2>AbovePlayer — Cómo tapar al jugador</h2>
-<p>La capa <code>AbovePlayer</code> se renderiza <strong>después</strong> del jugador. Todo lo que pongas ahí tapa al personaje cuando pasa por debajo.</p>
+<p>Tile size: <strong>16x16</strong> · Orientación: <strong>Orthogonal</strong> · Mapas creados con <code>BlankMapGenerator</code></p>
 
 <div class="note">
-<strong>Idea:</strong> En un árbol de 92px de alto, poner el tronco en <code>Object Layer 1</code> (detrás del jugador) y la copa en <code>AbovePlayer</code> (delante). El jugador camina por debajo y la copa lo tapa.<br><br>
-<strong>Pero no tenemos los tiles partidos.</strong> Alternativa: los árboles enteros en Object Layer 1 (detrás), y en AbovePlayer pones tiles de <code>Atlas_Trees_Bushes</code> simulando copas o ramas colgantes.
+<strong>IMPORTANTE:</strong> Los mapas están en blanco. Estos diseños son GUÍAS de cómo deberían verse. Úsalos como referencia al pintar en Tiled.
 </div>
 
-<h2>Mapas del proyecto</h2>
+<h2>1. LaParadaDeLaBruma (40x40)</h2>
+<p>Escena inicial. La furgo deja a Ray. Carretera horizontal, parada en el arcén, entrada al bosque a la derecha.</p>
 
+<style>
+.mapa1{grid-template-columns:repeat(40,10px)}
+.mapa1 .cell{width:10px;height:10px}
+</style>
+<div class="map-grid mapa1">
+<script>
+const M1 = { grass:0, dirt:1, water:2, road:3, tree:4, treeD:5, house:6, houseD:7, fire:8, rock:9, well:10, lamp:11, bush:12, flower:13, sign:14, bench:15, beach:16, wall:17, empty:18 };
+const C = ["grass","dirt","water","road","tree","tree-d","house","house-d","fire","rock","well","lamp","bush","flower","sign","bench","beach","wall","empty"];
+function m1(){
+let g=[];
+for(let r=0;r<40;r++){g[r]=[];for(let c=0;c<40;c++)g[r][c]=M1.tree}
+// Road horizonta filas 14-15
+for(let r=14;r<=15;r++)for(let c=0;c<40;c++)g[r][c]=M1.road;
+// Sendero vertical cols 30-34 filas 16-39
+for(let r=16;r<40;r++)for(let c=30;c<=34;c++)g[r][c]=M1.dirt;
+// Parada bus (banco+cartel) en col 22-24 fila 14-15 sobre carretera
+g[14][22]=M1.bench;g[14][23]=M1.sign;g[14][24]=M1.lamp;
+// Abrir bosque derecha
+for(let r=16;r<40;r++){g[r][29]=M1.bush;g[r][35]=M1.bush}
+// Flores
+g[16][10]=M1.flower;g[12][20]=M1.flower;g[8][15]=M1.flower;g[18][5]=M1.flower;g[22][12]=M1.flower;
+g[10][28]=M1.flower;g[20][18]=M1.flower;g[25][8]=M1.flower;
+let html="";
+for(let r=0;r<40;r++){for(let c=0;c<40;c++)html+=`<div class="cell ${C[g[r][c]]}"></div>`}
+document.write(html);
+} m1();
+</script>
+</div>
+<div class="legend">
+<span class="legend-item"><span class="legend-sq" style="background:#4a7a3a"></span>Bosque</span>
+<span class="legend-item"><span class="legend-sq" style="background:#9a8a5a"></span>Carretera</span>
+<span class="legend-item"><span class="legend-sq" style="background:#8a7a4a"></span>Sendero</span>
+<span class="legend-item"><span class="legend-sq" style="background:#baaa6a"></span>Cartel</span>
+<span class="legend-item"><span class="legend-sq" style="background:#dad66a"></span>Farola</span>
+<span class="legend-item"><span class="legend-sq" style="background:#6a4a3a"></span>Banco</span>
+<span class="legend-item"><span class="legend-sq" style="background:#3a7a3a"></span>Arbusto</span>
+<span class="legend-item"><span class="legend-sq" style="background:#da6a8a"></span>Flores</span>
+</div>
+<div class="note">
+<strong>Cómo hacerlo en Tiled:</strong><br>
+1. Capa <b>Ground</b>: Pinta toda la capa con pasto (700). Pinta las filas 14-15 con tierra (781) para la carretera. Pinta columnas 30-34 filas 16-39 con tierra (781) para el sendero.<br>
+2. Capa <b>Trees</b>: Pinta árboles densos en filas 0-13 (todo el ancho) y en los laterales filas 16-39 (columnas 0-28 y 35-39). Usa el pincel con tiles de Atlas_Trees_Bushes.<br>
+3. Capa <b>Object Layer 1</b>: Coloca banco (gid 450), cartel (gid 459), farola (gid 456) y arbustos (gid 473-478) en la entrada del sendero.<br>
+4. Capa <b>Collisions</b>: Rectángulos en bordes del mapa y dentro del bosque denso.
+</div>
+
+<h2>2. ElCaminoDelMusgo (60x20)</h2>
+<p>Sendero estrecho que conecta la parada con el claro del roble. 60 de ancho × 20 de alto (alargado horizontalmente).</p>
+
+<style>
+.mapa2{grid-template-columns:repeat(60,8px)}
+.mapa2 .cell{width:8px;height:8px}
+</style>
+<div class="map-grid mapa2">
+<script>
+let g2=[];
+for(let r=0;r<20;r++){g2[r]=[];for(let c=0;c<60;c++)g2[r][c]=M1.tree}
+// Sendero central 3 tiles de ancho, zigzag suave
+for(let r=0;r<20;r++){let offset=Math.floor(Math.sin(r*0.5)*2);let cx=28+offset;g2[r][cx]=M1.dirt;g2[r][cx+1]=M1.dirt;g2[r][cx+2]=M1.dirt}
+// Flores y arbustos al borde del camino
+for(let r=3;r<20;r+=4){let off=Math.floor(Math.sin(r*0.5)*2);g2[r][26+off]=M1.flower;g2[r][32+off]=M1.bush}
+let html2="";
+for(let r=0;r<20;r++){for(let c=0;c<60;c++)html2+=`<div class="cell ${C[g2[r][c]]}"></div>`}
+document.write(html2);
+</script>
+</div>
+<div class="legend">
+<span class="legend-item"><span class="legend-sq" style="background:#2a5a2a"></span>Bosque cerrado</span>
+<span class="legend-item"><span class="legend-sq" style="background:#8a7a4a"></span>Sendero tierra</span>
+<span class="legend-item"><span class="legend-sq" style="background:#da6a8a"></span>Flores</span>
+<span class="legend-item"><span class="legend-sq" style="background:#3a7a3a"></span>Arbustos</span>
+</div>
+<div class="note">
+<strong>Cómo hacerlo:</strong> Sendero de 3 tiles de ancho que serpentea suavemente. Bosque cerrado a los lados (capas Trees + Object Layer 1 con árboles grandes). Colisiones en los bordes del bosque para que el jugador no se salga del camino. Este mapa conecta LaParadaDeLaBruma (izquierda) con ElClaroDelRoble (derecha).
+</div>
+
+<h2>3. ElClaroDelRoble (60x60)</h2>
+<p>Zona principal. La cabaña de Elio, el taller, el lago Ojo de Plata, y el bosque rodeando todo.</p>
+
+<style>
+.mapa3{grid-template-columns:repeat(60,9px)}
+.mapa3 .cell{width:9px;height:9px}
+</style>
+<div class="map-grid mapa3">
+<script>
+let g3=[];
+for(let r=0;r<60;r++){g3[r]=[];for(let c=0;c<60;c++)g3[r][c]=M1.tree}
+// Claro central (pasto)
+for(let r=10;r<50;r++)for(let c=8;c<52;c++)g3[r][c]=M1.grass;
+// Lago esquina superior izquierda
+for(let r=3;r<12;r++)for(let c=3;c<14;c++)g3[r][c]=M1.water;
+for(let r=4;r<11;r++){g3[r][2]=M1.beach;g3[r][14]=M1.beach}
+for(let c=4;c<13;c++){g3[2][c]=M1.beach;g3[12][c]=M1.beach}
+g3[3][3]=M1.beach;g3[3][14]=M1.beach;g3[12][3]=M1.beach;g3[12][14]=M1.beach;
+// Casa de Elio (grande)
+for(let r=8;r<14;r++)for(let c=20;c<31;c++)g3[r][c]=M1.house;
+g3[8][20]=M1.houseD;g3[8][30]=M1.houseD;g3[14][20]=M1.houseD;g3[14][30]=M1.houseD;
+// Puerta de la casa
+g3[14][24]=M1.dirt;g3[14][25]=M1.dirt;
+// Taller
+for(let r=15;r<21;r++)for(let c=22;c<30;c++)g3[r][c]=M1.house;
+g3[15][22]=M1.houseD;g3[15][29]=M1.houseD;g3[21][22]=M1.houseD;g3[21][29]=M1.houseD;
+// Camino de la casa hacia abajo
+for(let r=14;r<40;r++)for(let c=24;c<=26;c++)g3[r][c]=M1.road;
+// Pozo
+g3[16][18]=M1.well;g3[16][19]=M1.well;
+// Hoguera
+g3[14][28]=M1.fire;g3[14][29]=M1.fire;g3[15][28]=M1.fire;g3[15][29]=M1.fire;
+// Rocas cerca lago
+g3[8][16]=M1.rock;g3[10][15]=M1.rock;g3[12][17]=M1.rock;
+// Farolas
+g3[14][22]=M1.lamp;g3[14][31]=M1.lamp;
+// Arbustos decorativos
+g3[6][22]=M1.bush;g3[6][28]=M1.bush;g3[22][20]=M1.bush;g3[22][32]=M1.bush;
+// Flores
+g3[12][10]=M1.flower;g3[15][12]=M1.flower;g3[18][15]=M1.flower;g3[20][10]=M1.flower;g3[25][18]=M1.flower;
+g3[28][12]=M1.flower;g3[30][20]=M1.flower;g3[22][35]=M1.flower;g3[35][15]=M1.flower;g3[40][22]=M1.flower;
+// Bancos
+g3[14][20]=M1.bench;g3[20][31]=M1.bench;
+// Cartel
+g3[16][32]=M1.sign;
+// Ãrboles grandes en borde del claro
+g3[8][8]=M1.treeD;g3[10][8]=M1.treeD;g3[6][18]=M1.treeD;g3[6][32]=M1.treeD;
+g3[10][50]=M1.treeD;g3[8][48]=M1.treeD;g3[22][8]=M1.treeD;g3[30][8]=M1.treeD;
+g3[40][8]=M1.treeD;g3[48][50]=M1.treeD;g3[50][48]=M1.treeD;
+let html3="";
+for(let r=0;r<60;r++){for(let c=0;c<60;c++)html3+=`<div class="cell ${C[g3[r][c]]}"></div>`}
+document.write(html3);
+</script>
+</div>
+<div class="legend">
+<span class="legend-item"><span class="legend-sq" style="background:#4a7a3a"></span>Pasto</span>
+<span class="legend-item"><span class="legend-sq" style="background:#3a6a9a"></span>Lago</span>
+<span class="legend-item"><span class="legend-sq" style="background:#caba7a"></span>Orilla</span>
+<span class="legend-item"><span class="legend-sq" style="background:#8a5a3a"></span>Casa/Taller</span>
+<span class="legend-item"><span class="legend-sq" style="background:#9a8a5a"></span>Camino</span>
+<span class="legend-item"><span class="legend-sq" style="background:#5a6a7a"></span>Pozo</span>
+<span class="legend-item"><span class="legend-sq" style="background:#da6a2a"></span>Hoguera</span>
+<span class="legend-item"><span class="legend-sq" style="background:#7a7a7a"></span>Rocas</span>
+<span class="legend-item"><span class="legend-sq" style="background:#dad66a"></span>Farola</span>
+<span class="legend-item"><span class="legend-sq" style="background:#2a5a2a"></span>Ãrbol</span>
+<span class="legend-item"><span class="legend-sq" style="background:#1a4a1a"></span>Ãrbol grande</span>
+</div>
+<div class="note">
+<strong>CÃ³mo hacerlo en Tiled:</strong><br>
+1. Capa <b>Ground</b>: Pinta el claro con pasto (700). Pinta el camino con tierra (781) desde la casa hasta el borde inferior del mapa. Pinta la zona del lago y orillas.<br>
+2. Capa <b>Water</b>: Pinta el lago con agua (5141) y orillas con tiles de transiciÃ³n (5017+).<br>
+3. Capa <b>Object Layer 1</b>: Coloca la casa grande (gid 445) en (20*16,8*16), el taller (gid 444) debajo, Ã¡rboles grandes (gid 480-483) alrededor del claro, pozo (448), hoguera (5676+), farolas (456), bancos (450), cartel (459), rocas (470).<br>
+4. Capa <b>Trees</b>: Rellena el bosque alrededor del claro con tiles de Atlas_Trees_Bushes.<br>
+5. Capa <b>Collisions</b>: RectÃ¡ngulos en bordes del lago, contorno de la casa y taller, base de Ã¡rboles grandes, bordes del mapa.<br>
+6. Capa <b>AbovePlayer</b>: Si quieres que las copas de Ã¡rboles tapen al jugador, pon tiles de vegetaciÃ³n aquÃ­.
+</div>
+
+<h2>4. LaCabaÃ±a (40x40)</h2>
+<p>Interior de la cabaÃ±a de Elio (opcional). Suelo de madera, muebles, chimenea.</p>
+
+<style>
+.mapa4{grid-template-columns:repeat(40,10px)}
+.mapa4 .cell{width:10px;height:10px}
+</style>
+<div class="map-grid mapa4">
+<script>
+let g4=[];
+for(let r=0;r<40;r++){g4[r]=[];for(let c=0;c<40;c++)g4[r][c]=M1.dirt}
+// Paredes
+for(let r=0;r<40;r++){g4[r][0]=M1.wall;g4[r][39]=M1.wall;g4[0][r]=M1.wall;g4[39][r]=M1.wall}
+// Mesa centro
+g4[18][18]=M1.house;g4[18][19]=M1.house;g4[19][18]=M1.house;g4[19][19]=M1.house;
+// Sillas
+g4[20][18]=M1.bench;g4[20][19]=M1.bench;
+// Chimenea
+g4[8][8]=M1.fire;g4[8][9]=M1.fire;g4[9][8]=M1.fire;g4[9][9]=M1.fire;
+// Cama
+for(let c=30;c<37;c++)g4[8][c]=M1.houseD;
+// EstanterÃ­a
+for(let c=5;c<12;c++)g4[30][c]=M1.houseD;
+// Alfombra
+g4[17][17]=M1.flower;g4[17][18]=M1.flower;g4[17][19]=M1.flower;g4[17][20]=M1.flower;
+g4[18][17]=M1.flower;g4[19][17]=M1.flower;g4[20][17]=M1.flower;
+// Ventanas
+g4[15][0]=M1.water;g4[25][0]=M1.water;g4[0][18]=M1.water;g4[0][20]=M1.water;
+let html4="";
+for(let r=0;r<40;r++){for(let c=0;c<40;c++)html4+=`<div class="cell ${C[g4[r][c]]}"></div>`}
+document.write(html4);
+</script>
+</div>
+
+<h2>5. ElLago (30x30)</h2>
+<p>Zona del lago Ojo de Plata con muelle (opcional, para escenas especÃ­ficas).</p>
+
+<style>
+.mapa5{grid-template-columns:repeat(30,12px)}
+.mapa5 .cell{width:12px;height:12px}
+</style>
+<div class="map-grid mapa5">
+<script>
+let g5=[];
+for(let r=0;r<30;r++){g5[r]=[];for(let c=0;c<30;c++)g5[r][c]=M1.tree}
+// Lago
+for(let r=3;r<20;r++)for(let c=3;c<25;c++)g5[r][c]=M1.water;
+// Orillas
+for(let c=4;c<24;c++){g5[2][c]=M1.beach;g5[20][c]=M1.beach}
+for(let r=4;r<19;r++){g5[r][2]=M1.beach;g5[r][25]=M1.beach}
+g5[2][2]=M1.beach;g5[2][25]=M1.beach;g5[20][2]=M1.beach;g5[20][25]=M1.beach;
+// Muelle
+for(let c=10;c<16;c++)g5[16][c]=M1.dirt;
+g5[16][9]=M1.wall;g5[16][16]=M1.wall;
+// Flores orilla
+g5[8][18]=M1.flower;g5[12][22]=M1.flower;g5[15][20]=M1.flower;g5[6][24]=M1.flower;
+g5[18][8]=M1.flower;g5[14][4]=M1.flower;
+// Rocas
+g5[5][8]=M1.rock;g5[10][5]=M1.rock;g5[18][14]=M1.rock;
+let html5="";
+for(let r=0;r<30;r++){for(let c=0;c<30;c++)html5+=`<div class="cell ${C[g5[r][c]]}"></div>`}
+document.write(html5);
+</script>
+</div>
+
+<h2>Referencia rÃ¡pida de tile IDs</h2>
 <table>
-<tr><th>Mapa</th><th>Tamaño</th><th>Descripción</th></tr>
-<tr><td>LaParadaDeLaBruma</td><td>40x40</td><td>Escena inicial — carretera, parada de bus, entrada al bosque</td></tr>
-<tr><td>ElCaminoDelMusgo</td><td>60x20</td><td>Sendero del bosque (conectar parada → claro)</td></tr>
-<tr><td>ElClaroDelRoble</td><td>60x60</td><td>Zona principal — cabaña, taller, lago Ojo de Plata</td></tr>
-<tr><td>LaCabana</td><td>40x40</td><td>Interior de la cabaña (opcional)</td></tr>
-<tr><td>ElLago</td><td>30x30</td><td>Zona del lago (opcional)</td></tr>
+<tr><th>Tileset</th><th>firstgid</th><th>IDs Ãºtiles</th></tr>
+<tr><td>Tileset_Ground</td><td>686</td><td><b>700</b> pasto, <b>781</b> tierra, 693+ transiciones</td></tr>
+<tr><td>Tilesets_Road</td><td>5280</td><td><b>5294</b> camino, 5281/5283 bordes</td></tr>
+<tr><td>Tileset_Water</td><td>4968</td><td><b>5141</b> agua, 5017+ orillas</td></tr>
+<tr><td>Atlas_Trees_Bushes</td><td>5340</td><td>VegetaciÃ³n 16x16 para capa Trees</td></tr>
+<tr><td>Animation_Flowers_Red</td><td>5484</td><td>Flores rojas (12 vars)</td></tr>
+<tr><td>Animation_Flowers_White</td><td>5580</td><td>Flores blancas</td></tr>
+<tr><td>Animation_Campfire</td><td>5676</td><td>4 tiles por fogata (5676-5677, 5692-5693)</td></tr>
 </table>
 
-<h2>Pipeline de renderizado (código)</h2>
-<pre style="background:#1a1a22;padding:1em;border-radius:6px;overflow-x:auto;font-size:.85em;color:#aaa">
-<code style="background:none;color:#aaa;font-size:1em">1. renderer.render(capasFondo)       → Ground, Flowers, Road, <b>Trees</b>, RockSlopes_Auto, Water
-2. batch.begin()
-3.   renderObjetos(Object Layer 1)   → Casas, árboles, props (detrás del jugador)
-4.   npcManager.renderSortedWithPlayer() → NPCs + Player (Y-sorted entre ellos)
-5. batch.end()
-6. renderer.render(aboveIndices)     → <b>AbovePlayer</b> (tapa al jugador)
-7. Stage                             → UI, menús, diálogos</code>
-</pre>
+<h2>Objetos (Object Layer 1)</h2>
+<table>
+<tr><th>gid</th><th>Objeto</th><th>TamaÃ±o</th></tr>
+<tr><td>443</td><td>House_Hay_1</td><td>89x91</td></tr>
+<tr><td>444</td><td>House_Hay_2 (Taller)</td><td>157x112</td></tr>
+<tr><td>445</td><td>House_Hay_3 (CabaÃ±a Elio)</td><td>175x128</td></tr>
+<tr><td>448</td><td>Well_Hay_1 (Pozo)</td><td>56x74</td></tr>
+<tr><td>450</td><td>Bench_1 (Banco)</td><td>14x30</td></tr>
+<tr><td>456</td><td>LampPost_3 (Farola)</td><td>46x62</td></tr>
+<tr><td>459</td><td>Sign_1 (Cartel)</td><td>24x22</td></tr>
+<tr><td>464</td><td>HayStack_2 (Heno)</td><td>29x32</td></tr>
+<tr><td>468</td><td>Rock_Brown_1</td><td>28x14</td></tr>
+<tr><td>470</td><td>Rock_Brown_4</td><td>27x27</td></tr>
+<tr><td>473-478</td><td>Bushes (Arbustos)</td><td>40x29 a 12x9</td></tr>
+<tr><td>480</td><td>Tree_Emerald_1</td><td>64x63</td></tr>
+<tr><td>481</td><td>Tree_Emerald_2</td><td>46x63</td></tr>
+<tr><td>482</td><td>Tree_Emerald_3</td><td>52x92</td></tr>
+<tr><td>483</td><td>Tree_Emerald_4</td><td>48x93</td></tr>
+</table>
 
-<h2>Reglas de oro</h2>
-
-<ul>
-<li><strong>Spawn</strong> no debe caer dentro de una colisión ni de agua</li>
-<li><strong>AbovePlayer</strong> solo para lo que tape al jugador (copas, techos)</li>
-<li><strong>Collisions</strong> para todo lo sólido — el Y-sorting no frena al jugador</li>
-<li><strong>Object Layer 1</strong> para objetos grandes que se necesiten como entidad individual</li>
-<li><strong>Ground</strong> siempre con algún tile (si no, se ve negro)</li>
-<li><strong>Tile 0</strong> en CSV = sin tile. Para rellenar de pasto, usa 700</li>
-<li><strong>Redimensionar</strong> el mapa en Tiled: <code>Mapa → Redimensionar Mapa (Ctrl+Shift+R)</code></li>
-</ul>
+<h2>Pipeline de renderizado</h2>
+<pre style="background:#1a1a22;padding:1em;border-radius:6px;font-size:.85em;color:#aaa">
+1. Ground -> Flowers -> Road -> <b>Trees</b> -> RockSlopes_Auto -> Water
+2. <b>Object Layer 1</b> (casas, Ã¡rboles, props)
+3. NPCs + Player (Y-sorted)
+4. <b>AbovePlayer</b> (tapa al jugador)
+5. Stage (UI)</pre>
 
 </div>
 </body>
