@@ -1,0 +1,1 @@
+para la bd sqlite para el guardado de partida 

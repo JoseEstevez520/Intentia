@@ -1,0 +1,9 @@
+{
+flags: {
+	class: java.util.HashSet
+	items: [
+		tiene_brujula
+	]
+}
+currentNodeId: attic_exploration
+}

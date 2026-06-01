@@ -53,6 +53,7 @@ public class MainMenuScreen implements Screen {
         TextButton btnNuevo = new TextButton("NUEVA PARTIDA", skin);
         TextButton btnContinuar = new TextButton("CONTINUAR", skin);
         TextButton btnExplorar = new TextButton("EXPLORAR (BETA)", skin);
+        TextButton btnPrueba = new TextButton("PRUEBA DEL DRAGON (TEST)", skin);
         TextButton btnAjustes = new TextButton("AJUSTES", skin);
         TextButton btnSalir = new TextButton("SALIR", skin);
 
@@ -96,6 +97,18 @@ public class MainMenuScreen implements Screen {
             }
         });
 
+        btnPrueba.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (transicionando) return;
+                transicionando = true;
+                game.getStoryManager().getGameState().resetTrialScore();
+                Screen anterior = game.getScreen();
+                game.setScreen(new DialogOverlayScreen(game, "trial_start"));
+                if (anterior != null && anterior != game.getScreen()) anterior.dispose();
+            }
+        });
+
         btnAjustes.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -121,6 +134,8 @@ public class MainMenuScreen implements Screen {
         panelBotones.add(btnContinuar).width(220).height(30).padBottom(4);
         panelBotones.row();
         panelBotones.add(btnExplorar).width(220).height(30).padBottom(4);
+        panelBotones.row();
+        panelBotones.add(btnPrueba).width(220).height(30).padBottom(4);
         panelBotones.row();
         panelBotones.add(btnAjustes).width(220).height(30).padBottom(4);
         panelBotones.row();
