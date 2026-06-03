@@ -2,174 +2,129 @@
   {
     "id": "car_awakening",
     "speakerId": "narrador",
-    "text": "DESPERTAR: Las ruedas del coche cantan sobre el asfalto mojado. Estás llegando a la vieja mansión del abuelo Elías. Sientes un hormigueo en las manos... el 'Intentia' está despertando en ti.",
-    "nextId": "car_choice",
-    "musicTrack": "audio/prologue_theme.mp3"
+    "text": "Alba y Ray han bajado de la furgo. Leo se ha quedado dentro. Al borde del camino, Elio espera.",
+    "nextId": "game_start"
   },
   {
-    "id": "car_choice",
-    "speakerId": "padre",
-    "text": "Javier: '¿Estás listo para esto? No es un campamento normal, es... bueno, el abuelo tiene sus métodos.'",
-    "options": [
-      {
-        "text": "Estoy más que listo. (Set Flag: valiente)",
-        "targetId": "arrival_house"
-      },
-      {
-        "text": "Tengo un poco de miedo. (Set Flag: cauteloso)",
-        "targetId": "arrival_house"
-      }
-    ]
-  },
-  {
-    "id": "arrival_house",
-    "speakerId": "abuelo",
-    "text": "Elías te recibe en el porche. Sus ojos parecen contener galaxias enteras.\n\nElías: 'Bienvenido. Antes de empezar, explora la casa. Encuentra algo que te defina.'",
-    "nextId": "house_hub"
-  },
-  {
-    "id": "house_hub",
+    "id": "game_start",
     "speakerId": "narrador",
-    "text": "ESTÁS EN EL SALÓN. Hay tres caminos ante ti. Explora uno o ve directo al examen del abuelo.",
-    "options": [
-      {
-        "text": "Ir a la BIBLIOTECA (Aprender sobre el lore)",
-        "targetId": "library_exploration"
-      },
-      {
-        "text": "Subir al DESVÁN (Encontrar un objeto)",
-        "targetId": "attic_exploration"
-      },
-      {
-        "text": "Entrar en la COCINA (Momento de relax)",
-        "targetId": "kitchen_moment"
-      },
-      {
-        "text": "[ COMENZAR EL EXAMEN DEL ABUELO ]",
-        "targetId": "trial_start"
-      }
-    ]
+    "text": "Elio espera al borde del camino. Alba habla con él en voz baja. Presiona [E] para hablar con los personajes.",
+    "options": []
   },
   {
-    "id": "library_exploration",
-    "speakerId": "abuelo",
-    "text": "En la biblioteca, lees un pergamino: 'La intención es el puente entre el pensamiento y la realidad'.",
-    "actions": ["leyo_pergamino"],
-    "options": [
-      {
-        "text": "Volver al salón",
-        "targetId": "house_hub"
-      }
-    ]
+    "id": "npc_elio_saludo",
+    "speakerId": "elio",
+    "text": "¡Y este es el famoso explorador! Me han dicho que tienes ojo para las nubes.\n\n—(se agacha a tu altura)— Bienvenido, explorador. Llevo todo el día esperando.",
+    "options": []
   },
   {
-    "id": "attic_exploration",
-    "speakerId": "abuelo",
-    "text": "Encuentras una brújula que apunta a los secretos.",
-    "actions": ["tiene_brujula"],
-    "options": [
-      {
-        "text": "Volver al salón",
-        "targetId": "house_hub"
-      }
-    ]
+    "id": "npc_alba_abrazo",
+    "speakerId": "alba",
+    "text": "—(se arrodilla, te abraza. Te dice algo al oído — no se oye.)—\n\n—(se levanta, mira a Elio. Un segundo. Una mirada larga. Luego se gira y vuelve a la furgo.)—",
+    "options": []
   },
   {
-    "id": "kitchen_moment",
-    "speakerId": "abuelo",
-    "text": "La cocinera Teodora te da un pastel de manzana que te llena de energía.",
-    "actions": ["energia_pastre"],
-    "options": [
-      {
-        "text": "Volver al salón",
-        "targetId": "house_hub"
-      }
-    ]
+    "id": "npc_leo_despide",
+    "speakerId": "leo",
+    "text": "—(sin mirarte, desde la furgo)— Vale. Pórtate bien.\n\nNo dice más. No mira a Elio.",
+    "options": []
   },
   {
-    "id": "trial_start",
-    "speakerId": "abuelo",
-    "text": "Elías se pone serio. 'Es hora. Veremos si has prestado atención.'",
-    "nextId": "trial_q1"
-  },
-  {
-    "id": "trial_q1",
-    "speakerId": "abuelo",
-    "text": "PRIMERA PREGUNTA: ¿Qué es la intención según lo que has visto?",
-    "options": [
-      {
-        "text": "Un puente entre pensamiento y realidad. (CORRECTA)",
-        "targetId": "trial_q2",
-        "scoreValue": 1
-      },
-      {
-        "text": "Solo un deseo fuerte. (INCORRECTA)",
-        "targetId": "trial_q2",
-        "scoreValue": 0
-      }
-    ]
-  },
-  {
-    "id": "trial_q2",
-    "speakerId": "abuelo",
-    "text": "SEGUNDA PREGUNTA: Si un dragón de humo te ataca, ¿qué haces?",
-    "options": [
-      {
-        "text": "Mantener la mirada con valor. (CORRECTA)",
-        "targetId": "trial_q3",
-        "scoreValue": 1
-      },
-      {
-        "text": "Huir para salvar la vida. (INCORRECTA)",
-        "targetId": "trial_q3",
-        "scoreValue": 0
-      }
-    ]
-  },
-  {
-    "id": "trial_q3",
-    "speakerId": "abuelo",
-    "text": "ÚLTIMA PREGUNTA: ¿Estás dispuesto a aceptar tu legado?",
-    "options": [
-      {
-        "text": "Sí, lo acepto. (CORRECTA)",
-        "targetId": "trial_evaluation_node",
-        "scoreValue": 1
-      },
-      {
-        "text": "No estoy seguro... (INCORRECTA)",
-        "targetId": "trial_evaluation_node",
-        "scoreValue": 0
-      }
-    ]
-  },
-  {
-    "id": "trial_evaluation_node",
-    "speakerId": "abuelo",
-    "text": "El abuelo Elías cierra los ojos y medita sobre tus respuestas...",
-    "trialEvaluation": {
-      "threshold": 0.6,
-      "successTargetId": "trial_success",
-      "failTargetId": "trial_fail",
-      "successFlag": "hijo_de_intentia"
-    }
-  },
-  {
-    "id": "trial_success",
-    "speakerId": "abuelo",
-    "text": "¡HAS PASADO! El abuelo sonríe. 'Has acertado al menos 2 de 3. Estás listo para el siguiente nivel.'",
-    "nextId": "final_node"
-  },
-  {
-    "id": "trial_fail",
-    "speakerId": "abuelo",
-    "text": "HAS FALLADO. El abuelo niega con la cabeza. 'Has cometido demasiados errores. Vuelve cuando tu mente esté clara.'",
-    "nextId": "house_hub"
-  },
-  {
-    "id": "final_node",
+    "id": "parada_info",
     "speakerId": "narrador",
-    "text": "FIN DEL TEST: Has probado las ramas, los puntos y el sistema de evaluación. ¡El motor funciona!",
+    "text": "PARADA DE LA BRUMA\n\nUna marquesina de piedra y un banco de madera. Desde aquí, el bosque se abre hacia el Camino del Musgo. Dicen que Elio construyó esta parada hace años.\n\nAhora solo queda el silencio y el rumor de los árboles.",
+    "options": []
+  },
+  {
+    "id": "bosque_entrada",
+    "speakerId": "elio",
+    "text": "¡Ray, por aquí! ¡Corre, corre, corre!\n\n—(se adentra sin esperar. El bosque se cierra detrás de él.)—",
+    "options": []
+  },
+  {
+    "id": "bosque_dragon1",
+    "speakerId": "elio",
+    "text": "—(susurrando)— Shh. Ahí.\n\n—(señala entre los árboles. Un momento de silencio.)—\n\n¿Lo ves? Quieto entre los árboles.\n\nSe llama... no, espera. Los dragones no tienen nombre hasta que alguien se los pone. Tú ponle uno. Pero luego. Ahora no hay tiempo.\n\n—(se levanta de un salto y sigue corriendo.)—",
+    "options": []
+  },
+  {
+    "id": "bosque_olor",
+    "speakerId": "elio",
+    "text": "—(frena. Cierra los ojos. Huele el aire.)—\n\nHuelo a dragón.\n\n—(pausa.)—\n\nHuelen a... a bosque mojado.\n\n—(abre los ojos.)—\n\nMi abuela me traía aquí. Decía que el bosque huele distinto cuando está solo.\n\n—(mira al frente.)—\n\nVamos.",
+    "options": []
+  },
+  {
+    "id": "bosque_recta",
+    "speakerId": "elio",
+    "text": "—(corriendo, sin mirar atrás)— Las primeras veces que venía aquí... era con una persona que ya no puede venir.\n\n—(pausa. Sigue corriendo.)—\n\nBueno. Ya no vienen muchos, la verdad.\n\n—(la frase queda ahí. No se detiene.)—",
+    "options": []
+  },
+  {
+    "id": "bosque_puente",
+    "speakerId": "elio",
+    "text": "—(se para en el puente. Mira el agua. Silencio. 5 segundos.)—\n\nTu abuela...\n\n—(no termina la frase. Más silencio.)—\n\nEl agua siempre baja. No importa lo que encuentre.\n\n—(carraspea. Se endereza. La máscara vuelve.)—\n\nVamos, que se hace tarde.",
+    "options": []
+  },
+  {
+    "id": "bosque_dragon3",
+    "speakerId": "elio",
+    "text": "—(frena en seco)— ¡Ahí! ¡Ahí! ¿Lo has visto?\n\n—(una sombra cruza entre los árboles. Un rumor grave retumba.)—\n\n—(voz más baja, casi para sí)— Siempre aparecen cuando dejas de forzarlo.\n\n—(sonríe. No a ti. Al bosque.)—\n\n¡Vamos!",
+    "options": []
+  },
+  {
+    "id": "claro_revelacion",
+    "speakerId": "elio",
+    "text": "—(respira hondo. Tú llegas a su lado.)—\n\nMira, Ray.\n\n—(la cámara sube. Las nubes tienen formas de dragón. Claras. Reconocibles.)—\n\n—(señala una nube aparte. Una más pequeña. Con forma de perfil.)—\n\nSiempre hay una que no es un dragón.\n\n—(sonríe. Una sonrisa que no es del personaje. Es real.)—",
+    "options": [
+      {"text": "¿A quién?", "targetId": "claro_nube"}
+    ]
+  },
+  {
+    "id": "claro_nube",
+    "speakerId": "elio",
+    "text": "—(no responde. Sigue sonriendo. Un segundo.)—\n\n—(la máscara vuelve. Gira.)—\n\n¡Vamos, que la casa se enFRÍA!\n\n—(echa a andar hacia la cabaña.)—",
+    "options": []
+  },
+  {
+    "id": "perro_saludo",
+    "speakerId": "elio",
+    "text": "—(el perro sale de la casa. Mueve la cola. Se acerca a ti.)—\n\n—(el jugador se acerca)— ¿Es tuyo?\n\n—(Elio)— Sí. Llegó un día y se quedó. La primera semana me mordió.\n\nO yo le mordí a él, ya no me acuerdo.\n\n—(Ray se ríe.)—\n\nSe llama... bueno, no le puse nombre. Le digo Viejo. O bicho. Él viene igual.",
+    "options": []
+  },
+  {
+    "id": "guitarra_nota",
+    "speakerId": "elio",
+    "text": "—(voz desde lejos, desde la cocina)— ¿La has tocado? Sigue teniendo música.",
+    "options": []
+  },
+  {
+    "id": "notas_estudio",
+    "speakerId": "narrador",
+    "text": "Notas sueltas en la mesa:\n\n— \"El dragón no existe hasta que alguien lo mira.\"\n— \"Clara decía que el mundo no tiene sentido, pero que eso no es malo.\"\n— \"Dibujar nubes es más fácil que recordar.\"\n— \"Hoy tampoco.\"",
+    "options": []
+  },
+  {
+    "id": "manuscrito_clara",
+    "speakerId": "narrador",
+    "text": "FRAGMENTO DEL MANUSCRITO DE CLARA\n\n\"Aceleré en un semáforo en ámbar. Solo quería llegar antes. Dos personas que ya no están. Y yo, que sigo aquí, escribiendo esto en una mesa que huele a su café, mientras él sigue creyendo que fue un accidente. Como si 'accidente' borrara la prisa que tenía.\n\nAdiós, Elio. Sigue mirando las nubes. Pase lo que pase.\"\n\n—(el resto del cajón está vacío.)—",
+    "options": []
+  },
+  {
+    "id": "foto_clara",
+    "speakerId": "narrador",
+    "text": "Una foto de Clara. Una mujer joven sonriendo en un parque. Hace mucho tiempo.",
+    "options": []
+  },
+  {
+    "id": "consola_cierre",
+    "speakerId": "elio",
+    "text": "—(ya sin la urgencia del bosque. Quieto.)—\n\n¿Alguna vez has jugado a ser otro?",
+    "options": []
+  },
+  {
+    "id": "final_demo",
+    "speakerId": "narrador",
+    "text": "INTENTIA\n\nPRÓXIMAMENTE\n\n—(Gracias por jugar la demo.)—",
     "options": []
   }
 ]

@@ -100,6 +100,11 @@ TileSet/Art/Trees and Bushes/Tree_Emerald_4.png
 TileSet/Art/Water and Sand/Tileset_Water.png
 TileSet/Tiled/Tilemaps/Beginning Fields.png
 TileSet/Tiled/Tilemaps/Beginning Fields.tmx
+TileSet/Tiled/Tilemaps/ElCaminoDelMusgo.tmx
+TileSet/Tiled/Tilemaps/ElClaroDelRoble.tmx
+TileSet/Tiled/Tilemaps/ElLago.tmx
+TileSet/Tiled/Tilemaps/LaCabana.tmx
+TileSet/Tiled/Tilemaps/LaParadaDeLaBruma.tmx
 TileSet/Tiled/Tilemaps/Rules/RockSlopes_Rules.tmx
 TileSet/Tiled/Tilemaps/rules.txt
 TileSet/Tiled/Tilesets/Animation_Campfire.tsx
@@ -127,8 +132,10 @@ fonts/gnf.regular.ttf
 music/exploracion.mp3
 music/menu.mp3
 portraits/father_normal.png
+portraits/mother_normal.png
 portraits/player_neutral.png
 portraits/retrato.png
+portraits/void_echo.png
 save.json
 sfx/_click.wav
 sfx/_confirm.wav

@@ -1,15 +1,11 @@
 {
-  "abuelo": [
-    { "check": "flag", "flag": "hijo_de_intentia", "nodeId": "npc_abuelo_heredero" },
-    { "check": "flag", "flag": "tiene_brujula", "nodeId": "npc_abuelo_examen" },
-    { "check": "flag", "flag": "leyo_pergamino", "nodeId": "npc_abuelo_desvan" },
-    { "check": "flag", "flag": "energia_pastre", "nodeId": "npc_abuelo_apremia" },
-    { "check": "default", "nodeId": "npc_abuelo_hola" }
+  "elio": [
+    { "check": "default", "nodeId": "npc_elio_saludo" }
   ],
-  "padre": [
-    { "check": "default", "nodeId": "npc_padre_hola" }
+  "leo": [
+    { "check": "default", "nodeId": "npc_leo_despide" }
   ],
-  "madre": [
-    { "check": "default", "nodeId": "npc_madre_hola" }
+  "alba": [
+    { "check": "default", "nodeId": "npc_alba_abrazo" }
   ]
 }

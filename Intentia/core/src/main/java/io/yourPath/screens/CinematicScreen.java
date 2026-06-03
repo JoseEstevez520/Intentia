@@ -23,6 +23,7 @@ public class CinematicScreen implements Screen {
     private FitViewport viewport;
     private boolean terminado = false;
     private boolean listo = false;
+    private boolean disposed = false;
 
     public CinematicScreen(Main juego, Screen siguiente) {
         this.juego = juego;
@@ -38,12 +39,16 @@ public class CinematicScreen implements Screen {
 
         juego.getMusicManager().play(io.yourPath.audio.MusicCommand.silencio(1f));
 
-        reproductor = VideoPlayerCreator.createVideoPlayer();
         FileHandle video = Gdx.files.internal("videos/intro.webm");
         try {
-            reproductor.load(video);
-            reproductor.play();
-            listo = true;
+            reproductor = VideoPlayerCreator.createVideoPlayer();
+            if (reproductor != null) {
+                reproductor.load(video);
+                reproductor.play();
+                listo = true;
+            } else {
+                terminado = true;
+            }
         } catch (Exception e) {
             System.err.println("Error al cargar video: " + e.getMessage());
             terminado = true;
@@ -52,33 +57,30 @@ public class CinematicScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        if (disposed) return;
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
             Gdx.input.isKeyJustPressed(Input.Keys.SPACE) ||
             Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            if (reproductor != null) {
+                try { reproductor.stop(); } catch (Exception ignored) {}
+            }
             terminado = true;
         }
 
-        if (!listo) {
-            if (terminado) {
-                dispose();
-                juego.transitarA(siguiente, flashVerdeAgua());
-            }
+        if (terminado) {
+            juego.transitarA(siguiente, flashVerdeAgua());
             return;
         }
+
+        if (!listo || reproductor == null) return;
 
         reproductor.update();
 
         if (!reproductor.isPlaying()) {
             terminado = true;
-        }
-
-        if (terminado) {
-            dispose();
-            juego.transitarA(siguiente, flashVerdeAgua());
-            return;
         }
 
         Texture frame = reproductor.getTexture();
@@ -103,6 +105,8 @@ public class CinematicScreen implements Screen {
 
     @Override
     public void dispose() {
+        if (disposed) return;
+        disposed = true;
         if (reproductor != null) {
             reproductor.stop();
             reproductor.dispose();

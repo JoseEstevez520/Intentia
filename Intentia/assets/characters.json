@@ -10,18 +10,18 @@
     "portraitPath": "portraits/void_echo.png"
   },
   {
-    "id": "padre",
-    "name": "Javier (Padre)",
+    "id": "leo",
+    "name": "Leo",
     "portraitPath": "portraits/father_normal.png"
   },
   {
-    "id": "madre",
-    "name": "Marta (Madre)",
+    "id": "alba",
+    "name": "Alba",
     "portraitPath": "portraits/mother_normal.png"
   },
   {
-    "id": "abuelo",
-    "name": "Abuelo Elías",
+    "id": "elio",
+    "name": "Elio",
     "portraitPath": "portraits/retrato.png"
   }
 ]

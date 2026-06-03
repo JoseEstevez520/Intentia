@@ -57,6 +57,7 @@ public class SkinUtil {
         NinePatchDrawable fondoPausa = new NinePatchDrawable(new NinePatch(btnUpTex, BORDE, BORDE, BORDE, BORDE));
 
         BitmapFont font = crearFuente(16);
+        font.getData().markupEnabled = true;
         BitmapFont fontNombre = crearFuente(32);
 
         Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
@@ -64,6 +65,7 @@ public class SkinUtil {
         Label.LabelStyle labelInteraccionStyle = new Label.LabelStyle(font, VERDE_AGUA);
         Label.LabelStyle labelDialogoStyle = new Label.LabelStyle(font, MARRON_OSCURO);
         Label.LabelStyle labelNombreDialogoStyle = new Label.LabelStyle(font, MARRON_MADERA);
+        Label.LabelStyle labelDireccionStyle = new Label.LabelStyle(font, new Color(0.55f, 0.55f, 0.55f, 1f));
 
         TextButton.TextButtonStyle btnStyle = new TextButton.TextButtonStyle();
         btnStyle.up = upBtn;
@@ -94,6 +96,7 @@ public class SkinUtil {
         skin.add("interaccion", labelInteraccionStyle);
         skin.add("dialogo-texto", labelDialogoStyle);
         skin.add("nombre-dialogo", labelNombreDialogoStyle);
+        skin.add("dialogo-direccion", labelDireccionStyle);
         skin.add("default", btnStyle);
         skin.add("bloqueado", btnDisabledStyle);
         skin.add("default", winStyle);

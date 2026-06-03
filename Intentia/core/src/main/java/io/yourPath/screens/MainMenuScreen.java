@@ -69,7 +69,7 @@ public class MainMenuScreen implements Screen {
                 transicionando = true;
                 game.getStoryManager().start("car_awakening");
                 Screen anterior = game.getScreen();
-                game.setScreen(new CinematicScreen(game, new DialogOverlayScreen(game)));
+                game.setScreen(new CinematicScreen(game, new GameScreen(game)));
                 if (anterior != null) anterior.dispose();
             }
         });

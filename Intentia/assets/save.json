@@ -1,6 +1,3 @@
 {
-currentNodeId: trial_evaluation_node
-currentTrialScore: 1
-totalPossibleScore: 3
-trialCurrentQuestion: 3
+  "currentNodeId": "npc_elio_saludo"
 }

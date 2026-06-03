@@ -39,6 +39,10 @@ public class NPC {
     private float speed;
     private float patrolDistance;
     private float interactionRadius;
+    private float wanderMinX = 32;
+    private float wanderMaxX = 600;
+    private float wanderMinY = 32;
+    private float wanderMaxY = 600;
 
     private float stateTime;
     private float pauseTimer;
@@ -336,7 +340,7 @@ public class NPC {
                     case ARRIBA:    nuevaY += step; break;
                     case ABAJO:     nuevaY -= step; break;
                 }
-                if (nuevaX >= 32 && nuevaX <= 600 && nuevaY >= 32 && nuevaY <= 600) {
+                if (nuevaX >= wanderMinX && nuevaX <= wanderMaxX && nuevaY >= wanderMinY && nuevaY <= wanderMaxY) {
                     position.x = nuevaX;
                     position.y = nuevaY;
                 } else {
@@ -367,6 +371,13 @@ public class NPC {
             FRAME_WIDTH + interactionRadius,
             FRAME_HEIGHT + interactionRadius
         );
+    }
+
+    public void setWanderBounds(float minX, float maxX, float minY, float maxY) {
+        this.wanderMinX = minX;
+        this.wanderMaxX = maxX;
+        this.wanderMinY = minY;
+        this.wanderMaxY = maxY;
     }
 
     public void setTalking(boolean talking) {

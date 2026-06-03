@@ -186,7 +186,6 @@ public class TransitionScreen implements Screen {
         destination.show();
         if (origin != null) {
             origin.hide();
-            origin.dispose();
             origin = null;
         }
     }

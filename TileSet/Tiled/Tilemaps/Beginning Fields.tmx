@@ -417,35 +417,35 @@
   <object id="143" gid="456" x="224.5" y="122.25" width="46" height="62"/>
  </objectgroup>
  <objectgroup id="15" name="NPCs">
-  <object id="144" name="Abuelo" x="192" y="560" width="16" height="16">
-   <properties>
-    <property name="npcId" value="abuelo"/>
-    <property name="dialogNodeId" value="npc_abuelo_hola"/>
-    <property name="movement" value="patrol_h"/>
-    <property name="speed" value="40"/>
-    <property name="patrolDist" value="3"/>
-    <property name="spriteWalk" value="sprites/npc/abuelo_walk.png"/>
-    <property name="spriteIdle" value="sprites/npc/abuelo_idle.png"/>
-   </properties>
-  </object>
-  <object id="145" name="Padre" x="320" y="320" width="16" height="16">
-   <properties>
-    <property name="npcId" value="padre"/>
-    <property name="dialogNodeId" value="npc_padre_hola"/>
-    <property name="movement" value="static"/>
-    <property name="spriteWalk" value="sprites/npc/hombre_walk.png"/>
-    <property name="spriteIdle" value="sprites/npc/hombre_idle.png"/>
-   </properties>
-  </object>
-  <object id="146" name="Madre" x="400" y="240" width="16" height="16">
-   <properties>
-    <property name="npcId" value="madre"/>
-    <property name="dialogNodeId" value="npc_madre_hola"/>
-    <property name="movement" value="wander"/>
-    <property name="speed" value="30"/>
-    <property name="spriteWalk" value="sprites/npc/mujer_c_walk.png"/>
-    <property name="spriteIdle" value="sprites/npc/mujer_c_idle.png"/>
-   </properties>
-  </object>
+   <object id="144" name="Elio" x="192" y="560" width="16" height="16">
+    <properties>
+     <property name="npcId" value="elio"/>
+     <property name="dialogNodeId" value="npc_elio_saludo"/>
+     <property name="movement" value="patrol_h"/>
+     <property name="speed" value="40"/>
+     <property name="patrolDist" value="3"/>
+     <property name="spriteWalk" value="sprites/npc/abuelo_walk.png"/>
+     <property name="spriteIdle" value="sprites/npc/abuelo_idle.png"/>
+    </properties>
+   </object>
+   <object id="145" name="Leo" x="320" y="320" width="16" height="16">
+    <properties>
+     <property name="npcId" value="leo"/>
+     <property name="dialogNodeId" value="npc_leo_despide"/>
+     <property name="movement" value="static"/>
+     <property name="spriteWalk" value="sprites/npc/hombre_walk.png"/>
+     <property name="spriteIdle" value="sprites/npc/hombre_idle.png"/>
+    </properties>
+   </object>
+   <object id="146" name="Alba" x="400" y="240" width="16" height="16">
+    <properties>
+     <property name="npcId" value="alba"/>
+     <property name="dialogNodeId" value="npc_alba_abrazo"/>
+     <property name="movement" value="wander"/>
+     <property name="speed" value="30"/>
+     <property name="spriteWalk" value="sprites/npc/mujer_c_walk.png"/>
+     <property name="spriteIdle" value="sprites/npc/mujer_c_idle.png"/>
+    </properties>
+   </object>
  </objectgroup>
 </map>

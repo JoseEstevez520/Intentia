@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.yourPath.Main;
@@ -157,7 +158,7 @@ public class DialogOverlayScreen implements Screen {
         zonaOpciones.add(tablaOpciones).left().expandX().fillX();
         zonaOpciones.add(labelPagina).right().padLeft(8);
 
-        flechaContinuar = new Label("\u25B8", skin, "dialogo-texto");
+        flechaContinuar = new Label(">>", skin, "dialogo-texto");
         flechaContinuar.setVisible(false);
 
         labelBadge = new Label("[PRUEBA]", skin, "dialogo-texto");
@@ -181,7 +182,7 @@ public class DialogOverlayScreen implements Screen {
 
         badgeCell = contenedorDialogo.add(badgeTable).colspan(2).expandX().fillX().padBottom(ESPACIO_PEQ);
         contenedorDialogo.row();
-        contenedorDialogo.add(retrato).size(PORTRAIT_SIZE, PORTRAIT_SIZE).left().padRight(ESPACIO_MEDIO);
+        contenedorDialogo.add(retrato).size(0).left().padRight(0);
         contenedorDialogo.add(textoColumna).expand().fill();
 
         float anchoDialogo = VW * ANCHO_DIALOGO_RATIO;
@@ -242,7 +243,7 @@ public class DialogOverlayScreen implements Screen {
             cargarRetrato(hablante);
         }
 
-        paginasTexto = dividirEnPaginas(nodo.getText());
+        paginasTexto = dividirEnPaginas(procesarDireccionesEscenicas(nodo.getText()));
         paginaActual = 0;
         String textoPagina = paginasTexto.get(0);
         typewriter = new TypewriterAction(labelTexto, textoPagina);
@@ -263,8 +264,10 @@ public class DialogOverlayScreen implements Screen {
     }
 
     private void cargarRetrato(CharacterProfile hablante) {
+        Cell cell = contenedorDialogo.getCell(retrato);
         if (hablante.getPortraitPath() == null || hablante.getPortraitPath().isEmpty()) {
             retrato.setVisible(false);
+            if (cell != null) cell.size(0).padRight(0);
             return;
         }
         try {
@@ -276,8 +279,10 @@ public class DialogOverlayScreen implements Screen {
             Texture tex = cacheRetratos.get(hablante.getPortraitPath());
             retrato.setDrawable(new TextureRegionDrawable(new TextureRegion(tex)));
             retrato.setVisible(true);
+            if (cell != null) cell.size(PORTRAIT_SIZE, PORTRAIT_SIZE).padRight(ESPACIO_MEDIO);
         } catch (Exception e) {
             retrato.setVisible(false);
+            if (cell != null) cell.size(0).padRight(0);
         }
     }
 
@@ -287,33 +292,49 @@ public class DialogOverlayScreen implements Screen {
             paginas.add("");
             return paginas;
         }
+
         BitmapFont font = labelTexto.getStyle().font;
         float anchoMax = getAnchoTexto();
         GlyphLayout layout = new GlyphLayout();
+        int maxLineas = 5;
+        float alturaLinea = font.getLineHeight();
 
-        layout.setText(font, texto);
-        if (layout.width <= anchoMax) {
+        layout.setText(font, texto, Color.WHITE, anchoMax, Align.left, true);
+        int totalLineas = Math.round(layout.height / alturaLinea);
+
+        if (totalLineas <= maxLineas) {
             paginas.add(texto);
             return paginas;
         }
 
         String[] palabras = texto.split(" ");
         StringBuilder pagina = new StringBuilder();
+
         for (String palabra : palabras) {
-            String prueba = pagina.length() > 0 ? pagina + " " + palabra : palabra;
-            layout.setText(font, prueba);
-            if (layout.width > anchoMax && pagina.length() > 0) {
+            String prueba = pagina.length() > 0 ? pagina.toString() + " " + palabra : palabra;
+            layout.setText(font, prueba, Color.WHITE, anchoMax, Align.left, true);
+            int lineasEnPrueba = Math.round(layout.height / alturaLinea);
+
+            if (lineasEnPrueba > maxLineas && pagina.length() > 0) {
                 paginas.add(pagina.toString().trim());
                 pagina = new StringBuilder(palabra);
             } else {
                 pagina = new StringBuilder(prueba);
             }
         }
+
         if (pagina.length() > 0) {
             paginas.add(pagina.toString().trim());
         }
 
         return paginas;
+    }
+
+    private String procesarDireccionesEscenicas(String texto) {
+        String t = texto.replace("—", "-");
+        t = t.replace("\u201C", "\"").replace("\u201D", "\"").replace("\u2019", "'");
+        t = t.replace("\u00A0", " ");
+        return t.replaceAll("-\\\\(([^)]*)\\\\)-", "[#808080]-($1)-[/]").trim();
     }
 
     private void alCompletarPagina(NarrativeNode nodo) {
@@ -459,7 +480,9 @@ public class DialogOverlayScreen implements Screen {
                 tablaOpciones.add(flechaContinuar).right();
                 flechaContinuar.setVisible(true);
             } else {
-                mostrarFinHistoria();
+                esperandoInput = true;
+                tablaOpciones.add(flechaContinuar).right();
+                flechaContinuar.setVisible(true);
             }
         } else if (nodo instanceof TrialNode) {
             esperandoInput = true;
@@ -671,6 +694,8 @@ public class DialogOverlayScreen implements Screen {
                                 if (dn.getNextId() != null) {
                                     storyManager.advance(dn.getNextId());
                                     mostrarNodoActual();
+                                } else {
+                                    mostrarFinHistoria();
                                 }
                             } else if (nodo instanceof TrialNode) {
                                 StoryManager.TrialResult result = storyManager.evaluateCurrentTrial();
