@@ -1,5 +1,9 @@
 # INTENTIA
 
+<p align="center">
+  <img src="assets/readme-hero.png" alt="A child and grandfather seeing a dragon in the clouds" width="100%" />
+</p>
+
 > *"Juzgar si la vida vale o no vale la pena vivir es responder a la pregunta fundamental de la filosofía. Considero que el sentido de la vida es la más apremiante de las cuestiones."* — Albert Camus
 
 ## Concepto Narrativo
